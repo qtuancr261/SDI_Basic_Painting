@@ -1,0 +1,10 @@
+           Đồ án bộ môn Kỹ thuật Đồ họa
+1. Thông tin phần mềm:
+    - Tên: SDI Basic Painting
+    - Công nghệ sử dụng : Qt Framework/C++ theo giấy phép mã nguồn mở (L)GPL v3
+    - Mô tả: Ứng dụng các thuật toán vẽ, biến đổi các đối tượng hình học 2D và 3D tạo thành một phần mềm paint đơn giản cho phép thực hiện các thuật toán trên.
+2. Thông tin về nhóm:
+    - Lớp D14CQCN02-N
+      > Thiều Quang Tuấn - N14DCCN136
+      > Lê Hoàng Tùng - N14DCCN113
+      > Hoàng Lê Anh Minh - N14DCCN138
