@@ -1,25 +1,36 @@
 #ifndef SDI_MAINWINDOW_H
 #define SDI_MAINWINDOW_H
 
+#include <QApplication>
 #include <QMainWindow>
+#include <QList>
+#include <QByteArray>
 #include <QAction>
 #include <QMenu>
 #include <QMenuBar>
 #include <QToolBar>
 #include <QDockWidget>
 #include <QStatusBar>
+#include <QWidget>
+#include <QImage>
+#include <QImageWriter>
+#include <QMessageBox>
 class SDI_MainWindow : public QMainWindow
 {
     Q_OBJECT
+public:
+    explicit SDI_MainWindow(QWidget *parent = 0);
+    ~SDI_MainWindow();
 private:
     QMenu* FileMenu;
     QMenu* saveAsMenu;
     QMenu* ViewMenu;
     QMenu* ToolsMenu;
     QMenu* HelpMenu;
+    QWidget* paintWidget;
     // File Actions
     QAction* openAct;
-    QAction* saveAsAct;
+    QList<QAction*> saveAsActs;
     QAction* printAct;
     QAction* quitAct;
     // View Actions
@@ -35,10 +46,18 @@ private:
     // Help Actions
     QAction* aboutSDI_PaintingAct;
     QAction* aboutQtAct;
+    //Private Functions
+    void createActions();
+    void createMenus();
+    void createToolsBar();
+    void createDockWidget();
+    bool mayBeSave();
+    bool saveFile();
+protected:
+    virtual void closeEvent(QCloseEvent* closeEvent) override;
+private slots:
+    void aboutSDI_Painting();
 
-public:
-    explicit SDI_MainWindow(QWidget *parent = 0);
-    ~SDI_MainWindow();
 };
 
 #endif // SDI_MAINWINDOW_H

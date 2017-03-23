@@ -27,3 +27,6 @@ SOURCES += main.cpp\
         sdi_mainwindow.cpp
 
 HEADERS  += sdi_mainwindow.h
+
+RESOURCES += \
+    resource.qrc
