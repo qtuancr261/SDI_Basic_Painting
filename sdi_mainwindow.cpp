@@ -4,6 +4,7 @@ void SDI_MainWindow::createActions()
 {
     openAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Mở ảnh"), this);
     openAct->setShortcut(QKeySequence::Open);
+    openAct->setStatusTip(tr("Mở ảnh để chỉnh sửa cơ bản"));
 
     foreach(QByteArray imageFormat, QImageWriter::supportedImageFormats())
     {
@@ -16,6 +17,7 @@ void SDI_MainWindow::createActions()
 
     printAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("In ảnh"), this);
     printAct->setShortcut(QKeySequence::Print);
+    printAct->setStatusTip(tr("In thành tập tin văn bản"));
 
     quitAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Thoát"), this);
     quitAct->setShortcut(QKeySequence::Quit);
@@ -47,6 +49,21 @@ void SDI_MainWindow::createActions()
 
     aboutQtAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Thông tin về Qt/Bản quyền"), this);
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    QAction* drawPointAct{new QAction(QIcon(":/images/icons/Letters.ico"), tr("Vẽ điểm"), this)};
+    drawPointAct->setShortcut(Qt::CTRL + Qt::Key_P);
+    drawPointAct->setStatusTip(tr("Vẽ một điểm trên hệ trục, dùng chuột để chọn điểm vẽ hoặc dùng nút Thêm đối tượng để nhập vào tọa độ..."));
+    setupDrawAct(drawPointAct);
+
+    QAction* drawLineAct{new QAction(QIcon(":/images/icons/Letters.ico"), tr("Vẽ đoạn thẳng"), this)};
+    drawLineAct->setShortcut(Qt::CTRL + Qt::Key_L);
+    drawLineAct->setStatusTip(tr("Vẽ một đoạn thẳng trên hệ trục, dùng chuột để chọn 2 điểm mút vẽ hoặc dùng Thêm đối tượng để nhập vào tọa độ..."));
+    setupDrawAct(drawLineAct);
+
+    //for (QAction*& act : draw2DObjectActs) draw2DGroupActs->addAction(act);
+
+
+
 
 }
 
@@ -87,7 +104,12 @@ void SDI_MainWindow::createMenus()
 
 void SDI_MainWindow::createToolsBar()
 {
-
+    QToolBar* mainToolBar;
+    mainToolBar = addToolBar(tr("Tâp tin"));
+    mainToolBar->addAction(openAct);
+    mainToolBar->addAction(printAct);
+    mainToolBar = addToolBar(tr("Vẽ các đối tượng cơ bản"));
+    mainToolBar->addActions(draw2DObjectActs);
 }
 
 void SDI_MainWindow::createDockWidget()
@@ -95,19 +117,26 @@ void SDI_MainWindow::createDockWidget()
 
 }
 
+void SDI_MainWindow::setupDrawAct(QAction *drawAct)
+{
+    drawAct->setCheckable(true);
+    drawAct->setActionGroup(draw2DGroupActs);
+    draw2DObjectActs.append(drawAct);
+}
+
 bool SDI_MainWindow::mayBeSave()
 {
-
+    return true;
 }
 
 bool SDI_MainWindow::saveFile()
 {
-
+    return true;
 }
 
 void SDI_MainWindow::closeEvent(QCloseEvent *closeEvent)
 {
-
+    closeEvent->accept();
 }
 
 void SDI_MainWindow::aboutSDI_Painting()
@@ -125,10 +154,12 @@ void SDI_MainWindow::aboutSDI_Painting()
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      paintWidget(new QWidget(this))
+      paintWidget(new QWidget(this)),
+      draw2DGroupActs{new QActionGroup(this)}
 {
     createActions();
     createMenus();
+    createToolsBar();
     setCentralWidget(paintWidget);
     setWindowTitle("SDI Basic Painting");
     statusBar()->showMessage("Khởi tạo chương trình");

@@ -6,6 +6,7 @@
 #include <QList>
 #include <QByteArray>
 #include <QAction>
+#include <QActionGroup>
 #include <QMenu>
 #include <QMenuBar>
 #include <QToolBar>
@@ -46,11 +47,15 @@ private:
     // Help Actions
     QAction* aboutSDI_PaintingAct;
     QAction* aboutQtAct;
+    // Draw Actions
+    QActionGroup* draw2DGroupActs;
+    QList<QAction*> draw2DObjectActs;
     //Private Functions
     void createActions();
     void createMenus();
     void createToolsBar();
     void createDockWidget();
+    void setupDrawAct(QAction* drawAct);
     bool mayBeSave();
     bool saveFile();
 protected:
