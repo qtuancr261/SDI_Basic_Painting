@@ -12,7 +12,9 @@
 #include <QToolBar>
 #include <QDockWidget>
 #include <QStatusBar>
-#include <QWidget>
+#include <QSpinBox>
+#include <QLabel>
+#include <QComboBox>
 #include <QImage>
 #include <QImageWriter>
 #include <QMessageBox>
@@ -50,6 +52,8 @@ private:
     // Draw Actions
     QActionGroup* draw2DGroupActs;
     QList<QAction*> draw2DObjectActs;
+    QComboBox* triangleTypes;
+    QSpinBox* penWidthBox;
     //Private Functions
     void createActions();
     void createMenus();
