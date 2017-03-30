@@ -24,9 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        sdi_mainwindow.cpp
+        sdi_mainwindow.cpp \
+    lefttoolswidget.cpp
 
-HEADERS  += sdi_mainwindow.h
+HEADERS  += sdi_mainwindow.h \
+    lefttoolswidget.h
 
 RESOURCES += \
     resource.qrc

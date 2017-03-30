@@ -87,13 +87,6 @@ void SDI_MainWindow::createActions()
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
     setupDrawAct(drawTriangleAct);
 
-
-
-    //for (QAction*& act : draw2DObjectActs) draw2DGroupActs->addAction(act);
-
-
-
-
 }
 
 void SDI_MainWindow::createMenus()
@@ -158,7 +151,11 @@ void SDI_MainWindow::createToolsBar()
 
 void SDI_MainWindow::createDockWidget()
 {
-
+    leftToolsWidget* widget{new leftToolsWidget(this)};
+    leftSideDockWidget->setWidget(widget);
+    leftSideDockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
+    leftSideDockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+    addDockWidget(Qt::RightDockWidgetArea, leftSideDockWidget);
 }
 
 void SDI_MainWindow::setupDrawAct(QAction *drawAct)
@@ -201,13 +198,15 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
       paintWidget(new QWidget(this)),
       draw2DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
-      penWidthBox{new QSpinBox(this)}
+      penWidthBox{new QSpinBox(this)},
+      leftSideDockWidget{new QDockWidget(this)}
 {
     createActions();
     createMenus();
     createToolsBar();
+    createDockWidget();
     setCentralWidget(paintWidget);
-    setFont(QFont("Tahoma", 12));
+    setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
     statusBar()->showMessage("Khởi tạo chương trình");
 }

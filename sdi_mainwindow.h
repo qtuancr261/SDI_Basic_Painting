@@ -18,6 +18,7 @@
 #include <QImage>
 #include <QImageWriter>
 #include <QMessageBox>
+#include "lefttoolswidget.h"
 class SDI_MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -31,6 +32,7 @@ private:
     QMenu* ToolsMenu;
     QMenu* HelpMenu;
     QWidget* paintWidget;
+    QDockWidget* leftSideDockWidget;
     // File Actions
     QAction* openAct;
     QList<QAction*> saveAsActs;
