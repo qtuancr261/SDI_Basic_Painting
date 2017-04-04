@@ -68,6 +68,8 @@ protected:
     virtual void closeEvent(QCloseEvent* closeEvent) override;
 private slots:
     void aboutSDI_Painting();
+public slots:
+    void showDockWidget(bool enable);
 
 };
 

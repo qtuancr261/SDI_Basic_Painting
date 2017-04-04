@@ -30,6 +30,7 @@ void SDI_MainWindow::createActions()
     showDockWidgetAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Hiện thanh công cụ chính"), this);
     showDockWidgetAct->setCheckable(true);
     showDockWidgetAct->setChecked(true);
+    QObject::connect(showDockWidgetAct, SIGNAL(toggled(bool)), this, SLOT(showDockWidget(bool)));
 
     show2DModeAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Chế độ đồ họa 2D"), this);
 
@@ -104,8 +105,8 @@ void SDI_MainWindow::createMenus()
     menuBar()->addMenu(FileMenu);
 
     ViewMenu = new QMenu(tr("Xem"), this);
-    ViewMenu->addAction(showToolBarAct);
     ViewMenu->addAction(showDockWidgetAct);
+    ViewMenu->addAction(showToolBarAct);
     ViewMenu->addSeparator();
     ViewMenu->addAction(show2DModeAct);
     ViewMenu->addAction(show3DModeAct);
@@ -151,8 +152,12 @@ void SDI_MainWindow::createToolsBar()
 
 void SDI_MainWindow::createDockWidget()
 {
+    QGroupBox* leftToolsBox{new QGroupBox(tr("Thanh công cụ chính"), this)};
     leftToolsWidget* widget{new leftToolsWidget(this)};
-    leftSideDockWidget->setWidget(widget);
+    QVBoxLayout* leftToolsBoxLayout{new QVBoxLayout(leftToolsBox)};
+    leftToolsBoxLayout->addWidget(widget);
+    leftToolsBox->setLayout(leftToolsBoxLayout);
+    leftSideDockWidget->setWidget(leftToolsBox);
     leftSideDockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
     leftSideDockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, leftSideDockWidget);
@@ -191,6 +196,14 @@ void SDI_MainWindow::aboutSDI_Painting()
                                 "       <li> Hoàng Lê Anh Minh - N14DCCN138</li>"
                                 "   </ol>"
                                 "</p>"));
+}
+
+void SDI_MainWindow::showDockWidget(bool enable)
+{
+    if (enable)
+        restoreDockWidget(leftSideDockWidget);
+    else
+        removeDockWidget(leftSideDockWidget);
 }
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)

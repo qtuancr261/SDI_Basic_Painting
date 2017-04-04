@@ -106,4 +106,6 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
 {
     slider->setRange(minValue, MaxValue);
     box->setRange(minValue, MaxValue);
+    QObject::connect(slider, SIGNAL(valueChanged(int)), box, SLOT(setValue(int)));
+    QObject::connect(box, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
 }
