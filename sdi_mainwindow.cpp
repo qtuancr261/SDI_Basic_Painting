@@ -47,7 +47,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(penWidthBox, SIGNAL(valueChanged(int)), this ,SLOT(penWidth(int)));
 
     clearScreenAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Xóa màn hình"), this);
-    QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), this, SLOT(initOxy()));
+    QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(clearImage()));
 
     aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("SDI Basic Painting"), this);
     QObject::connect(aboutSDI_PaintingAct, SIGNAL(triggered()), this, SLOT(aboutSDI_Painting()));
@@ -211,13 +211,6 @@ bool SDI_MainWindow::saveFile(const QByteArray &fileFormat)
               return central2DWidget->saveImage(fileName, fileFormat.constData());
           }
 }
-
-void SDI_MainWindow::initOxy()
-{
-    central2DWidget->showGUI();
-    update();
-}
-
 void SDI_MainWindow::closeEvent(QCloseEvent *closeEvent)
 {
     if (mayBeSave())

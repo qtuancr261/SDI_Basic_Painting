@@ -77,7 +77,6 @@ private slots:
     void aboutSDI_Painting();
 
 public slots:
-    void initOxy();
     void showDockWidget(bool enable);
 
 };
