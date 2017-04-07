@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += printsupport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SDI_Basic_Painting
@@ -25,10 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         sdi_mainwindow.cpp \
-    lefttoolswidget.cpp
+    lefttoolswidget.cpp \
+    sdi_painter.cpp \
+    draw2dwidget.cpp
 
 HEADERS  += sdi_mainwindow.h \
-    lefttoolswidget.h
+    lefttoolswidget.h \
+    sdi_painter.h \
+    draw2dwidget.h
 
 RESOURCES += \
     resource.qrc

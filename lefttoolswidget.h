@@ -15,7 +15,7 @@ class leftToolsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit leftToolsWidget(QWidget *parent = 0);
+    explicit leftToolsWidget(QWidget *parent = nullptr);
     ~leftToolsWidget() = default;
     QPushButton* graphic2DMode;
     QPushButton* graphic3DMode;

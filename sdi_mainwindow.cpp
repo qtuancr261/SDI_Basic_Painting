@@ -44,6 +44,7 @@ void SDI_MainWindow::createActions()
     pickPenWidthAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Chọn độ dày của nét vẽ"), this);
 
     clearScreenAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Xóa màn hình"), this);
+    QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), this, SLOT(initGUI()));
 
     aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("SDI Basic Painting"), this);
     QObject::connect(aboutSDI_PaintingAct, SIGNAL(triggered()), this, SLOT(aboutSDI_Painting()));
@@ -88,6 +89,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
     setupDrawAct(drawTriangleAct);
 
+
 }
 
 void SDI_MainWindow::createMenus()
@@ -116,6 +118,7 @@ void SDI_MainWindow::createMenus()
     ToolsMenu->addAction(pickPenColorAct);
     ToolsMenu->addAction(pickPenWidthAct);
     ToolsMenu->addSeparator();
+    ToolsMenu->addAction(clearScreenAct);
     ToolsMenu->addAction(optionAct);
     menuBar()->addMenu(ToolsMenu);
 
@@ -180,6 +183,12 @@ bool SDI_MainWindow::saveFile()
     return true;
 }
 
+void SDI_MainWindow::initGUI()
+{
+    centralWidget2D->showGUI();
+    update();
+}
+
 void SDI_MainWindow::closeEvent(QCloseEvent *closeEvent)
 {
     closeEvent->accept();
@@ -208,7 +217,7 @@ void SDI_MainWindow::showDockWidget(bool enable)
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      paintWidget(new QWidget(this)),
+      centralWidget2D{new draw2DWidget(this)},
       draw2DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
       penWidthBox{new QSpinBox(this)},
@@ -218,7 +227,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     createMenus();
     createToolsBar();
     createDockWidget();
-    setCentralWidget(paintWidget);
+    setCentralWidget(centralWidget2D);
     setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
     statusBar()->showMessage("Khởi tạo chương trình");

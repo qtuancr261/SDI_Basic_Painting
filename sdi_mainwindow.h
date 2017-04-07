@@ -19,11 +19,12 @@
 #include <QImageWriter>
 #include <QMessageBox>
 #include "lefttoolswidget.h"
+#include "draw2dwidget.h"
 class SDI_MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit SDI_MainWindow(QWidget *parent = 0);
+    explicit SDI_MainWindow(QWidget *parent = nullptr);
     ~SDI_MainWindow();
 private:
     QMenu* FileMenu;
@@ -31,8 +32,8 @@ private:
     QMenu* ViewMenu;
     QMenu* ToolsMenu;
     QMenu* HelpMenu;
-    QWidget* paintWidget;
     QDockWidget* leftSideDockWidget;
+    draw2DWidget* centralWidget2D;
     // File Actions
     QAction* openAct;
     QList<QAction*> saveAsActs;
@@ -64,11 +65,13 @@ private:
     void setupDrawAct(QAction* drawAct);
     bool mayBeSave();
     bool saveFile();
+
 protected:
     virtual void closeEvent(QCloseEvent* closeEvent) override;
 private slots:
     void aboutSDI_Painting();
 public slots:
+    void initGUI();
     void showDockWidget(bool enable);
 
 };
