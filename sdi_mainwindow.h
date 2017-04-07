@@ -33,7 +33,7 @@ private:
     QMenu* ToolsMenu;
     QMenu* HelpMenu;
     QDockWidget* leftSideDockWidget;
-    draw2DWidget* centralWidget2D;
+    draw2DWidget* central2DWidget;
     // File Actions
     QAction* openAct;
     QList<QAction*> saveAsActs;

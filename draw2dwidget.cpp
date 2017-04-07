@@ -22,7 +22,7 @@ bool draw2DWidget::openImage(const QString &fileName)
     QImage loadedImage;
     if (!loadedImage.load(fileName))
         return false;
-    originSize = loadedImage.size();
+    originalSize = loadedImage.size();
     QImage scale = loadedImage.scaled(size(), Qt::KeepAspectRatio);;
     QSize newSize = loadedImage.size().scaled(size().width(), size().height(), Qt::KeepAspectRatio);
     resizeImage(&scale, newSize);
@@ -34,8 +34,8 @@ bool draw2DWidget::openImage(const QString &fileName)
 
 bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
 {
-    QImage visibleImage = image.scaled(originSize, Qt::IgnoreAspectRatio);
-    resizeImage(&visibleImage, originSize);
+    QImage visibleImage = image.scaled(originalSize, Qt::IgnoreAspectRatio);
+    resizeImage(&visibleImage, originalSize);
 
     if (visibleImage.save(fileName, fileFormat)) {
         modified = false;
@@ -106,7 +106,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     if (width() > image.width() || height() > image.height()) {
         int newWidth = width();
         int newHeight = height();
-        originSize = QSize(newWidth, newHeight);
+        originalSize = QSize(newWidth, newHeight);
         resizeImage(&image, QSize(newWidth, newHeight));
         update();
     }

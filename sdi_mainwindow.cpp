@@ -185,7 +185,7 @@ bool SDI_MainWindow::saveFile()
 
 void SDI_MainWindow::initGUI()
 {
-    centralWidget2D->showGUI();
+    central2DWidget->showGUI();
     update();
 }
 
@@ -217,17 +217,17 @@ void SDI_MainWindow::showDockWidget(bool enable)
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      centralWidget2D{new draw2DWidget(this)},
+      leftSideDockWidget{new QDockWidget(this)},
+      central2DWidget{new draw2DWidget(this)},
       draw2DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
-      penWidthBox{new QSpinBox(this)},
-      leftSideDockWidget{new QDockWidget(this)}
+      penWidthBox{new QSpinBox(this)}
 {
     createActions();
     createMenus();
     createToolsBar();
     createDockWidget();
-    setCentralWidget(centralWidget2D);
+    setCentralWidget(central2DWidget);
     setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
     statusBar()->showMessage("Khởi tạo chương trình");

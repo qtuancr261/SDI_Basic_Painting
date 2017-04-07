@@ -46,7 +46,7 @@ private:
     QColor myPenColor;
     QImage image;
     QPoint lastPoint;
-    QSize originSize;
+    QSize originalSize;
     void paintOxy(QPainter&);
 signals:
 
