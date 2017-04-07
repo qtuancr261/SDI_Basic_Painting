@@ -5,6 +5,7 @@ void SDI_MainWindow::createActions()
     openAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Mở ảnh"), this);
     openAct->setShortcut(QKeySequence::Open);
     openAct->setStatusTip(tr("Mở ảnh để chỉnh sửa cơ bản"));
+    QObject::connect(openAct, SIGNAL(triggered(bool)), this, SLOT(open()));
 
     foreach(QByteArray imageFormat, QImageWriter::supportedImageFormats())
     {
@@ -18,10 +19,11 @@ void SDI_MainWindow::createActions()
     printAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("In ảnh"), this);
     printAct->setShortcut(QKeySequence::Print);
     printAct->setStatusTip(tr("In thành tập tin văn bản"));
+    QObject::connect(printAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(print()));
 
     quitAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Thoát"), this);
     quitAct->setShortcut(QKeySequence::Quit);
-    QObject::connect(quitAct, SIGNAL(triggered()), qApp, SLOT(quit()));
+    QObject::connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
 
     showToolBarAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Hiện thanh công cụ phụ"), this);
     showToolBarAct->setCheckable(true);
@@ -41,16 +43,22 @@ void SDI_MainWindow::createActions()
 
     pickPenColorAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Chọn màu vẽ"), this);
     pickPenColorAct->setStatusTip(tr("Chọn màu vẽ"));
-    pickPenWidthAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Chọn độ dày của nét vẽ"), this);
+    QObject::connect(pickPenColorAct, SIGNAL(triggered(bool)), this, SLOT(penColor()));
+    QObject::connect(penWidthBox, SIGNAL(valueChanged(int)), this ,SLOT(penWidth(int)));
 
     clearScreenAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Xóa màn hình"), this);
-    QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), this, SLOT(initGUI()));
+    QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), this, SLOT(initOxy()));
 
     aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("SDI Basic Painting"), this);
     QObject::connect(aboutSDI_PaintingAct, SIGNAL(triggered()), this, SLOT(aboutSDI_Painting()));
 
     aboutQtAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Thông tin về Qt/Bản quyền"), this);
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    QAction* drawAct{new QAction(QIcon(":/images/icons/Letters.ico"), tr("Vẽ tự do"), this)};
+    drawAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
+    drawAct->setStatusTip(tr("Vẽ tự do, nhấn và giữ chuột để vẽ ..."));
+    setupDrawAct(drawAct);
 
     QAction* drawPointAct{new QAction(QIcon(":/images/icons/Letters.ico"), tr("Vẽ điểm"), this)};
     drawPointAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
@@ -116,7 +124,6 @@ void SDI_MainWindow::createMenus()
 
     ToolsMenu = new QMenu(tr("Công cụ"), this);
     ToolsMenu->addAction(pickPenColorAct);
-    ToolsMenu->addAction(pickPenWidthAct);
     ToolsMenu->addSeparator();
     ToolsMenu->addAction(clearScreenAct);
     ToolsMenu->addAction(optionAct);
@@ -175,15 +182,37 @@ void SDI_MainWindow::setupDrawAct(QAction *drawAct)
 
 bool SDI_MainWindow::mayBeSave()
 {
-    return true;
+    if (central2DWidget->isModified())
+    {
+        QMessageBox::StandardButton returnButton;
+        returnButton = QMessageBox::warning(this, tr("SDI Basic Painting"),
+                                    tr("Thay dổi chưa được lưu lại.\n"
+                                       "Bạn có muốn lưu lại ảnh trước khi thoát ?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        if (returnButton == QMessageBox::Save)
+            return saveFile("png"); // default image format
+        else if (returnButton == QMessageBox::Cancel)
+            return false;
+    }
+   return true;
 }
 
-bool SDI_MainWindow::saveFile()
+bool SDI_MainWindow::saveFile(const QByteArray &fileFormat)
 {
-    return true;
+    QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
+
+          QString fileName = QFileDialog::getSaveFileName(this, tr("Lưu lại thành..."),
+                                     initialPath,
+                                     tr("%1 Files (*.%2);;All Files (*)")
+                                     .arg(QString::fromLatin1(fileFormat.toUpper()))
+                                     .arg(QString::fromLatin1(fileFormat)));
+          if (fileName.isEmpty()) {
+              return false;
+          } else {
+              return central2DWidget->saveImage(fileName, fileFormat.constData());
+          }
 }
 
-void SDI_MainWindow::initGUI()
+void SDI_MainWindow::initOxy()
 {
     central2DWidget->showGUI();
     update();
@@ -191,7 +220,43 @@ void SDI_MainWindow::initGUI()
 
 void SDI_MainWindow::closeEvent(QCloseEvent *closeEvent)
 {
-    closeEvent->accept();
+    if (mayBeSave())
+        closeEvent->accept();
+    else
+        closeEvent->ignore();
+}
+
+void SDI_MainWindow::open()
+{
+    if (mayBeSave())
+    {
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Mở tập tin"), QDir::currentPath(), tr("Common formats (*.jpeg *.jpg *.jp2 *.bmp);;"
+                                                                                                        "Portable formats (*.pbm *.png *.pgm *.ppm);;"
+                                                                                                        "Icon/Cursor format (*.ico *.icns *.cur);;"
+                                                                                                        "Tagged formats (*.tif *.tiff)"
+                                                                                                        "Wireless/Web/X11 formats (*.webp *.wbmp *.xbm *.xpm)"));
+        if (!fileName.isEmpty())
+            central2DWidget->openImage(fileName);
+    }
+}
+
+void SDI_MainWindow::save()
+{
+    QAction* action = qobject_cast<QAction*>(sender());
+    QByteArray fileFormat(action->data().toByteArray());
+    saveFile(fileFormat);
+}
+
+void SDI_MainWindow::penColor()
+{
+    QColor newColor = QColorDialog::getColor(central2DWidget->penColor());
+    if (newColor.isValid())
+        central2DWidget->setPenColor(newColor);
+}
+
+void SDI_MainWindow::penWidth(int newWidth)
+{
+    central2DWidget->setPenWidth(newWidth);
 }
 
 void SDI_MainWindow::aboutSDI_Painting()
@@ -230,7 +295,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setCentralWidget(central2DWidget);
     setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
-    statusBar()->showMessage("Khởi tạo chương trình");
+    statusBar()->showMessage("Demo 0.2 04/2017");
 }
 
 SDI_MainWindow::~SDI_MainWindow()

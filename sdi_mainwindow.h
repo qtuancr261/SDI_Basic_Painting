@@ -18,6 +18,8 @@
 #include <QImage>
 #include <QImageWriter>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QColorDialog>
 #include "lefttoolswidget.h"
 #include "draw2dwidget.h"
 class SDI_MainWindow : public QMainWindow
@@ -47,7 +49,6 @@ private:
     // Tools Actions
     QAction* optionAct;
     QAction* pickPenColorAct;
-    QAction* pickPenWidthAct;
     QAction* clearScreenAct;
     // Help Actions
     QAction* aboutSDI_PaintingAct;
@@ -64,14 +65,19 @@ private:
     void createDockWidget();
     void setupDrawAct(QAction* drawAct);
     bool mayBeSave();
-    bool saveFile();
+    bool saveFile(const QByteArray& fileFormat);
 
 protected:
     virtual void closeEvent(QCloseEvent* closeEvent) override;
 private slots:
+    void open();
+    void save();
+    void penColor();
+    void penWidth(int newWidth);
     void aboutSDI_Painting();
+
 public slots:
-    void initGUI();
+    void initOxy();
     void showDockWidget(bool enable);
 
 };

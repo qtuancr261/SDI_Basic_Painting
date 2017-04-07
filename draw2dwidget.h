@@ -6,7 +6,7 @@
 #include <QPoint>
 #include <QImage>
 #include <QMouseEvent>
-#include <QPainter>
+#include "sdi_painter.h"
 enum class draw2DMode
 {
     pencil, point, line, rect, square, parallelogram, circle, triangle
@@ -40,7 +40,7 @@ private:
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
-    bool scribbling;
+    //bool scribbling;
     draw2DMode drawMode;
     int myPenWidth;
     QColor myPenColor;

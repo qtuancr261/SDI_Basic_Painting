@@ -11,7 +11,7 @@ draw2DWidget::draw2DWidget(QWidget *parent)
 {
     setAttribute(Qt::WA_StaticContents);
     modified = false;
-    scribbling = false;
+    //scribbling = false;
     drawMode = draw2DMode::pencil;
     myPenWidth = 2;
     myPenColor = Qt::blue;
@@ -57,14 +57,14 @@ void draw2DWidget::setPenWidth(int newWidth)
 
 void draw2DWidget::showGUI()
 {
-    QPainter painter(&image);
+    SDI_Painter painter(&image);
     paintOxy(painter);
 }
 
 void draw2DWidget::clearImage()
 {
     image.fill(qRgb(255, 255, 255));
-    QPainter painter(&image);
+    SDI_Painter painter(&image);
     paintOxy(painter);
     modified = true;
     update();
@@ -75,19 +75,19 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton && drawMode == draw2DMode::pencil)
     {
         lastPoint = event->pos();
-        scribbling = true;
+        //scribbling = true;
     }
 }
 
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton && scribbling && drawMode == draw2DMode::pencil )
+    if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::pencil )
         drawLineTo(event->pos());
 }
 
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton && scribbling && drawMode == draw2DMode::pencil)
+    if (event->button() == Qt::LeftButton  && drawMode == draw2DMode::pencil)
     {
         drawLineTo(event->pos());
         //scribbling = false;
@@ -115,7 +115,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
 
 void draw2DWidget::drawLineTo(const QPoint &endPoint)
 {
-    QPainter painter(&image);
+    SDI_Painter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
     painter.drawLine(lastPoint, endPoint);
@@ -135,7 +135,7 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
     newImage.fill(qRgb(255, 255, 255));
     //-----------------------------------------
     // draw x-axis and y-axis
-    QPainter painter(&newImage);
+    SDI_Painter painter(&newImage);
     //paintOxy(painter);
     //line1.push_back(QPoint(250, 200));
    // if (callTime == 1) image->fill(qRgb(255, 255, 255));
@@ -169,7 +169,7 @@ void draw2DWidget::print()
 
     QPrintDialog printDialog(&printer, this);
     if (printDialog.exec() == QDialog::Accepted) {
-        QPainter painter(&printer);
+        SDI_Painter painter(&printer);
         QRect rect = painter.viewport();
         QSize size = image.size();
         size.scale(rect.size(), Qt::KeepAspectRatio);
