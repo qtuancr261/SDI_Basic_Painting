@@ -12,7 +12,6 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     setAttribute(Qt::WA_StaticContents);
     modified = false;
     //scribbling = false;
-    drawMode = draw2DMode::pencil;
     myPenWidth = 2;
     myPenColor = Qt::blue;
 }
@@ -58,21 +57,22 @@ void draw2DWidget::setPenWidth(int newWidth)
 void draw2DWidget::showGUI()
 {
     SDI_Painter painter(&image);
-    paintOxy(painter);
+    painter.drawOxy(this->width(), this->height(), origin);
 }
 
 void draw2DWidget::clearImage()
 {
     image.fill(qRgb(255, 255, 255));
+    origin = QPoint(width()/2, height()/2);
     SDI_Painter painter(&image);
-    paintOxy(painter);
+    painter.drawOxy(this->width(), this->height(), origin);
     modified = true;
     update();
 }
 
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton && drawMode == draw2DMode::pencil)
+    if (event->button() == Qt::LeftButton && drawMode == draw2DMode::normal)
     {
         lastPoint = event->pos();
         //scribbling = true;
@@ -81,13 +81,13 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::pencil )
+    if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::normal )
         drawLineTo(event->pos());
 }
 
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton  && drawMode == draw2DMode::pencil)
+    if (event->button() == Qt::LeftButton  && drawMode == draw2DMode::normal)
     {
         drawLineTo(event->pos());
         //scribbling = false;
@@ -144,22 +144,34 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
     callTime++;
 }
 
-void draw2DWidget::paintOxy(QPainter &painter)
+void draw2DWidget::setDraw2DObjectMode(int id)
 {
-    QPoint OPoint(width()/2, height()/2);
-    QPoint OyTop(width()/2, 0);
-    QPoint OyBot(width()/2, height());
-    QPoint OxLeft(0, height()/2);
-    QPoint OxRight(width(), height()/2);
-    painter.setPen(QPen(Qt::gray, 2, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin));
-    painter.drawLine(OyBot,OyTop);
-    painter.drawLine(OxLeft, OxRight);
-    //--- Draw Origin Point
-    painter.setPen(QPen(Qt::black, 5, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin));
-    painter.drawPoint(OPoint);
-    painter.drawText(OPoint + QPoint(-20, 20), "O" );
+    switch (id) {
+    case 1:
+        drawMode = draw2DMode::point;
+        break;
+    case 2:
+        drawMode = draw2DMode::line;
+        break;
+    case 3:
+        drawMode = draw2DMode::rect;
+        break;
+    case 4:
+        drawMode = draw2DMode::square;
+        break;
+    case 5:
+        drawMode = draw2DMode::parallelogram;
+        break;
+    case 6:
+        drawMode = draw2DMode::circle;
+        break;
+    case 7:
+        drawMode = draw2DMode::triangle;
+        break;
+    default:
+        drawMode = draw2DMode::normal;
+        break;
+    }
 }
 
 void draw2DWidget::print()

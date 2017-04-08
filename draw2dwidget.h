@@ -6,10 +6,11 @@
 #include <QPoint>
 #include <QImage>
 #include <QMouseEvent>
+#include <QSignalMapper>
 #include "sdi_painter.h"
 enum class draw2DMode
 {
-    pencil, point, line, rect, square, parallelogram, circle, triangle
+    normal, point, line, rect, square, parallelogram, circle, triangle
 };
 
 class draw2DWidget : public QWidget
@@ -40,17 +41,17 @@ private:
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
-    //bool scribbling;
+    QPoint origin;
     draw2DMode drawMode;
     int myPenWidth;
     QColor myPenColor;
     QImage image;
     QPoint lastPoint;
     QSize originalSize;
-    void paintOxy(QPainter&);
 signals:
 
 public slots:
+    void setDraw2DObjectMode(int id);
     void clearImage();
     void print();
 };

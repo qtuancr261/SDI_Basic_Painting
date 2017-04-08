@@ -97,7 +97,14 @@ void SDI_MainWindow::createActions()
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
     setupDrawAct(drawTriangleAct);
 
-
+    QSignalMapper* draw2DObjectMapper{new QSignalMapper(this)};
+    for (int i{}; i < draw2DObjectActs.size(); i++)
+    {
+        draw2DObjectMapper->setMapping(draw2DObjectActs[i], i);
+        QObject::connect(draw2DObjectActs[i], SIGNAL(toggled(bool)), draw2DObjectMapper, SLOT(map()));
+    }
+    QObject::connect(draw2DObjectMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
+    drawAct->setChecked(true); // default draw mode
 }
 
 void SDI_MainWindow::createMenus()
