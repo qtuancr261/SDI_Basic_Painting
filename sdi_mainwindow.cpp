@@ -12,7 +12,7 @@ void SDI_MainWindow::createActions()
         QString text = tr("%1...").arg(QString(imageFormat).toUpper());
         QAction* saveAct = new QAction(text, this);
         saveAct->setData(imageFormat);
-        //connect
+        QObject::connect(saveAct, SIGNAL(triggered(bool)), this, SLOT(save()));
         saveAsActs.append(saveAct);
     }
 
