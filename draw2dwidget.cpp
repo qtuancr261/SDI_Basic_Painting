@@ -129,7 +129,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawObject(const QPoint &endPoint)
+void draw2DWidget::drawObject(const QPoint &endPoint) // handle draw Object
 {
     SDI_Painter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
