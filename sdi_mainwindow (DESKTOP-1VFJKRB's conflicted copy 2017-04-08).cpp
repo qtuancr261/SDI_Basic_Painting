@@ -12,7 +12,7 @@ void SDI_MainWindow::createActions()
         QString text = tr("%1...").arg(QString(imageFormat).toUpper());
         QAction* saveAct = new QAction(text, this);
         saveAct->setData(imageFormat);
-        QObject::connect(saveAct, SIGNAL(triggered(bool)), this, SLOT(save()));
+        //connect
         saveAsActs.append(saveAct);
     }
 
@@ -56,7 +56,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
     QAction* drawAct{new QAction(QIcon(":/images/icons/Letters.ico"), tr("Vẽ tự do"), this)};
-    drawAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    drawAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
     drawAct->setStatusTip(tr("Vẽ tự do, nhấn và giữ chuột để vẽ ..."));
     setupDrawAct(drawAct);
 
@@ -97,14 +97,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
     setupDrawAct(drawTriangleAct);
 
-    QSignalMapper* draw2DObjectMapper{new QSignalMapper(this)};
-    for (int i{}; i < draw2DObjectActs.size(); i++)
-    {
-        draw2DObjectMapper->setMapping(draw2DObjectActs[i], i);
-        QObject::connect(draw2DObjectActs[i], SIGNAL(toggled(bool)), draw2DObjectMapper, SLOT(map()));
-    }
-    QObject::connect(draw2DObjectMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
-    drawAct->setChecked(true); // default draw mode
+
 }
 
 void SDI_MainWindow::createMenus()
@@ -175,7 +168,7 @@ void SDI_MainWindow::createDockWidget()
     leftToolsBoxLayout->addWidget(widget);
     leftToolsBox->setLayout(leftToolsBoxLayout);
     leftSideDockWidget->setWidget(leftToolsBox);
-    leftSideDockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
+    leftSideDockWidget->setFeatures(QDockWidget::DockWidgetMovable);
     leftSideDockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, leftSideDockWidget);
 }
@@ -295,7 +288,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setCentralWidget(central2DWidget);
     setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
-    statusBar()->showMessage("Demo 0.2 04/2017 - Chế độ vẽ tự do");
+    statusBar()->showMessage("Demo 0.2 04/2017");
 }
 
 SDI_MainWindow::~SDI_MainWindow()

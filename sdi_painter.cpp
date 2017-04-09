@@ -47,8 +47,10 @@ void SDI_Painter::drawLine(const QPoint &p1,const QPoint &p2)
      //QPainter::drawLine(p1, p2);
     if (std::abs(p1.y() - p2.y()) >= std::abs(p1.x() - p2.x()))
     {
-        if (p1.x() < p2.x()) midPointYLine(p2, p1);
-        else midPointYLine(p1, p2 );
+        if (p1.x() < p2.x())
+            midPointYLine(p2, p1);
+        else
+            midPointYLine(p1, p2 );
     }
     else
     {

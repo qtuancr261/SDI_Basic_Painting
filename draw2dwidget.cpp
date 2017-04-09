@@ -72,11 +72,27 @@ void draw2DWidget::clearImage()
 
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton && drawMode == draw2DMode::normal)
+    switch (drawMode)
+    {
+    case draw2DMode::line:
+        if (lastPoint.isNull())
+            lastPoint = event->pos();
+        else
+        {
+            drawLineTo(event->pos());
+            lastPoint = QPoint(0, 0); // set to null
+        }
+        break;
+    default:
+        if (event->button() == Qt::LeftButton)
+            lastPoint = event->pos();
+        break;
+    }
+    /*if (event->button() == Qt::LeftButton && drawMode == draw2DMode::normal)
     {
         lastPoint = event->pos();
         //scribbling = true;
-    }
+    }*/
 }
 
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
