@@ -79,7 +79,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = event->pos();
         else
         {
-            drawLineTo(event->pos());
+            drawObject(event->pos());
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
@@ -98,14 +98,14 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::normal )
-        drawLineTo(event->pos());
+        drawObject(event->pos());
 }
 
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton  && drawMode == draw2DMode::normal)
     {
-        drawLineTo(event->pos());
+        drawObject(event->pos());
         //scribbling = false;
     }
 }
@@ -129,7 +129,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawLineTo(const QPoint &endPoint)
+void draw2DWidget::drawObject(const QPoint &endPoint)
 {
     SDI_Painter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
