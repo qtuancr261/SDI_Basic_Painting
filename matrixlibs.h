@@ -1,7 +1,7 @@
 #ifndef MATRIXLIBS_H
 #define MATRIXLIBS_H
 
-#endif // MATRIXLIBS_H
+
 #include <QVector>
 
 namespace matrix2DLibs
@@ -15,3 +15,4 @@ namespace matrix2DLibs
     }
 
 }
+#endif // MATRIXLIBS_H

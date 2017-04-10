@@ -83,6 +83,15 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
+    case draw2DMode::rect:
+        if (lastPoint.isNull())
+            lastPoint = event->pos();
+        else
+        {
+            drawObject(event->pos());
+            lastPoint = QPoint(0, 0); // set to null
+        }
+        break;
     default:
         if (event->button() == Qt::LeftButton)
             lastPoint = event->pos();
@@ -134,12 +143,26 @@ void draw2DWidget::drawObject(const QPoint &endPoint) // handle draw Object
     SDI_Painter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
-    painter.drawLine(lastPoint, endPoint);
+    int rad = (myPenWidth / 2) + 2;
     modified = true;
 
-    int rad = (myPenWidth / 2) + 2;
-    update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-    lastPoint = endPoint;
+
+    switch (drawMode)
+    {
+    case draw2DMode::normal:
+    case draw2DMode::line:
+        painter.drawLine(lastPoint, endPoint);
+        update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        lastPoint = endPoint;
+        break;
+    case draw2DMode::rect:
+        if (lastPoint.x() < endPoint.x())
+            painter.drawRect(lastPoint, endPoint);
+        else
+            painter.drawRect(endPoint, lastPoint);
+        update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        break;
+    }
 }
 
 void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
@@ -188,6 +211,7 @@ void draw2DWidget::setDraw2DObjectMode(int id)
         drawMode = draw2DMode::normal;
         break;
     }
+    lastPoint = QPoint(0, 0); // reset
 }
 
 void draw2DWidget::print()

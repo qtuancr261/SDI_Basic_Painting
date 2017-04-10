@@ -8,6 +8,7 @@
 #include <QSpinBox>
 #include <QRadioButton>
 #include <QGroupBox>
+#include <QColorDialog>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QSpacerItem>
