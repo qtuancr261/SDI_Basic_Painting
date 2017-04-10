@@ -14,6 +14,7 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     //scribbling = false;
     myPenWidth = 2;
     myPenColor = Qt::blue;
+    setMouseTracking(true);
 }
 
 bool draw2DWidget::openImage(const QString &fileName)
@@ -111,6 +112,10 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::normal )
         drawObject(event->pos());
+    //emit mouseMoveTo();
+    emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())/10.0))
+                                                .arg(QString::number((origin.y() - event->pos().y())/10.0)));
+
 }
 
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -126,6 +131,7 @@ void draw2DWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
+    origin = QPoint(width()/2, height()/2);
     painter.drawImage(dirtyRect, image, dirtyRect);
 }
 

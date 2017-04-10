@@ -78,6 +78,7 @@ private slots:
 
 public slots:
     void showDockWidget(bool enable);
+    void showMessage(QString message);
 
 };
 

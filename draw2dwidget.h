@@ -49,7 +49,7 @@ private:
     QPoint lastPoint;
     QSize originalSize;
 signals:
-
+    void mouseMoveTo(QString currentPos);
 public slots:
     void setDraw2DObjectMode(int id);
     void clearImage();
