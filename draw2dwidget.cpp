@@ -74,6 +74,9 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     switch (drawMode)
     {
+    case draw2DMode::point:
+        drawObject(event->pos());
+        break;
     case draw2DMode::line:
         if (lastPoint.isNull())
             lastPoint = event->pos();
@@ -149,6 +152,10 @@ void draw2DWidget::drawObject(const QPoint &endPoint) // handle draw Object
 
     switch (drawMode)
     {
+    case draw2DMode::point:
+        painter.drawPoint(endPoint);
+        update(QRect(endPoint, endPoint + QPoint(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
+        break;
     case draw2DMode::normal:
     case draw2DMode::line:
         painter.drawLine(lastPoint, endPoint);
