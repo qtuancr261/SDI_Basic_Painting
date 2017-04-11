@@ -88,6 +88,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
         }
         break;
     case draw2DMode::rect:
+    case draw2DMode::square:
         if (lastPoint.isNull())
             lastPoint = event->pos();
         else
@@ -174,6 +175,11 @@ void draw2DWidget::drawObject(const QPoint &endPoint) // handle draw Object
         else
             painter.drawRect(endPoint, lastPoint);
         update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        break;
+    case draw2DMode::square:
+        QPoint exactPoint(endPoint);
+        painter.drawSquare(lastPoint, exactPoint);
+        update(QRect(lastPoint, exactPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
     }
 }

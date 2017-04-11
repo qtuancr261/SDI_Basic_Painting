@@ -14,6 +14,7 @@ public:
     void drawOxy(int width, int height, QPoint& Origin);
     virtual void drawLine(const QPoint &p1, const QPoint &p2);
     virtual void drawRect(const QPoint&topLeft, const QPoint& bottomRight);
+    virtual void drawSquare(const QPoint &firstPoint, QPoint &lastPoint);
     void midPointYLine(const QPoint& p1, const QPoint& p2);
     void midPointXLine(const QPoint& p1, const QPoint& p2);
 

@@ -71,6 +71,32 @@ void SDI_Painter::drawRect(const QPoint &topLeft, const QPoint &bottomRight)
     drawLine(bottomLeft, bottomRight);
 }
 
+void SDI_Painter::drawSquare(const QPoint &firstPoint, QPoint &lastPoint)
+{
+    int rectWidth{std::abs(lastPoint.x() - firstPoint.x())};
+    int rectHeight{std::abs(lastPoint.y() - firstPoint.y())};
+    if (rectWidth > rectHeight)
+    {
+        if (lastPoint.x() > firstPoint.x())
+            lastPoint.rx() -= (rectWidth - rectHeight);
+        else
+            lastPoint.rx() += (rectWidth - rectHeight);
+    }
+    else if (rectWidth < rectHeight)
+    {
+        if (lastPoint.y() > firstPoint.y())
+            lastPoint.ry() -= (rectHeight - rectWidth);
+        else
+            lastPoint.ry() += (rectHeight - rectWidth);
+    }
+    QPoint topRight{lastPoint.x(), firstPoint.y()};
+    QPoint bottomLeft{firstPoint.x(), lastPoint.y()};
+    drawLine(firstPoint, topRight);
+    drawLine(firstPoint, bottomLeft);
+    drawLine(topRight, lastPoint);
+    drawLine(bottomLeft, lastPoint);
+}
+
 void SDI_Painter::midPointYLine(const QPoint &p1, const QPoint &p2)
 {
     int aFactor{p2.y() - p1.y()};
