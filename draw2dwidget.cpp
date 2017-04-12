@@ -98,6 +98,15 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
+    case draw2DMode::circle:
+        if (lastPoint.isNull())
+            lastPoint = eventPos;
+        else
+        {
+            drawObject(eventPos);
+            lastPoint = QPoint(0, 0); // set to null
+        }
+        break;
     default:
         if (event->button() == Qt::LeftButton)
             lastPoint = eventPos;
@@ -180,9 +189,15 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
         update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
     case draw2DMode::square:
+    {
         SDI_Point exactPoint(endPoint);
         painter.drawSquare(lastPoint, exactPoint);
         update(QRect(lastPoint, exactPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+    }
+        break;
+    case draw2DMode::circle:
+        painter.drawCircle(lastPoint, endPoint);
+        update();
         break;
     }
 }

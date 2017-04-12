@@ -47,16 +47,16 @@ SDI_Point SDI_Point::rotate(double radian) const
 {
     QVector<QVector<double>> RotMatrix; // 2D rotate matrix
     RotMatrix = matrix2DLibs::createRotateMatrix(radian);
-    matrix2DLibs::ouputMatrix(RotMatrix);
+    //matrix2DLibs::ouputMatrix(RotMatrix);
     QVector<double> currentPoint{ static_cast<double>(x()), static_cast<double>(y()), static_cast<double>(h) };
     QVector<double> newPoint(3, 0.0);
     for (int i{}; i < 3; i++)
     {
         for (int j{}; j < 3; j++)
         {
-          cout << i << " Loop " <<newPoint[i] << " " << currentPoint[j] << " " << RotMatrix[j][i];
+          //cout << i << " Loop " <<newPoint[i] << " " << currentPoint[j] << " " << RotMatrix[j][i];
           newPoint[i] += (currentPoint[j] *RotMatrix[j][i]);
-          cout << "-> " << newPoint[i] << endl;
+          //cout << "-> " << newPoint[i] << endl;
         }
     }
     cout << "New " << newPoint[0] << newPoint[1] << newPoint[2] << endl;

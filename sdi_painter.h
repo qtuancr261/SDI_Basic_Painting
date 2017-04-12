@@ -21,6 +21,7 @@ public:
     virtual void drawCircle(const SDI_Point& centralPoint, const SDI_Point& pointOnCircle);
     void midPointYLine(const SDI_Point& p1, const SDI_Point& p2);
     void midPointXLine(const SDI_Point& p1, const SDI_Point& p2);
+    void midPointXCircle(const SDI_Point& topCirclePoint, const SDI_Point& centralCirclePoint, const SDI_Point& rightCirclePoint, double radius);
 
 private:
     QVector<SDI_Point> line;

@@ -110,7 +110,15 @@ void SDI_Painter::drawSquare(const SDI_Point &firstPoint, SDI_Point &lastPoint)
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
 {
     double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
-    SDI_Point firstCirclePoint(centralPoint.translate(0, -radius));
+    SDI_Point topCirclePoint(centralPoint.translate(0, -radius));
+    SDI_Point rightCirclePoint(centralPoint.translate(radius, 0));
+    drawPoint(topCirclePoint);
+    //drawLine(topCirclePoint, centralPoint);
+    drawPoint(rightCirclePoint);
+    //drawLine(topCirclePoint, rightCirclePoint);
+    drawPoint(centralPoint);
+    //drawLine(centralPoint, rightCirclePoint);
+    midPointXCircle(topCirclePoint, centralPoint, rightCirclePoint, radius);
 }
 
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
@@ -148,4 +156,33 @@ void SDI_Painter::midPointXLine(const SDI_Point &p1, const SDI_Point &p2)
         else if (aFactor*x + bFactor*yNext + cFactor >= 0 && y < laststPoint.y()) y++;
         drawPoint(x, y);
     }
+}
+
+void SDI_Painter::midPointXCircle(const SDI_Point &topCirclePoint, const SDI_Point &centralCirclePoint, const SDI_Point &rightCirclePoint, double radius)
+{
+    double y{double(topCirclePoint.y())};
+    int xMax{static_cast<int>(radius*sqrt(2.0)/2)};
+    //drawPoint(firstPoint);
+    for (int x{topCirclePoint.x()}; x <= topCirclePoint.x() + xMax; x++)
+    {
+        double yNext(y + 1/2);
+        if (qPow(x - centralCirclePoint.x(), 2.0) + qPow(yNext - centralCirclePoint.y(), 2.0) - qPow(radius, 2.0) >= 0.0) y++;
+        drawPoint(x, y);
+        drawPoint(SDI_Point(x,y).centralSymmetry(centralCirclePoint));
+        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(x, centralCirclePoint.y())));
+        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(centralCirclePoint.x(), y)));
+    }
+
+    double x{double(topCirclePoint.x() + xMax)};
+    //drawPoint(firstPoint);
+    for (; y <= centralCirclePoint.y(); y++)
+    {
+        double xNext(x + 1/2);
+        if (qPow(xNext - centralCirclePoint.x(), 2.0) + qPow(y - centralCirclePoint.y(), 2.0) - qPow(radius, 2.0) < 0.0) x++;
+        drawPoint(x, y);
+        drawPoint(SDI_Point(x,y).centralSymmetry(centralCirclePoint));
+        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(x, centralCirclePoint.y())));
+        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(centralCirclePoint.x(), y)));
+    }
+
 }
