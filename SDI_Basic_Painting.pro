@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     lefttoolswidget.cpp \
     sdi_painter.cpp \
     draw2dwidget.cpp \
-    sdi_point.cpp
+    sdi_point.cpp \
+    matrixlibs.cpp
 
 HEADERS  += sdi_mainwindow.h \
     lefttoolswidget.h \

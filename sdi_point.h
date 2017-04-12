@@ -11,11 +11,14 @@ private:
 public:
     SDI_Point();
     SDI_Point(int xpos, int ypos, int hValue = 1);
+     ~SDI_Point() = default;
 
     SDI_Point translate(int xtrans, int ytrans);
-    ~SDI_Point() = default;
+    SDI_Point scale(int Sx, int Sy);
+    SDI_Point rotate(double radian);
+    SDI_Point centralSymmetry(const QPoint& centralPoint);
 
-
+    static double distance(const QPoint& p1, const QPoint& p2);
 };
 
 #endif // SDI_POINT_H
