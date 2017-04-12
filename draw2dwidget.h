@@ -3,11 +3,11 @@
 
 #include <QWidget>
 #include <QColor>
-#include <QPoint>
 #include <QImage>
 #include <QMouseEvent>
 #include <QSignalMapper>
 #include "sdi_painter.h"
+#include "sdi_point.h"
 enum class draw2DMode
 {
     normal, point, line, rect, square, parallelogram, circle, triangle
@@ -37,16 +37,16 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void drawObject(const QPoint &endPoint);
+    void drawObject(const SDI_Point &endPoint);
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
-    QPoint origin;
+    SDI_Point origin;
     draw2DMode drawMode;
     int myPenWidth;
     QColor myPenColor;
     QImage image;
-    QPoint lastPoint;
+    SDI_Point lastPoint;
     QSize originalSize;
 signals:
     void mouseMoveTo(QString currentPos);

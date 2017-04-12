@@ -10,7 +10,12 @@ SDI_Point::SDI_Point(int xpos, int ypos, int hValue) : QPoint(xpos, ypos), h(hVa
 
 }
 
-SDI_Point SDI_Point::translate(int xtrans, int ytrans)
+SDI_Point::SDI_Point(const QPoint &srcPoint) : SDI_Point(srcPoint.x(), srcPoint.y())
+{
+
+}
+
+SDI_Point SDI_Point::translate(int xtrans, int ytrans) const
 {
     QVector<QVector<int>> transMatrix; // 2D translate matrix
     transMatrix = matrix2DLibs::createTranslateMatrix(xtrans, ytrans);
@@ -24,7 +29,7 @@ SDI_Point SDI_Point::translate(int xtrans, int ytrans)
     return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
 }
 
-SDI_Point SDI_Point::scale(int Sx, int Sy)
+SDI_Point SDI_Point::scale(int Sx, int Sy) const
 {
     QVector<QVector<int>> ScaMatrix; // 2D scale matrix
     ScaMatrix = matrix2DLibs::createScaleMatrix(Sx, Sy);
@@ -38,7 +43,7 @@ SDI_Point SDI_Point::scale(int Sx, int Sy)
     return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
 }
 
-SDI_Point SDI_Point::rotate(double radian)
+SDI_Point SDI_Point::rotate(double radian) const
 {
     QVector<QVector<double>> RotMatrix; // 2D rotate matrix
     RotMatrix = matrix2DLibs::createRotateMatrix(radian);
@@ -58,7 +63,7 @@ SDI_Point SDI_Point::rotate(double radian)
     return SDI_Point(float(newPoint[0]), float(newPoint[1]), newPoint[2]);
 }
 
-SDI_Point SDI_Point::centralSymmetry(const QPoint &centralPoint)
+SDI_Point SDI_Point::centralSymmetry(const QPoint &centralPoint) const
 {
     QVector<QVector<int>> centralSymMatrix; // 2D reflect matrix
     centralSymMatrix = matrix2DLibs::createCentralSymetryMatrix(centralPoint);

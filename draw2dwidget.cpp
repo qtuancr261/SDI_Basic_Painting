@@ -73,33 +73,34 @@ void draw2DWidget::clearImage()
 
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
+    SDI_Point eventPos(event->pos());
     switch (drawMode)
     {
     case draw2DMode::point:
-        drawObject(event->pos());
+        drawObject(eventPos);
         break;
     case draw2DMode::line:
         if (lastPoint.isNull())
-            lastPoint = event->pos();
+            lastPoint = eventPos;
         else
         {
-            drawObject(event->pos());
+            drawObject(eventPos);
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
     case draw2DMode::rect:
     case draw2DMode::square:
         if (lastPoint.isNull())
-            lastPoint = event->pos();
+            lastPoint = eventPos;
         else
         {
-            drawObject(event->pos());
+            drawObject(eventPos);
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
     default:
         if (event->button() == Qt::LeftButton)
-            lastPoint = event->pos();
+            lastPoint = eventPos;
         break;
     }
     /*if (event->button() == Qt::LeftButton && drawMode == draw2DMode::normal)
@@ -111,8 +112,9 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    SDI_Point eventPos(event->pos());
     if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::normal )
-        drawObject(event->pos());
+        drawObject(eventPos);
     //emit mouseMoveTo();
     emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())/10.0))
                                                 .arg(QString::number((origin.y() - event->pos().y())/10.0)));
@@ -121,9 +123,10 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+    SDI_Point eventPos(event->pos());
     if (event->button() == Qt::LeftButton  && drawMode == draw2DMode::normal)
     {
-        drawObject(event->pos());
+        drawObject(eventPos);
         //scribbling = false;
     }
 }
@@ -148,7 +151,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawObject(const QPoint &endPoint) // handle draw Object
+void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
 {
     SDI_Painter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
@@ -177,7 +180,7 @@ void draw2DWidget::drawObject(const QPoint &endPoint) // handle draw Object
         update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
     case draw2DMode::square:
-        QPoint exactPoint(endPoint);
+        SDI_Point exactPoint(endPoint);
         painter.drawSquare(lastPoint, exactPoint);
         update(QRect(lastPoint, exactPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
