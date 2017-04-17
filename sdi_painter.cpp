@@ -25,7 +25,7 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
 
     drawText(Origin + SDI_Point(10, -10), "O");
 
-    int yUP{Origin.y() + factor/2};
+    /*int yUP{Origin.y() + factor/2};
     int yDOWN{Origin.y() - factor/2};
     for (int xleft{Origin.x()}, xright{Origin.x()}; xleft < width; xleft += factor, xright -= factor)
     {
@@ -38,7 +38,7 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
     {
         drawLine(SDI_Point(xLEFT, yup), SDI_Point(xRIGHT, yup));
         drawLine(SDI_Point(xLEFT, ydown), SDI_Point(xRIGHT, ydown));
-    }
+    }*/
 
 }
 

@@ -125,8 +125,8 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::normal )
         drawObject(eventPos);
     //emit mouseMoveTo();
-    emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())/10.0))
-                                                .arg(QString::number((origin.y() - event->pos().y())/10.0)));
+    emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())))
+                                                .arg(QString::number((origin.y() - event->pos().y()))));
 
 }
 
