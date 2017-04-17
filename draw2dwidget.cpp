@@ -75,6 +75,7 @@ void draw2DWidget::clearImage()
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
+    if (event->button() == Qt::LeftButton)
     switch (drawMode)
     {
     case draw2DMode::point:
@@ -96,7 +97,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     {
         switch (triangleTypeID)
         {
-        case 0: // Isosceles Right Triangle
+        case 0: // Triangle
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else if (lastPoint_2.isNull())
@@ -107,19 +108,23 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 lastPoint = lastPoint_2 = QPoint(0, 0); // reset to null
             }
             break;
+        case 1: // Isosceles Right Triangle
+            if (lastPoint.isNull())
+                lastPoint = eventPos;
+            else
+            {
+                drawObject(eventPos);
+                lastPoint = QPoint(0, 0); // set to null
+            }
+            break;
         }
         break;
     }
-    default:
+    default: // scribbling mode
         if (event->button() == Qt::LeftButton)
             lastPoint = eventPos;
         break;
     }
-    /*if (event->button() == Qt::LeftButton && drawMode == draw2DMode::normal)
-    {
-        lastPoint = event->pos();
-        //scribbling = true;
-    }*/
 }
 
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
@@ -208,11 +213,13 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
     {
         switch (triangleTypeID)
         {
-        case 0:
+        case 0: //triangle
             painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
             update();
             break;
-        default:
+        case 1:// // Isosceles Right Triangle
+            painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
+            update();
             break;
         }
     }

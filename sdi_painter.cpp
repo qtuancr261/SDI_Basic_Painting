@@ -21,7 +21,6 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
     SDI_Point bottomMostOy{width/2, height};
     drawLine(topMostOy, bottomMostOy);
     drawText(topMostOy + SDI_Point(20, 20), "y");
-
     drawText(Origin + SDI_Point(10, -10), "O");
 
     /*int yUP{Origin.y() + factor/2};
@@ -117,7 +116,7 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     //drawLine(topCirclePoint, rightCirclePoint);
     drawPoint(centralPoint);
     //drawLine(centralPoint, rightCirclePoint);
-    midPointXCircle(topCirclePoint, centralPoint, rightCirclePoint, radius);
+    midPointXCircle(topCirclePoint, centralPoint, radius);
 }
 
 void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3)
@@ -130,6 +129,16 @@ void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2,
     drawLine(point3, point1);
 }
 
+void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_Point &epoint)
+{
+    double legLength{SDI_Point::distance(cpoint, epoint)};
+    SDI_Point topLegPoint(cpoint.translate(0, -legLength));
+    SDI_Point rightLegPoint(cpoint.translate(legLength, 0));
+    drawLine(cpoint, topLegPoint); // draw leg 1
+    drawLine(cpoint, rightLegPoint); // draw leg 2
+    drawLine(topLegPoint, rightLegPoint); // draw hypotenuse
+}
+
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
 {
     int aFactor{p2.y() - p1.y()};
@@ -138,7 +147,6 @@ void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
     SDI_Point firstPoint{(p1.y() <= p2.y() ? p1 : p2)};
     SDI_Point laststPoint{(p1.y() <= p2.y() ? p2 : p1)};
     double x{double(firstPoint.x())};
-    //drawPoint(firstPoint);
     for (int y{firstPoint.y()}; y < laststPoint.y(); y++)
     {
         double xNext(x >= laststPoint.x() ? x - 1/2 : x + 1/2);
@@ -146,7 +154,6 @@ void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
         else if (aFactor*xNext + bFactor*y + cFactor >= 0 && x < laststPoint.x()) x++;
         drawPoint(x, y);
     }
-    //drawPoint(laststPoint);
 }
 
 void SDI_Painter::midPointXLine(const SDI_Point &p1, const SDI_Point &p2)
@@ -167,11 +174,10 @@ void SDI_Painter::midPointXLine(const SDI_Point &p1, const SDI_Point &p2)
     }
 }
 
-void SDI_Painter::midPointXCircle(const SDI_Point &topCirclePoint, const SDI_Point &centralCirclePoint, const SDI_Point &rightCirclePoint, double radius)
+void SDI_Painter::midPointXCircle(const SDI_Point &topCirclePoint, const SDI_Point &centralCirclePoint, double radius)
 {
     double y{double(topCirclePoint.y())};
     int xMax{static_cast<int>(radius*sqrt(2.0)/2)};
-    //drawPoint(firstPoint);
     for (int x{topCirclePoint.x()}; x <= topCirclePoint.x() + xMax; x++)
     {
         double yNext(y + 1/2);
@@ -183,7 +189,6 @@ void SDI_Painter::midPointXCircle(const SDI_Point &topCirclePoint, const SDI_Poi
     }
 
     double x{double(topCirclePoint.x() + xMax)};
-    //drawPoint(firstPoint);
     for (; y <= centralCirclePoint.y(); y++)
     {
         double xNext(x + 1/2);
