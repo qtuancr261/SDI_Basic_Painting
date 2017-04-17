@@ -80,24 +80,8 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
         drawObject(eventPos);
         break;
     case draw2DMode::line:
-        if (lastPoint.isNull())
-            lastPoint = eventPos;
-        else
-        {
-            drawObject(eventPos);
-            lastPoint = QPoint(0, 0); // set to null
-        }
-        break;
     case draw2DMode::rect:
     case draw2DMode::square:
-        if (lastPoint.isNull())
-            lastPoint = eventPos;
-        else
-        {
-            drawObject(eventPos);
-            lastPoint = QPoint(0, 0); // set to null
-        }
-        break;
     case draw2DMode::circle:
         if (lastPoint.isNull())
             lastPoint = eventPos;
@@ -167,8 +151,10 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
                         Qt::RoundJoin));
     int rad = (myPenWidth / 2) + 2;
     modified = true;
+    //------------------------------ set up panter ------------------//
 
 
+    //using painter to draw current 2D Object
     switch (drawMode)
     {
     case draw2DMode::point:
@@ -249,6 +235,11 @@ void draw2DWidget::setDraw2DObjectMode(int id)
         break;
     }
     lastPoint = QPoint(0, 0); // reset
+}
+
+void draw2DWidget::setTriangleTypeID(int newID)
+{
+    triangleTypeID =  newID;
 }
 
 void draw2DWidget::print()

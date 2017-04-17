@@ -43,6 +43,7 @@ private:
     bool modified;
     SDI_Point origin;
     draw2DMode drawMode;
+    int triangleTypeID;
     int myPenWidth;
     QColor myPenColor;
     QImage image;
@@ -52,6 +53,7 @@ signals:
     void mouseMoveTo(QString currentPos);
 public slots:
     void setDraw2DObjectMode(int id);
+    void setTriangleTypeID(int newID);
     void clearImage();
     void print();
 };

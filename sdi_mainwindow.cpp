@@ -154,9 +154,10 @@ void SDI_MainWindow::createToolsBar()
     mainToolBar->addActions(draw2DObjectActs);
     mainToolBar->addSeparator();
     triangleTypes->addItem(tr("Tam giác thường"));
-    triangleTypes->addItem(tr("Tam giác cân"));
+    triangleTypes->addItem(tr("Tam giác vuông cân"));
     triangleTypes->addItem(tr("Tam giác đều"));
     triangleTypes->setDisabled(true);
+    QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
     mainToolBar->addWidget(triangleTypes);
 
     mainToolBar = addToolBar(tr("Tùy chỉnh vẽ"));

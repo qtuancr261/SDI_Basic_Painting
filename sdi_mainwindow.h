@@ -79,7 +79,8 @@ private slots:
 public slots:
     void showDockWidget(bool enable);
     void showMessage(QString message);
-
+signals:
+    void triangleTypeChanged(int triangleTypeID);
 };
 
 #endif // SDI_MAINWINDOW_H
