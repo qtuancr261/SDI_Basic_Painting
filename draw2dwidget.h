@@ -48,6 +48,7 @@ private:
     QColor myPenColor;
     QImage image;
     SDI_Point lastPoint;
+    SDI_Point lastPoint_2;
     QSize originalSize;
 signals:
     void mouseMoveTo(QString currentPos);

@@ -12,7 +12,6 @@ SDI_Painter::SDI_Painter(QPaintDevice *device) : QPainter(device)
 
 void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
 {
-    int factor{10};
     SDI_Point leftMostOx{0, height/2};
     SDI_Point rightMostOx{width, height/2};
     drawLine(leftMostOx, rightMostOx);
@@ -119,6 +118,16 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     drawPoint(centralPoint);
     //drawLine(centralPoint, rightCirclePoint);
     midPointXCircle(topCirclePoint, centralPoint, rightCirclePoint, radius);
+}
+
+void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3)
+{
+    drawPoint(point1);
+    drawPoint(point2);
+    drawPoint(point3);
+    drawLine(point1, point2);
+    drawLine(point2, point3);
+    drawLine(point3, point1);
 }
 
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)

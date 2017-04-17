@@ -14,6 +14,7 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     //scribbling = false;
     myPenWidth = 2;
     myPenColor = Qt::blue;
+    triangleTypeID = 0; // normal
     setMouseTracking(true);
 }
 
@@ -91,6 +92,24 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
+    case draw2DMode::triangle:
+    {
+        switch (triangleTypeID)
+        {
+        case 0: // Isosceles Right Triangle
+            if (lastPoint.isNull())
+                lastPoint = eventPos;
+            else if (lastPoint_2.isNull())
+                lastPoint_2 = eventPos;
+            else
+            {
+                drawObject(eventPos);
+                lastPoint = lastPoint_2 = QPoint(0, 0); // reset to null
+            }
+            break;
+        }
+        break;
+    }
     default:
         if (event->button() == Qt::LeftButton)
             lastPoint = eventPos;
@@ -185,6 +204,18 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
         painter.drawCircle(lastPoint, endPoint);
         update();
         break;
+    case draw2DMode::triangle:
+    {
+        switch (triangleTypeID)
+        {
+        case 0:
+            painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
+            update();
+            break;
+        default:
+            break;
+        }
+    }
     }
 }
 
@@ -234,12 +265,13 @@ void draw2DWidget::setDraw2DObjectMode(int id)
         drawMode = draw2DMode::normal;
         break;
     }
-    lastPoint = QPoint(0, 0); // reset
+    lastPoint = lastPoint_2 =  QPoint(0, 0); // reset
 }
 
 void draw2DWidget::setTriangleTypeID(int newID)
 {
     triangleTypeID =  newID;
+    lastPoint = lastPoint_2 = QPoint(0,0);
 }
 
 void draw2DWidget::print()
