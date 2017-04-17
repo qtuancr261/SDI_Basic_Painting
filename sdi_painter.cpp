@@ -109,14 +109,8 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
 {
     double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
     SDI_Point topCirclePoint(centralPoint.translate(0, -radius));
-    SDI_Point rightCirclePoint(centralPoint.translate(radius, 0));
-    drawPoint(topCirclePoint);
-    //drawLine(topCirclePoint, centralPoint);
-    drawPoint(rightCirclePoint);
-    //drawLine(topCirclePoint, rightCirclePoint);
     drawPoint(centralPoint);
-    //drawLine(centralPoint, rightCirclePoint);
-    midPointXCircle(topCirclePoint, centralPoint, radius);
+    midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
 
 void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3)
@@ -141,12 +135,14 @@ void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_
 
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
 {
+    // aFact*x + bFact*y + c = 0
     int aFactor{p2.y() - p1.y()};
     int bFactor{-(p2.x() - p1.x())};
     int cFactor{p2.x()*p1.y() - p1.x()*p2.y()};
     SDI_Point firstPoint{(p1.y() <= p2.y() ? p1 : p2)};
     SDI_Point laststPoint{(p1.y() <= p2.y() ? p2 : p1)};
     double x{double(firstPoint.x())};
+
     for (int y{firstPoint.y()}; y < laststPoint.y(); y++)
     {
         double xNext(x >= laststPoint.x() ? x - 1/2 : x + 1/2);
@@ -158,13 +154,13 @@ void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
 
 void SDI_Painter::midPointXLine(const SDI_Point &p1, const SDI_Point &p2)
 {
+    // aFact*x + bFact*y + c = 0
     int aFactor{p2.y() - p1.y()};
     int bFactor{-(p2.x() - p1.x())};
     int cFactor{p2.x()*p1.y() - p1.x()*p2.y()};
     SDI_Point firstPoint{(p1.x() <= p2.x() ? p1 : p2)};
     SDI_Point laststPoint{(p1.x() <= p2.x() ? p2 : p1)};
     double y{double(firstPoint.y())};
-    //drawPoint(firstPoint);
     for (int x{firstPoint.x()}; x < laststPoint.x(); x++)
     {
         double yNext(y >= laststPoint.y() ? y - 1/2 : y + 1/2);
@@ -174,25 +170,29 @@ void SDI_Painter::midPointXLine(const SDI_Point &p1, const SDI_Point &p2)
     }
 }
 
-void SDI_Painter::midPointXCircle(const SDI_Point &topCirclePoint, const SDI_Point &centralCirclePoint, double radius)
+void SDI_Painter::midPointXYCircle(const SDI_Point &topCirclePoint, const SDI_Point &centralCirclePoint, double radius)
 {
     double y{double(topCirclePoint.y())};
-    int xMax{static_cast<int>(radius*sqrt(2.0)/2)};
-    for (int x{topCirclePoint.x()}; x <= topCirclePoint.x() + xMax; x++)
+    int xMax{static_cast<int>(radius*qSqrt(2.0)/2)};
+    for (int x{topCirclePoint.x()}; x <= topCirclePoint.x() + xMax; x++) // from x = topPoint.x() to topPoint.x() + R*sqrt(2.0)/2
     {
-        double yNext(y + 1/2);
+        double yNext(y + 1/2); // midpoint
         if (qPow(x - centralCirclePoint.x(), 2.0) + qPow(yNext - centralCirclePoint.y(), 2.0) - qPow(radius, 2.0) >= 0.0) y++;
-        drawPoint(x, y);
+        // if (x-a)^2 + (yNext-b)^2 - radius^2 >= 0
+        // y' = y + 1 -> machine coordinate system
+        drawPoint(x, y); // draw next point (x, y')
         drawPoint(SDI_Point(x,y).centralSymmetry(centralCirclePoint));
         drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(x, centralCirclePoint.y())));
         drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(centralCirclePoint.x(), y)));
     }
 
     double x{double(topCirclePoint.x() + xMax)};
-    for (; y <= centralCirclePoint.y(); y++)
+    for (; y <= centralCirclePoint.y(); y++) // continue from the last point we drew
     {
-        double xNext(x + 1/2);
+        double xNext(x + 1/2); // midpoint
         if (qPow(xNext - centralCirclePoint.x(), 2.0) + qPow(y - centralCirclePoint.y(), 2.0) - qPow(radius, 2.0) < 0.0) x++;
+        // if (xNext-a)^2 + (y-b)^2 - radius^2 < 0
+        // x' = x + 1 -> machine coordinate system
         drawPoint(x, y);
         drawPoint(SDI_Point(x,y).centralSymmetry(centralCirclePoint));
         drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(x, centralCirclePoint.y())));

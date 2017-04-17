@@ -21,9 +21,9 @@ public:
     virtual void drawCircle(const SDI_Point& centralPoint, const SDI_Point& pointOnCircle);
     virtual void drawTriangle(const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3);
     virtual void drawIsoscelesRightTriangle(const SDI_Point& cpoint, const SDI_Point& epoint);
-    void midPointYLine(const SDI_Point& p1, const SDI_Point& p2);
-    void midPointXLine(const SDI_Point& p1, const SDI_Point& p2);
-    void midPointXCircle(const SDI_Point& topCirclePoint, const SDI_Point& centralCirclePoint, double radius);
+    void midPointYLine(const SDI_Point& p1, const SDI_Point& p2); // drawLine using midpoint algorithm if yValue > xValue
+    void midPointXLine(const SDI_Point& p1, const SDI_Point& p2); // drawLine using midpoint algorithm if xValue > yValue
+    void midPointXYCircle(const SDI_Point& topCirclePoint, const SDI_Point& centralCirclePoint, double radius);
 
 private:
     QVector<SDI_Point> line;

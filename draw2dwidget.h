@@ -13,23 +13,23 @@ enum class draw2DMode
     normal, point, line, rect, square, parallelogram, circle, triangle
 };
 
-class draw2DWidget : public QWidget
+class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
 {
     Q_OBJECT
 public:
-    explicit draw2DWidget(QWidget *parent = nullptr);
+    explicit draw2DWidget(QWidget *parent = nullptr); //  default constructor
 
     bool openImage(const QString& fileName);
     bool saveImage(const QString& fileName, const char* fileFormat);
-    void setPenColor(const QColor& newColor);
-    void setPenWidth(int newWidth);
+    void setPenColor(const QColor& newColor); // set painter's color
+    void setPenWidth(int newWidth);  // set painter width
 
-    bool isModified() const {return modified;}
+    bool isModified() const {return modified;} // check if image has been modified
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
-    void showGUI();
+    void showGUI(); // show axis of coordinates
 
-protected:
+protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
@@ -37,19 +37,22 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void drawObject(const SDI_Point &endPoint);
+    void drawObject(const SDI_Point &endPoint); // draw 2D Objects
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
-    SDI_Point origin;
-    draw2DMode drawMode;
-    int triangleTypeID;
-    int myPenWidth;
-    QColor myPenColor;
     QImage image;
+    QSize originalSize; // original size of loaded image
+
+    SDI_Point origin; // where the axes of the system intersect
     SDI_Point lastPoint;
     SDI_Point lastPoint_2;
-    QSize originalSize;
+
+    draw2DMode drawMode; // hold 2D Object ID
+    int triangleTypeID; // hold triangle ID
+    int myPenWidth;
+    QColor myPenColor;
+
 signals:
     void mouseMoveTo(QString currentPos);
 public slots:
