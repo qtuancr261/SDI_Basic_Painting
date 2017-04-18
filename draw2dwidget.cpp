@@ -94,7 +94,6 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
         }
         break;
     case draw2DMode::triangle:
-    {
         switch (triangleTypeID)
         {
         case 0: // Triangle
@@ -119,7 +118,17 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             break;
         }
         break;
-    }
+    case draw2DMode::parallelogram:
+        if (lastPoint.isNull())
+            lastPoint = eventPos;
+        else if (lastPoint_2.isNull())
+            lastPoint_2 = eventPos;
+        else
+        {
+            drawObject(eventPos);
+            lastPoint = lastPoint_2 = QPoint(0, 0);
+        }
+        break;
     default: // scribbling mode
         if (event->button() == Qt::LeftButton)
             lastPoint = eventPos;
@@ -225,6 +234,8 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
         break;
     }
     case draw2DMode::parallelogram:
+        painter.drawParallelogram(lastPoint, lastPoint_2, endPoint);
+        update();
         break;
     }
 }

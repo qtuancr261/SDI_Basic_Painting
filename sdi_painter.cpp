@@ -133,6 +133,17 @@ void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_
     drawLine(topLegPoint, rightLegPoint); // draw hypotenuse
 }
 
+void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &pointB, const SDI_Point &pointC)
+{
+    SDI_Point pointD;
+    pointD.setX(pointC.x() + pointA.x() - pointB.x());
+    pointD.setY(pointA.y() - pointB.y() + pointC.y());
+    drawLine(pointA, pointB);
+    drawLine(pointB, pointC);
+    drawLine(pointC, pointD);
+    drawLine(pointD, pointA);
+}
+
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
 {
     // aFact*x + bFact*y + c = 0
