@@ -126,11 +126,11 @@ void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2,
 void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_Point &epoint)
 {
     double legLength{SDI_Point::distance(cpoint, epoint)};
-    SDI_Point topLegPoint(cpoint.translate(0, -legLength));
-    SDI_Point rightLegPoint(cpoint.translate(legLength, 0));
+    SDI_Point topLegPoint(cpoint.translate(0, cpoint.y() > epoint.y() ? -legLength : legLength));
+    SDI_Point sideLegPoint(cpoint.translate((cpoint.x() < epoint.x() ? legLength : -legLength), 0));
     drawLine(cpoint, topLegPoint); // draw leg 1
-    drawLine(cpoint, rightLegPoint); // draw leg 2
-    drawLine(topLegPoint, rightLegPoint); // draw hypotenuse
+    drawLine(cpoint, sideLegPoint); // draw leg 2
+    drawLine(topLegPoint, sideLegPoint); // draw hypotenuse
 }
 
 void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &pointB, const SDI_Point &pointC)
