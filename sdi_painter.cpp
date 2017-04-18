@@ -14,13 +14,13 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
 {
     SDI_Point leftMostOx{0, height/2};
     SDI_Point rightMostOx{width, height/2};
-    drawLine(leftMostOx, rightMostOx);
+    drawLine(leftMostOx, rightMostOx); // draw x-axis
     drawText(rightMostOx + SDI_Point(-20, 20), "x");
 
     SDI_Point topMostOy{width/2, 0};
     SDI_Point bottomMostOy{width/2, height};
     drawLine(topMostOy, bottomMostOy);
-    drawText(topMostOy + SDI_Point(20, 20), "y");
+    drawText(topMostOy + SDI_Point(20, 20), "y"); // draw y-axis
     drawText(Origin + SDI_Point(10, -10), "O");
 
     /*int yUP{Origin.y() + factor/2};
@@ -56,14 +56,14 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
     if (std::abs(p1.y() - p2.y()) >= std::abs(p1.x() - p2.x()))
     {
         if (p1.x() < p2.x())
-            midPointYLine(p2, p1);
+            midPointYLine(p2, p1); // draw from
         else
             midPointYLine(p1, p2 );
     }
     else
     {
         if (p1.y() <= p2.y())
-            midPointXLine(p1, p2);
+            midPointXLine(p1, p2); // draw from
         else
             midPointXLine(p2, p1);
     }

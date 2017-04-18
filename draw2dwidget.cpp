@@ -222,7 +222,10 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
             update();
             break;
         }
+        break;
     }
+    case draw2DMode::parallelogram:
+        break;
     }
 }
 

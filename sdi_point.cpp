@@ -77,7 +77,7 @@ SDI_Point SDI_Point::centralSymmetry(const QPoint &centralPoint) const
     return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
 }
 
-double SDI_Point::distance(const QPoint &p1, const QPoint &p2)
+double SDI_Point::distance(const QPoint &p1, const QPoint &p2) // static function
 {
     return qSqrt(qPow(p1.x() - p2.x(), 2.0) + qPow(p1.y() - p2.y(), 2.0));
 }
