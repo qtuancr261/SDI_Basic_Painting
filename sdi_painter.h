@@ -13,6 +13,7 @@ public:
     SDI_Painter(QPaintDevice* device);
     ~SDI_Painter() = default;
     void drawOxy(int width, int height, SDI_Point& Origin); // draw user's coordinate
+    void drawOxyz(int width, int height, SDI_Point& Origin);
     virtual void drawPoint(const SDI_Point& p1);
     virtual void drawPoint(int x, int y);
     virtual void drawLine(const SDI_Point &p1, const SDI_Point &p2);

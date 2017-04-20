@@ -301,7 +301,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setCentralWidget(central2DWidget);
     setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
-    statusBar()->showMessage("Demo 0.2 04/2017 - Chế độ vẽ tự do");
+    statusBar()->showMessage("Demo 0.3 - 18/04/2017 - Chế độ vẽ tự do - hoàn thành vẽ 7 đối tượng hình học cơ bản");
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)), this, SLOT(showMessage(QString)));
 }
 
