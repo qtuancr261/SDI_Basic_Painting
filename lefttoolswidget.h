@@ -43,9 +43,11 @@ private:
     void setupGUI();
     void setDrawModeButtonStyle(QPushButton* button);
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
-signals:
 
-public slots:
+signals:
+    void changeGraphicMode(int newID);
+private slots:
+    void decideNewGraphicMode();
 };
 
 #endif // LEFTTOOLSWIDGET_H

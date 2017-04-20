@@ -67,7 +67,10 @@ void draw2DWidget::clearImage()
     image.fill(qRgb(255, 255, 255));
     origin = QPoint(width()/2, height()/2);
     SDI_Painter painter(&image);
-    painter.drawOxyz(this->width(), this->height(), origin);
+    if (graphicMode == graphicsMode::graphic2D)
+        painter.drawOxy(this->width(), this->height(), origin);
+    else
+         painter.drawOxyz(this->width(), this->height(), origin);
     modified = true;
     update();
 }

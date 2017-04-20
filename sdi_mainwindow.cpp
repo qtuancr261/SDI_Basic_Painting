@@ -172,6 +172,7 @@ void SDI_MainWindow::createDockWidget()
 {
     QGroupBox* leftToolsBox{new QGroupBox(tr("Thanh công cụ chính"), this)};
     leftToolsWidget* widget{new leftToolsWidget(this)};
+    QObject::connect(widget, SIGNAL(changeGraphicMode(int)), central2DWidget, SLOT(setGraphicMode(int)));
     QVBoxLayout* leftToolsBoxLayout{new QVBoxLayout(leftToolsBox)};
     leftToolsBoxLayout->addWidget(widget);
     leftToolsBox->setLayout(leftToolsBoxLayout);

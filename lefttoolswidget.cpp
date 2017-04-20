@@ -10,8 +10,12 @@ void leftToolsWidget::setupGUI()
     // select graphic mode
     graphic2DMode = new QPushButton(QIcon(":/images/icons/Letters.ico"), tr("Hệ trục tọa độ Oxy"), this);
     setDrawModeButtonStyle(graphic2DMode);
+    QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+
     graphic3DMode = new QPushButton(QIcon(":/images/icons/Letters.ico"), tr("Hệ trục tọa độ Oxyz"), this);
     setDrawModeButtonStyle(graphic3DMode);
+    QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+
     helpMode = new QPushButton(QIcon(":/images/icons/Letters.ico"), tr("Giới thiệu"), this);
     setDrawModeButtonStyle(helpMode);
     QVBoxLayout* selectModeLayout{new QVBoxLayout(this)};
@@ -108,4 +112,12 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
     box->setRange(minValue, MaxValue);
     QObject::connect(slider, SIGNAL(valueChanged(int)), box, SLOT(setValue(int)));
     QObject::connect(box, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+}
+
+void leftToolsWidget::decideNewGraphicMode()
+{
+    if (graphic2DMode->isChecked())
+        emit changeGraphicMode(2);
+    else
+        emit changeGraphicMode(3);
 }
