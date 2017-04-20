@@ -41,16 +41,17 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
 
 void SDI_Painter::drawOxyz(int width, int height, SDI_Point &Origin)
 {
-    setPen(Qt::DashDotDotLine);
     SDI_Point rightMostOy{width, height/2};
     drawLine(Origin, rightMostOy);
-    drawText(rightMostOy + SDI_Point(0, -20), "");
+    drawText(rightMostOy + SDI_Point(-20, -20), "y");
 
     SDI_Point topMostOz{width/2, 0};
     drawLine(Origin, topMostOz);
+    drawText(topMostOz + SDI_Point(20, 20), "z");
 
     SDI_Point bottomMostOx{Origin.x() - height/2, Origin.y() + height/2};
     drawLine(Origin, bottomMostOx);
+    drawText(bottomMostOx + SDI_Point(-20, -20), "x");
 }
 
 void SDI_Painter::drawPoint(const SDI_Point &p1)
