@@ -8,9 +8,13 @@
 #include <QSignalMapper>
 #include "sdi_painter.h"
 #include "sdi_point.h"
+enum class graphicsMode
+{
+   graphic2D = 2, graphic3D
+};
 enum class draw2DMode
 {
-    normal, point, line, rect, square, parallelogram, circle, triangle
+    normal = 0, point, line, rect, square, parallelogram, circle, triangle
 };
 
 class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
@@ -48,7 +52,8 @@ private:
     SDI_Point lastPoint;
     SDI_Point lastPoint_2;
 
-    draw2DMode drawMode; // hold 2D Object ID
+    graphicsMode graphicMode;
+    draw2DMode draw2DObjectMode; // hold 2D Object ID
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
     QColor myPenColor;
@@ -56,7 +61,8 @@ private:
 signals:
     void mouseMoveTo(QString currentPos);
 public slots:
-    void setDraw2DObjectMode(int id);
+    void setDraw2DObjectMode(int newId);
+    void setGraphicMode(int newId);
     void setTriangleTypeID(int newID);
     void clearImage();
     void print();

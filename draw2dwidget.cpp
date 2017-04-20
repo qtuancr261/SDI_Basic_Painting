@@ -76,7 +76,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
     if (event->button() == Qt::LeftButton)
-    switch (drawMode)
+    switch (draw2DObjectMode)
     {
     case draw2DMode::point:
         drawObject(eventPos);
@@ -139,7 +139,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->buttons() == Qt::LeftButton  && drawMode == draw2DMode::normal )
+    if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == draw2DMode::normal )
         drawObject(eventPos);
     //emit mouseMoveTo();
     emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())))
@@ -150,7 +150,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->button() == Qt::LeftButton  && drawMode == draw2DMode::normal)
+    if (event->button() == Qt::LeftButton  && draw2DObjectMode == draw2DMode::normal)
     {
         drawObject(eventPos);
         //scribbling = false;
@@ -188,7 +188,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
 
 
     //using painter to draw current 2D Object
-    switch (drawMode)
+    switch (draw2DObjectMode)
     {
     case draw2DMode::point:
         painter.drawPoint(endPoint);
@@ -258,35 +258,43 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
     callTime++;
 }
 
-void draw2DWidget::setDraw2DObjectMode(int id)
+void draw2DWidget::setDraw2DObjectMode(int newId)
 {
-    switch (id) {
+    switch (newId) {
     case 1:
-        drawMode = draw2DMode::point;
+        draw2DObjectMode = draw2DMode::point;
         break;
     case 2:
-        drawMode = draw2DMode::line;
+        draw2DObjectMode = draw2DMode::line;
         break;
     case 3:
-        drawMode = draw2DMode::rect;
+        draw2DObjectMode = draw2DMode::rect;
         break;
     case 4:
-        drawMode = draw2DMode::square;
+        draw2DObjectMode = draw2DMode::square;
         break;
     case 5:
-        drawMode = draw2DMode::parallelogram;
+        draw2DObjectMode = draw2DMode::parallelogram;
         break;
     case 6:
-        drawMode = draw2DMode::circle;
+        draw2DObjectMode = draw2DMode::circle;
         break;
     case 7:
-        drawMode = draw2DMode::triangle;
+        draw2DObjectMode = draw2DMode::triangle;
         break;
     default:
-        drawMode = draw2DMode::normal;
+        draw2DObjectMode = draw2DMode::normal;
         break;
     }
     lastPoint = lastPoint_2 =  QPoint(0, 0); // reset
+}
+
+void draw2DWidget::setGraphicMode(int newId)
+{
+    if (newId == 2)
+        graphicMode = graphicsMode::graphic2D;
+    else
+        graphicMode = graphicsMode::graphic3D;
 }
 
 void draw2DWidget::setTriangleTypeID(int newID)
