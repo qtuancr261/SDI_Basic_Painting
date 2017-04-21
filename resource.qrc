@@ -1,5 +1,22 @@
 <RCC>
     <qresource prefix="/images">
         <file>icons/Letters.ico</file>
+        <file>icons/exit.png</file>
+        <file>icons/print.png</file>
+        <file>icons/save.png</file>
+        <file>icons/openImg.png</file>
+        <file>icons/oxyz_coordinate.png</file>
+        <file>icons/oxy_coordinate.png</file>
+        <file>icons/about.png</file>
+        <file>icons/QtIcon.png</file>
+        <file>icons/scribble.png</file>
+        <file>icons/point.png</file>
+        <file>icons/line.png</file>
+        <file>icons/rect.png</file>
+        <file>icons/square.png</file>
+        <file>icons/parallelogram.png</file>
+        <file>icons/circle.png</file>
+        <file>icons/triangle.png</file>
+        <file>icons/penColor.png</file>
     </qresource>
 </RCC>

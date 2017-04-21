@@ -13,6 +13,7 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     modified = false;
     //scribbling = false;
     myPenWidth = 2;
+    graphicMode = graphicsMode::graphic2D;
     myPenColor = Qt::blue;
     triangleTypeID = 0; // normal
     setMouseTracking(true);

@@ -8,15 +8,15 @@ leftToolsWidget::leftToolsWidget(QWidget *parent) : QWidget(parent)
 void leftToolsWidget::setupGUI()
 {
     // select graphic mode
-    graphic2DMode = new QPushButton(QIcon(":/images/icons/Letters.ico"), tr("Hệ trục tọa độ Oxy"), this);
+    graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Hệ trục tọa độ Oxy"), this);
     setDrawModeButtonStyle(graphic2DMode);
     QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
 
-    graphic3DMode = new QPushButton(QIcon(":/images/icons/Letters.ico"), tr("Hệ trục tọa độ Oxyz"), this);
+    graphic3DMode = new QPushButton(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Hệ trục tọa độ Oxyz"), this);
     setDrawModeButtonStyle(graphic3DMode);
     QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
 
-    helpMode = new QPushButton(QIcon(":/images/icons/Letters.ico"), tr("Giới thiệu"), this);
+    helpMode = new QPushButton(QIcon(":/images/icons/about.png"), tr("Giới thiệu"), this);
     setDrawModeButtonStyle(helpMode);
     QVBoxLayout* selectModeLayout{new QVBoxLayout(this)};
     selectModeLayout->addWidget(graphic2DMode);
