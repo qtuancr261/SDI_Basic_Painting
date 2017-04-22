@@ -41,6 +41,7 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
 
 void SDI_Painter::drawOxyz(int width, int height, SDI_Point &Origin)
 {
+    drawText(Origin + SDI_Point(20, -20), "O");
     SDI_Point rightMostOy{width, height/2};
     drawLine(Origin, rightMostOy);
     drawText(rightMostOy + SDI_Point(-20, -20), "y");

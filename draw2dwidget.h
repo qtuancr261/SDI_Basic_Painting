@@ -46,6 +46,7 @@ private:
 
     bool modified;
     QImage image;
+    QImage tempImage;
     QSize originalSize; // original size of loaded image
 
     SDI_Point origin; // where the axes of the system intersect
@@ -53,6 +54,7 @@ private:
     SDI_Point lastPoint_2;
 
     graphicsMode graphicMode;
+    bool drawPausing;
     draw2DMode draw2DObjectMode; // hold 2D Object ID
     int triangleTypeID; // hold triangle ID
     int myPenWidth;

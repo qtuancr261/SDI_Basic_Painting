@@ -35,6 +35,8 @@ void leftToolsWidget::setupGUI()
     OzTranslateSlider = new QSlider(Qt::Horizontal, this);
     OzTranslateBox = new QSpinBox(this);
     setSlider_BoxSytle(OzTranslateSlider, OzTranslateBox, -50, 50);
+    OzTranslateBox->setDisabled(true);
+    OzTranslateSlider->setDisabled(true);
     QGridLayout* translationLayout{new QGridLayout(this)};
     translationLayout->addWidget(new QLabel("Ox"), 0, 0);
     translationLayout->addWidget(OxTranslateSlider, 0, 1);
@@ -118,6 +120,6 @@ void leftToolsWidget::decideNewGraphicMode()
 {
     if (graphic2DMode->isChecked())
         emit changeGraphicMode(2);
-    else
+    else if (graphic3DMode->isChecked())
         emit changeGraphicMode(3);
 }

@@ -16,6 +16,7 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     graphicMode = graphicsMode::graphic2D;
     myPenColor = Qt::blue;
     triangleTypeID = 0; // normal
+    drawPausing = false;
     setMouseTracking(true);
 }
 
@@ -39,10 +40,13 @@ bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
     QImage visibleImage = image.scaled(originalSize, Qt::IgnoreAspectRatio);
     resizeImage(&visibleImage, originalSize);
 
-    if (visibleImage.save(fileName, fileFormat)) {
+    if (visibleImage.save(fileName, fileFormat))
+    {
         modified = false;
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -295,10 +299,27 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
 
 void draw2DWidget::setGraphicMode(int newId)
 {
+    if (modified)
+    {
+        drawPausing = true;
+        if (graphicMode == graphicsMode::graphic2D)
+            saveImage(QDir::currentPath() + "/temp2D", "PNG");
+        else
+            saveImage(QDir::currentPath() + "/temp3D", "PNG");
+    }
     if (newId == 2)
         graphicMode = graphicsMode::graphic2D;
     else
         graphicMode = graphicsMode::graphic3D;
+    clearImage();
+    if (drawPausing)
+    {
+        if (graphicMode == graphicsMode::graphic2D)
+            openImage(QDir::currentPath() + "/temp2D");
+        else
+            openImage(QDir::currentPath() + "/temp3D");
+    }
+    modified = false;
 }
 
 void draw2DWidget::setTriangleTypeID(int newID)
