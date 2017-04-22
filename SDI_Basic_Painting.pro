@@ -29,14 +29,16 @@ SOURCES += main.cpp\
     sdi_painter.cpp \
     draw2dwidget.cpp \
     sdi_point.cpp \
-    matrixlibs.cpp
+    matrixlibs.cpp \
+    sdi_point3d.cpp
 
 HEADERS  += sdi_mainwindow.h \
     lefttoolswidget.h \
     sdi_painter.h \
     draw2dwidget.h \
     sdi_point.h \
-    matrixlibs.h
+    matrixlibs.h \
+    sdi_point3d.h
 
 RESOURCES += \
     resource.qrc

@@ -312,14 +312,15 @@ void draw2DWidget::setGraphicMode(int newId)
     else
         graphicMode = graphicsMode::graphic3D;
     clearImage();
+    modified = false;
     if (drawPausing)
     {
         if (graphicMode == graphicsMode::graphic2D)
             openImage(QDir::currentPath() + "/temp2D");
         else
             openImage(QDir::currentPath() + "/temp3D");
+        modified = true;
     }
-    modified = false;
 }
 
 void draw2DWidget::setTriangleTypeID(int newID)
