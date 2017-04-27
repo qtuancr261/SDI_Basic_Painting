@@ -119,7 +119,7 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
 void leftToolsWidget::decideNewGraphicMode()
 {
     if (graphic2DMode->isChecked())
-        emit changeGraphicMode(2);
+        emit changeGraphicsMode(2);
     else if (graphic3DMode->isChecked())
-        emit changeGraphicMode(3);
+        emit changeGraphicsMode(3);
 }

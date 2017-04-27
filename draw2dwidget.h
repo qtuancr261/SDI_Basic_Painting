@@ -31,7 +31,6 @@ public:
     bool isModified() const {return modified;} // check if image has been modified
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
-    void showGUI(); // show axis of coordinates
 
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
@@ -64,7 +63,7 @@ signals:
     void mouseMoveTo(QString currentPos);
 public slots:
     void setDraw2DObjectMode(int newId);
-    void setGraphicMode(int newId);
+    void setGraphicsMode(int newId);
     void setTriangleTypeID(int newID);
     void clearImage();
     void print();

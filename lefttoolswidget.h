@@ -45,7 +45,7 @@ private:
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
 
 signals:
-    void changeGraphicMode(int newID);
+    void changeGraphicsMode(int newID);
 private slots:
     void decideNewGraphicMode();
 };

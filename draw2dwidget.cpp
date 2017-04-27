@@ -61,12 +61,6 @@ void draw2DWidget::setPenWidth(int newWidth)
     myPenWidth = newWidth;
 }
 
-void draw2DWidget::showGUI()
-{
-    SDI_Painter painter(&image);
-    painter.drawOxy(this->width(), this->height(), origin);
-}
-
 void draw2DWidget::clearImage()
 {
     image.fill(qRgb(255, 255, 255));
@@ -297,7 +291,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
     lastPoint = lastPoint_2 =  QPoint(0, 0); // reset
 }
 
-void draw2DWidget::setGraphicMode(int newId)
+void draw2DWidget::setGraphicsMode(int newId)
 {
     if (modified)
     {
