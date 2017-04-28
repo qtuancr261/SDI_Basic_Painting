@@ -94,30 +94,31 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(bottomLeft, bottomRight);
 }
 
-void SDI_Painter::drawSquare(const SDI_Point &firstPoint, SDI_Point &lastPoint)
+void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPoint)
 {
-    int rectWidth{std::abs(lastPoint.x() - firstPoint.x())};
-    int rectHeight{std::abs(lastPoint.y() - firstPoint.y())};
+    SDI_Point exactPoint{lastPoint};
+    int rectWidth{std::abs(exactPoint.x() - firstPoint.x())};
+    int rectHeight{std::abs(exactPoint.y() - firstPoint.y())};
     if (rectWidth > rectHeight)
     {
-        if (lastPoint.x() > firstPoint.x())
-            lastPoint.rx() -= (rectWidth - rectHeight);
+        if (exactPoint.x() > firstPoint.x())
+            exactPoint.rx() -= (rectWidth - rectHeight);
         else
-            lastPoint.rx() += (rectWidth - rectHeight);
+            exactPoint.rx() += (rectWidth - rectHeight);
     }
     else if (rectWidth < rectHeight)
     {
-        if (lastPoint.y() > firstPoint.y())
-            lastPoint.ry() -= (rectHeight - rectWidth);
+        if (exactPoint.y() > firstPoint.y())
+            exactPoint.ry() -= (rectHeight - rectWidth);
         else
-            lastPoint.ry() += (rectHeight - rectWidth);
+            exactPoint.ry() += (rectHeight - rectWidth);
     }
-    SDI_Point topRight{lastPoint.x(), firstPoint.y()};
-    SDI_Point bottomLeft{firstPoint.x(), lastPoint.y()};
+    SDI_Point topRight{exactPoint.x(), firstPoint.y()};
+    SDI_Point bottomLeft{firstPoint.x(), exactPoint.y()};
     drawLine(firstPoint, topRight);
     drawLine(firstPoint, bottomLeft);
-    drawLine(topRight, lastPoint);
-    drawLine(bottomLeft, lastPoint);
+    drawLine(topRight, exactPoint);
+    drawLine(bottomLeft, exactPoint);
 }
 
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)

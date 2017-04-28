@@ -19,7 +19,7 @@ public:
     virtual void drawPoint(int x, int y);
     virtual void drawLine(const SDI_Point &p1, const SDI_Point &p2);
     virtual void drawRect(const SDI_Point&topLeft, const SDI_Point& bottomRight);
-    virtual void drawSquare(const SDI_Point &firstPoint, SDI_Point &lastPoint);
+    virtual void drawSquare(const SDI_Point &firstPoint, const SDI_Point &lastPoint);
     virtual void drawCircle(const SDI_Point& centralPoint, const SDI_Point& pointOnCircle);
     virtual void drawTriangle(const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3);
     virtual void drawIsoscelesRightTriangle(const SDI_Point& cpoint, const SDI_Point& epoint);

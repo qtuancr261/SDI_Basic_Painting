@@ -70,6 +70,7 @@ void draw2DWidget::clearImage()
         painter.drawOxy(this->width(), this->height(), origin);
     else
          painter.drawOxyz(this->width(), this->height(), origin);
+    setOfShapes.clear();
     modified = true;
     update();
 }
@@ -81,7 +82,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     switch (draw2DObjectMode)
     {
     case geometricShape::point:
-        drawObject(eventPos);
+        drawObject(eventPos, 1);
         break;
     case geometricShape::line:
     case geometricShape::rect:
@@ -91,7 +92,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = eventPos;
         else
         {
-            drawObject(eventPos);
+            drawObject(eventPos,1);
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
@@ -105,7 +106,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 lastPoint_2 = eventPos;
             else
             {
-                drawObject(eventPos);
+                drawObject(eventPos,1);
                 lastPoint = lastPoint_2 = QPoint(0, 0); // reset to null
             }
             break;
@@ -114,7 +115,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 lastPoint = eventPos;
             else
             {
-                drawObject(eventPos);
+                drawObject(eventPos,1);
                 lastPoint = QPoint(0, 0); // set to null
             }
             break;
@@ -127,13 +128,13 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint_2 = eventPos;
         else
         {
-            drawObject(eventPos);
+            drawObject(eventPos,1);
             lastPoint = lastPoint_2 = QPoint(0, 0);
         }
         break;
     default: // scribbling mode
-        if (event->button() == Qt::LeftButton)
-            lastPoint = eventPos;
+        //if (event->button() == Qt::LeftButton)
+        //    lastPoint = eventPos;
         break;
     }
 }
@@ -141,9 +142,24 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal )
+    switch (draw2DObjectMode)
+    {
+    case geometricShape::normal:
+        //if (event->button() == Qt::LeftButton)
+        //    drawObject(eventPos,1);
+        break;
+    case geometricShape::line:
+    case geometricShape::rect:
+    case geometricShape::square:
+        if (!lastPoint.isNull())
+            drawObject(eventPos, 0);
+        break;
+    default:
+        break;
+    }
+    /*if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal )
         drawObject(eventPos);
-    //emit mouseMoveTo();
+    //emit mouseMoveTo();*/
     emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())))
                                                 .arg(QString::number((origin.y() - event->pos().y()))));
 
@@ -154,7 +170,7 @@ void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
     SDI_Point eventPos(event->pos());
     if (event->button() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal)
     {
-        drawObject(eventPos);
+        drawObject(eventPos, 0);
         //scribbling = false;
     }
 }
@@ -179,27 +195,37 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
+void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle draw Object
 {
     SDI_Painter painter(&image);
+    int rad = (myPenWidth / 2) + 2;
+    //Repaint the user's coordinate  system
+    image.fill(qRgb(255, 255, 255));
+    if (graphicMode == graphicsMode::graphic2D)
+        painter.drawOxy(this->width(), this->height(), origin);
+    else
+         painter.drawOxyz(this->width(), this->height(), origin);
+    //--------------------------finish---------------------------------
+
+    //Repaint exist shapes
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
-    int rad = (myPenWidth / 2) + 2;
-    image.fill(qRgb(255, 255, 255));
     if (!setOfShapes.isEmpty())
         for (SDI_GeometricShape* shape:setOfShapes)
         {
-            QVector<SDI_Point> setOfPoints = shape->getSetOfPoints();
-            if (shape->getShapeId() == geometricShape::rect)
-                //painter.drawRect(SDI_Point(100, 20), SDI_Point(250, 500));
+            QVector<SDI_Point> setOfPoints{shape->getSetOfPoints()};
+            geometricShape currentShapeName{shape->getShapeId()};
+            if (currentShapeName == geometricShape::rect)
                 painter.drawRect(setOfPoints[0], setOfPoints[1]);
-                //update();
+            else if (currentShapeName == geometricShape::line)
+                painter.drawLine(setOfPoints[0], setOfPoints[1]);
+            else if (currentShapeName == geometricShape::square)
+                painter.drawSquare(setOfPoints[0], setOfPoints[1]);
         }
     modified = true;
-    //------------------------------ set up panter ------------------//
+    //------------------------------ finish ------------------//
 
-
-    //using painter to draw current 2D Object
+    //using painter to draw new shape
     switch (draw2DObjectMode)
     {
     case geometricShape::point:
@@ -207,27 +233,42 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
         update(QRect(endPoint, endPoint + QPoint(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
     case geometricShape::normal:
+        break;
     case geometricShape::line:
         painter.drawLine(lastPoint, endPoint);
-        update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-        lastPoint = endPoint;
+        if (idMode == 1)
+        {
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+            update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        }
+        else
+            update();
         break;
     case geometricShape::rect:
         if (lastPoint.x() < endPoint.x())
             painter.drawRect(lastPoint, endPoint);
         else
             painter.drawRect(endPoint, lastPoint);
-        setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
-        //update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-        update();
+        if (idMode == 1)
+        {
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+            update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        }
+        else
+            update();
         break;
     case geometricShape::square:
     {
-        SDI_Point exactPoint(endPoint);
-        painter.drawSquare(lastPoint, exactPoint);
-        update(QRect(lastPoint, exactPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-    }
+        painter.drawSquare(lastPoint, endPoint);
+        if(idMode == 1)
+        {
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+            update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        }
+        else
+            update();
         break;
+    }
     case geometricShape::circle:
         painter.drawCircle(lastPoint, endPoint);
         update();
@@ -305,6 +346,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
 
 void draw2DWidget::setGraphicsMode(int newId)
 {
+    // save the current session
     if (modified)
     {
         drawPausing = true;
@@ -313,12 +355,18 @@ void draw2DWidget::setGraphicsMode(int newId)
         else
             saveImage(QDir::currentPath() + "/temp3D", "PNG");
     }
+    //-------------------------finish-------------------------------
+
+    // change graphics mode and clean all
     if (newId == 2)
         graphicMode = graphicsMode::graphic2D;
     else
         graphicMode = graphicsMode::graphic3D;
     clearImage();
     modified = false;
+    //-------------------------finish-------------------------------
+
+    // reload the previous session if the painter was paused
     if (drawPausing)
     {
         if (graphicMode == graphicsMode::graphic2D)
@@ -327,6 +375,7 @@ void draw2DWidget::setGraphicsMode(int newId)
             openImage(QDir::currentPath() + "/temp3D");
         modified = true;
     }
+    //-------------------------finish-------------------------------
 }
 
 void draw2DWidget::setTriangleTypeID(int newID)

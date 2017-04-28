@@ -5,7 +5,10 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
 {
     switch (shapeID)
     {
+    case geometricShape::normal:
+    case geometricShape::line:
     case geometricShape::rect:
+    case geometricShape::square:
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         break;

@@ -37,7 +37,7 @@ protected: // handle events
     virtual void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void drawObject(const SDI_Point &endPoint); // draw 2D Objects
+    void drawObject(const SDI_Point &endPoint, int idMode); // draw 2D Objects
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
