@@ -14,12 +14,17 @@ enum class graphicsMode
 {
    graphic2D = 2, graphic3D
 };
+enum class clearImageMode
+{
+   clearAll, clearForNewSession
+};
+
 class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
 {
     Q_OBJECT
 public:
     explicit draw2DWidget(QWidget *parent = nullptr); //  default constructor
-
+    ~draw2DWidget();
     bool openImage(const QString& fileName);
     bool saveImage(const QString& fileName, const char* fileFormat);
     void setPenColor(const QColor& newColor); // set painter's color
@@ -64,7 +69,7 @@ public slots:
     void setDraw2DObjectMode(int newId);
     void setGraphicsMode(int newId);
     void setTriangleTypeID(int newID);
-    void clearImage();
+    void clearImage(clearImageMode clearID = clearImageMode::clearAll);
     void print();
 };
 

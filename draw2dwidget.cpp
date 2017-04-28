@@ -20,6 +20,11 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     setMouseTracking(true);
 }
 
+draw2DWidget::~draw2DWidget()
+{
+    setOfShapes.clear();
+}
+
 bool draw2DWidget::openImage(const QString &fileName)
 {
     QImage loadedImage;
@@ -61,17 +66,26 @@ void draw2DWidget::setPenWidth(int newWidth)
     myPenWidth = newWidth;
 }
 
-void draw2DWidget::clearImage()
+void draw2DWidget::clearImage(clearImageMode clearID)
 {
     image.fill(qRgb(255, 255, 255));
     origin = QPoint(width()/2, height()/2);
     SDI_Painter painter(&image);
     if (graphicMode == graphicsMode::graphic2D)
+    {
         painter.drawOxy(this->width(), this->height(), origin);
+        if (clearID == clearImageMode::clearAll)
+        {
+            setOfShapes.clear();
+            modified = true;
+        }
+        else
+            modified = false;
+    }
     else
-         painter.drawOxyz(this->width(), this->height(), origin);
-    setOfShapes.clear();
-    modified = true;
+    {
+        painter.drawOxyz(this->width(), this->height(), origin);
+    }
     update();
 }
 
@@ -151,6 +165,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     case geometricShape::line:
     case geometricShape::rect:
     case geometricShape::square:
+    case geometricShape::circle:
         if (!lastPoint.isNull())
             drawObject(eventPos, 0);
         break;
@@ -213,14 +228,16 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     if (!setOfShapes.isEmpty())
         for (SDI_GeometricShape* shape:setOfShapes)
         {
-            QVector<SDI_Point> setOfPoints{shape->getSetOfPoints()};
+            QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
             geometricShape currentShapeName{shape->getShapeId()};
             if (currentShapeName == geometricShape::rect)
-                painter.drawRect(setOfPoints[0], setOfPoints[1]);
+                painter.drawRect(setOfPoints.at(0), setOfPoints.at(1));
             else if (currentShapeName == geometricShape::line)
-                painter.drawLine(setOfPoints[0], setOfPoints[1]);
+                painter.drawLine(setOfPoints.at(0), setOfPoints.at(1));
             else if (currentShapeName == geometricShape::square)
-                painter.drawSquare(setOfPoints[0], setOfPoints[1]);
+                painter.drawSquare(setOfPoints.at(0), setOfPoints.at(1));
+            else if (currentShapeName == geometricShape::circle)
+                painter.drawCircle(setOfPoints.at(0), setOfPoints.at(1));
         }
     modified = true;
     //------------------------------ finish ------------------//
@@ -271,6 +288,8 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     }
     case geometricShape::circle:
         painter.drawCircle(lastPoint, endPoint);
+        if (idMode == 1)
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
         update();
         break;
     case geometricShape::triangle:
@@ -357,13 +376,12 @@ void draw2DWidget::setGraphicsMode(int newId)
     }
     //-------------------------finish-------------------------------
 
-    // change graphics mode and clean all
+    // change graphics mode and clear for new session
     if (newId == 2)
         graphicMode = graphicsMode::graphic2D;
     else
         graphicMode = graphicsMode::graphic3D;
-    clearImage();
-    modified = false;
+    clearImage(clearImageMode::clearForNewSession);
     //-------------------------finish-------------------------------
 
     // reload the previous session if the painter was paused
