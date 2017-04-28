@@ -1,3 +1,4 @@
+// Algorithms
 #ifndef SDI_PAINTER_H
 #define SDI_PAINTER_H
 

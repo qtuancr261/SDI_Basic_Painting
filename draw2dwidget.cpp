@@ -80,13 +80,13 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     switch (draw2DObjectMode)
     {
-    case draw2DMode::point:
+    case geometricShape::point:
         drawObject(eventPos);
         break;
-    case draw2DMode::line:
-    case draw2DMode::rect:
-    case draw2DMode::square:
-    case draw2DMode::circle:
+    case geometricShape::line:
+    case geometricShape::rect:
+    case geometricShape::square:
+    case geometricShape::circle:
         if (lastPoint.isNull())
             lastPoint = eventPos;
         else
@@ -95,7 +95,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
-    case draw2DMode::triangle:
+    case geometricShape::triangle:
         switch (triangleTypeID)
         {
         case 0: // Triangle
@@ -120,7 +120,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             break;
         }
         break;
-    case draw2DMode::parallelogram:
+    case geometricShape::parallelogram:
         if (lastPoint.isNull())
             lastPoint = eventPos;
         else if (lastPoint_2.isNull())
@@ -141,7 +141,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == draw2DMode::normal )
+    if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal )
         drawObject(eventPos);
     //emit mouseMoveTo();
     emit mouseMoveTo(QString("(x = %1| y = %2)").arg(QString::number((event->pos().x() - origin.x())))
@@ -152,7 +152,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->button() == Qt::LeftButton  && draw2DObjectMode == draw2DMode::normal)
+    if (event->button() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal)
     {
         drawObject(eventPos);
         //scribbling = false;
@@ -185,6 +185,16 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
     int rad = (myPenWidth / 2) + 2;
+    image.fill(qRgb(255, 255, 255));
+    if (!setOfShapes.isEmpty())
+        for (SDI_GeometricShape* shape:setOfShapes)
+        {
+            QVector<SDI_Point> setOfPoints = shape->getSetOfPoints();
+            if (shape->getShapeId() == geometricShape::rect)
+                //painter.drawRect(SDI_Point(100, 20), SDI_Point(250, 500));
+                painter.drawRect(setOfPoints[0], setOfPoints[1]);
+                //update();
+        }
     modified = true;
     //------------------------------ set up panter ------------------//
 
@@ -192,35 +202,37 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
     //using painter to draw current 2D Object
     switch (draw2DObjectMode)
     {
-    case draw2DMode::point:
+    case geometricShape::point:
         painter.drawPoint(endPoint);
         update(QRect(endPoint, endPoint + QPoint(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
-    case draw2DMode::normal:
-    case draw2DMode::line:
+    case geometricShape::normal:
+    case geometricShape::line:
         painter.drawLine(lastPoint, endPoint);
         update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         lastPoint = endPoint;
         break;
-    case draw2DMode::rect:
+    case geometricShape::rect:
         if (lastPoint.x() < endPoint.x())
             painter.drawRect(lastPoint, endPoint);
         else
             painter.drawRect(endPoint, lastPoint);
-        update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+        //update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        update();
         break;
-    case draw2DMode::square:
+    case geometricShape::square:
     {
         SDI_Point exactPoint(endPoint);
         painter.drawSquare(lastPoint, exactPoint);
         update(QRect(lastPoint, exactPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
     }
         break;
-    case draw2DMode::circle:
+    case geometricShape::circle:
         painter.drawCircle(lastPoint, endPoint);
         update();
         break;
-    case draw2DMode::triangle:
+    case geometricShape::triangle:
     {
         switch (triangleTypeID)
         {
@@ -235,7 +247,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint) // handle draw Object
         }
         break;
     }
-    case draw2DMode::parallelogram:
+    case geometricShape::parallelogram:
         painter.drawParallelogram(lastPoint, lastPoint_2, endPoint);
         update();
         break;
@@ -264,28 +276,28 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
 {
     switch (newId) {
     case 1:
-        draw2DObjectMode = draw2DMode::point;
+        draw2DObjectMode = geometricShape::point;
         break;
     case 2:
-        draw2DObjectMode = draw2DMode::line;
+        draw2DObjectMode = geometricShape::line;
         break;
     case 3:
-        draw2DObjectMode = draw2DMode::rect;
+        draw2DObjectMode = geometricShape::rect;
         break;
     case 4:
-        draw2DObjectMode = draw2DMode::square;
+        draw2DObjectMode = geometricShape::square;
         break;
     case 5:
-        draw2DObjectMode = draw2DMode::parallelogram;
+        draw2DObjectMode = geometricShape::parallelogram;
         break;
     case 6:
-        draw2DObjectMode = draw2DMode::circle;
+        draw2DObjectMode = geometricShape::circle;
         break;
     case 7:
-        draw2DObjectMode = draw2DMode::triangle;
+        draw2DObjectMode = geometricShape::triangle;
         break;
     default:
-        draw2DObjectMode = draw2DMode::normal;
+        draw2DObjectMode = geometricShape::normal;
         break;
     }
     lastPoint = lastPoint_2 =  QPoint(0, 0); // reset

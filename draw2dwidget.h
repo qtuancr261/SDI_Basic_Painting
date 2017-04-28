@@ -1,3 +1,4 @@
+// GUI
 #ifndef DRAW2DWIDGET_H
 #define DRAW2DWIDGET_H
 
@@ -8,15 +9,11 @@
 #include <QSignalMapper>
 #include "sdi_painter.h"
 #include "sdi_point.h"
+#include "sdi_geometricshape.h"
 enum class graphicsMode
 {
    graphic2D = 2, graphic3D
 };
-enum class draw2DMode
-{
-    normal = 0, point, line, rect, square, parallelogram, circle, triangle
-};
-
 class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
 {
     Q_OBJECT
@@ -54,10 +51,12 @@ private:
 
     graphicsMode graphicMode;
     bool drawPausing;
-    draw2DMode draw2DObjectMode; // hold 2D Object ID
+    geometricShape draw2DObjectMode; // hold 2D Object ID
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
     QColor myPenColor;
+
+    QVector<SDI_GeometricShape*> setOfShapes;
 
 signals:
     void mouseMoveTo(QString currentPos);

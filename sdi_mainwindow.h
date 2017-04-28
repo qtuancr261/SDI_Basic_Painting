@@ -1,3 +1,4 @@
+// GUI
 #ifndef SDI_MAINWINDOW_H
 #define SDI_MAINWINDOW_H
 

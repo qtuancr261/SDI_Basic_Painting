@@ -1,3 +1,4 @@
+//GUI
 #ifndef LEFTTOOLSWIDGET_H
 #define LEFTTOOLSWIDGET_H
 

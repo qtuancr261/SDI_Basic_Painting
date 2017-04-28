@@ -1,3 +1,4 @@
+// object
 #ifndef SDI_POINT_H
 #define SDI_POINT_H
 #include <QPoint>
