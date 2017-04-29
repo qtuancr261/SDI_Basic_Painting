@@ -18,6 +18,10 @@ enum class clearImageMode
 {
    clearAll, clearForNewSession
 };
+enum class drawLineDelegateMode
+{
+    none, triangle, parrallelogram
+};
 
 class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
 {
@@ -47,6 +51,7 @@ private:
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
+    bool drawPausing;
     QImage image;
     QImage tempImage;
     QSize originalSize; // original size of loaded image
@@ -56,8 +61,8 @@ private:
     SDI_Point lastPoint_2;
 
     graphicsMode graphicMode;
-    bool drawPausing;
     geometricShape draw2DObjectMode; // hold 2D Object ID
+    drawLineDelegateMode delegateMode;
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
     QColor myPenColor;
