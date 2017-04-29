@@ -238,6 +238,10 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
                 painter.drawSquare(setOfPoints.at(0), setOfPoints.at(1));
             else if (currentShapeName == geometricShape::circle)
                 painter.drawCircle(setOfPoints.at(0), setOfPoints.at(1));
+            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 3)
+                painter.drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
+            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 2)
+                painter.drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
         }
     modified = true;
     //------------------------------ finish ------------------//
@@ -294,17 +298,20 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
         break;
     case geometricShape::triangle:
     {
-        switch (triangleTypeID)
-        {
-        case 0: //triangle
-            painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
-            update();
-            break;
-        case 1:// // Isosceles Right Triangle
-            painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
-            update();
-            break;
-        }
+        if (idMode == 1)
+            switch (triangleTypeID)
+            {
+            case 0: //triangle
+                painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
+                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint));
+                update();
+                break;
+            case 1:// // Isosceles Right Triangle
+                painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
+                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+                update();
+                break;
+            }
         break;
     }
     case geometricShape::parallelogram:

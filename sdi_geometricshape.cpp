@@ -10,6 +10,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
     case geometricShape::rect:
     case geometricShape::square:
     case geometricShape::circle:
+    case geometricShape::triangle: // isosceless Triangle
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         break;
