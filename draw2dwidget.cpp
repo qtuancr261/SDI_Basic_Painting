@@ -15,8 +15,8 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     myPenWidth = 2;
     graphicMode = graphicsMode::graphic2D;
     myPenColor = Qt::blue;
-    triangleTypeID = 0; // normal
-    delegateMode = drawLineDelegateMode::none;
+    triangleTypeID = 0; // normal triangle
+    delegateMode = drawLineDelegateMode::none; // disable delegate on startup
     drawPausing = false;
     setMouseTracking(true);
 }
@@ -107,7 +107,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = eventPos;
         else
         {
-            drawObject(eventPos,1);
+            drawObject(eventPos,1); // 1 means draw a permanent shape
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
@@ -170,7 +170,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     case geometricShape::square:
     case geometricShape::circle:
         if (!lastPoint.isNull())
-            drawObject(eventPos, 0);
+            drawObject(eventPos, 0); // 0 means draw a temporary shape
         break;
     case geometricShape::triangle:
         switch (triangleTypeID)
@@ -180,25 +180,22 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
                 break;
             else if (lastPoint_2.isNull())
             {
-                draw2DObjectMode = geometricShape::line;
-                delegateMode = drawLineDelegateMode::triangle;
+                draw2DObjectMode = geometricShape::line; // make a trick
+                delegateMode = drawLineDelegateMode::triangle; // delegate drawing triangle sides to drawLine function
                 drawObject(eventPos, 0);
             }
             else
             {
-                draw2DObjectMode = geometricShape::line;
+                draw2DObjectMode = geometricShape::line;// next trick
                 drawObject(eventPos,0);
-                //draw2DObjectMode = geometricShape::triangle;
-                //lastPoint = lastPoint_2 = QPoint(0, 0); // reset to null
             }
             break;
         case 1: // Isosceles Right Triangle
             if (lastPoint.isNull())
-                lastPoint = eventPos;
+                break;
             else
             {
                 drawObject(eventPos,0);
-                lastPoint = QPoint(0, 0); // set to null
             }
             break;
         }
@@ -244,7 +241,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle draw Object
+void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // handle draw Object
 {
     SDI_Painter painter(&image);
     int rad = (myPenWidth / 2) + 2;
@@ -257,7 +254,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     //--------------------------finish---------------------------------
 
     //Repaint existent shapes
-    drawExistentObject(&painter, idMode);
+    drawExistentObject(&painter, stateOfShape);
     //------------------------------ finish ------------------//
 
     //using painter to draw new shape
@@ -273,11 +270,11 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     case geometricShape::line:
         switch (delegateMode)
         {
-        case drawLineDelegateMode::triangle:
+        case drawLineDelegateMode::triangle: //
             if (lastPoint_2.isNull())
             {
                 painter.drawLine(lastPoint, endPoint);
-                draw2DObjectMode = geometricShape::triangle;
+                draw2DObjectMode = geometricShape::triangle; // restore draw2DObjectMode
             }
             else
             {
@@ -291,7 +288,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
             break;
         default:
             painter.drawLine(lastPoint, endPoint);
-            if (idMode == 1)
+            if (stateOfShape == 1)
             {
                 setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
                 update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
@@ -310,7 +307,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
             painter.drawRect(lastPoint, endPoint);
         else
             painter.drawRect(endPoint, lastPoint);
-        if (idMode == 1)
+        if (stateOfShape == 1)
         {
             setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
             update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
@@ -321,7 +318,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     case geometricShape::square:
     {
         painter.drawSquare(lastPoint, endPoint);
-        if(idMode == 1)
+        if(stateOfShape == 1)
         {
             setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
             update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
@@ -332,13 +329,13 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     }
     case geometricShape::circle:
         painter.drawCircle(lastPoint, endPoint);
-        if (idMode == 1)
+        if (stateOfShape == 1)
             setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
         update();
         break;
     case geometricShape::triangle:
     {
-        if (idMode == 1)
+        if (stateOfShape == 1)
             switch (triangleTypeID)
             {
             case 0: //triangle
@@ -352,6 +349,10 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
                 update();
                 break;
             }
+        else
+        {
+            painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
+        }
         break;
     }
     case geometricShape::parallelogram:
