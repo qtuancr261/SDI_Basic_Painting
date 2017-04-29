@@ -117,7 +117,9 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else if (lastPoint_2.isNull())
+            {
                 lastPoint_2 = eventPos;
+            }
             else
             {
                 drawObject(eventPos,1);
@@ -168,6 +170,37 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     case geometricShape::circle:
         if (!lastPoint.isNull())
             drawObject(eventPos, 0);
+        break;
+    case geometricShape::triangle:
+        switch (triangleTypeID)
+        {
+        case 0: // Triangle
+            if (lastPoint.isNull())
+                break;
+            else if (lastPoint_2.isNull())
+            {
+                draw2DObjectMode = geometricShape::line;
+                drawObject(eventPos, 0);
+                //draw2DObjectMode = geometricShape::triangle;
+            }
+            else
+            {
+                draw2DObjectMode = geometricShape::line;
+                drawObject(eventPos,0);
+                draw2DObjectMode = geometricShape::triangle;
+                //lastPoint = lastPoint_2 = QPoint(0, 0); // reset to null
+            }
+            break;
+        case 1: // Isosceles Right Triangle
+            if (lastPoint.isNull())
+                lastPoint = eventPos;
+            else
+            {
+                drawObject(eventPos,0);
+                lastPoint = QPoint(0, 0); // set to null
+            }
+            break;
+        }
         break;
     default:
         break;
@@ -223,30 +256,11 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
     //--------------------------finish---------------------------------
 
     //Repaint exist shapes
-    painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
-                        Qt::RoundJoin));
-    if (!setOfShapes.isEmpty())
-        for (SDI_GeometricShape* shape:setOfShapes)
-        {
-            QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
-            geometricShape currentShapeName{shape->getShapeId()};
-            if (currentShapeName == geometricShape::rect)
-                painter.drawRect(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::line)
-                painter.drawLine(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::square)
-                painter.drawSquare(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::circle)
-                painter.drawCircle(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 3)
-                painter.drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
-            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 2)
-                painter.drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
-        }
-    modified = true;
+    drawExistentObject(&painter, idMode);
     //------------------------------ finish ------------------//
 
     //using painter to draw new shape
+    painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     switch (draw2DObjectMode)
     {
     case geometricShape::point:
@@ -319,6 +333,32 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int idMode) // handle d
         update();
         break;
     }
+}
+
+void draw2DWidget::drawExistentObject(SDI_Painter *painter, int idMode)
+{
+    painter->setPen(QPen(myPenColor, idMode == 0 ? 1 : myPenWidth, Qt::SolidLine, Qt::RoundCap,
+                        Qt::RoundJoin));
+    if (!setOfShapes.isEmpty())
+        for (SDI_GeometricShape* shape:setOfShapes)
+        {
+            QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
+            geometricShape currentShapeName{shape->getShapeId()};
+            if (currentShapeName == geometricShape::rect)
+                painter->drawRect(setOfPoints.at(0), setOfPoints.at(1));
+            else if (currentShapeName == geometricShape::line)
+                painter->drawLine(setOfPoints.at(0), setOfPoints.at(1));
+            else if (currentShapeName == geometricShape::square)
+                painter->drawSquare(setOfPoints.at(0), setOfPoints.at(1));
+            else if (currentShapeName == geometricShape::circle)
+                painter->drawCircle(setOfPoints.at(0), setOfPoints.at(1));
+            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 3)
+                painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
+            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 2)
+                painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
+        }
+    modified = true;
+    update();
 }
 
 void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)

@@ -43,6 +43,7 @@ protected: // handle events
 
 private:
     void drawObject(const SDI_Point &endPoint, int idMode); // draw 2D Objects
+    void drawExistentObject(SDI_Painter *painter, int idMode);
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
