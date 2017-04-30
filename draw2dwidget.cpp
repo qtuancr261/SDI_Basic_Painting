@@ -93,12 +93,14 @@ void draw2DWidget::clearImage(clearImageMode clearID)
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
+    // left mouse press handler
     if (event->button() == Qt::LeftButton)
     switch (draw2DObjectMode)
     {
     case geometricShape::point:
         drawObject(eventPos, 1);
         break;
+    //-----------------------------------------------------------
     case geometricShape::line:
     case geometricShape::rect:
     case geometricShape::square:
@@ -111,6 +113,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = QPoint(0, 0); // set to null
         }
         break;
+   //-------------------------------------------------------------
     case geometricShape::triangle:
         switch (triangleTypeID)
         {
@@ -138,6 +141,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             break;
         }
         break;
+    //-------------------------------------------------------------
     case geometricShape::parallelogram:
         if (lastPoint.isNull())
             lastPoint = eventPos;
@@ -149,10 +153,17 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             lastPoint = lastPoint_2 = QPoint(0, 0);
         }
         break;
+    //-------------------------------------------------------------
     default: // scribbling mode
         //if (event->button() == Qt::LeftButton)
         //    lastPoint = eventPos;
         break;
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        lastPoint = lastPoint_2 = QPoint(0, 0);
+        delegateMode = drawLineDelegateMode::none;
+        drawObject(QPoint(0,0), 3); //
     }
 }
 
@@ -186,7 +197,6 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
             }
             else
             {
-                draw2DObjectMode = geometricShape::line;// next trick
                 drawObject(eventPos,0);
             }
             break;
@@ -200,6 +210,17 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
             break;
         }
         break;
+    case geometricShape::parallelogram:
+        if (lastPoint.isNull())
+            break;
+        else if (lastPoint_2.isNull())
+        {
+            draw2DObjectMode = geometricShape::line;
+            delegateMode = drawLineDelegateMode::parrallelogram;
+            drawObject(eventPos, 0);
+        }
+        else
+            drawObject(eventPos, 0);
     default:
         break;
     }
@@ -259,6 +280,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
 
     //using painter to draw new shape
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    if (stateOfShape != 3)
     switch (draw2DObjectMode)
     {
     case geometricShape::point:
@@ -276,15 +298,13 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
                 painter.drawLine(lastPoint, endPoint);
                 draw2DObjectMode = geometricShape::triangle; // restore draw2DObjectMode
             }
-            else
-            {
-                painter.drawLine(lastPoint, lastPoint_2);
-                painter.drawLine(lastPoint, endPoint);
-                painter.drawLine(lastPoint_2, endPoint);
-                draw2DObjectMode = geometricShape::triangle;
-            }
             break;
         case drawLineDelegateMode::parrallelogram:
+            if (lastPoint_2.isNull())
+            {
+                painter.drawLine(lastPoint, endPoint);
+                draw2DObjectMode = geometricShape::parallelogram;
+            }
             break;
         default:
             painter.drawLine(lastPoint, endPoint);
@@ -351,7 +371,10 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
             }
         else // icoscless Triangle
         {
-            painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
+            if (triangleTypeID == 0)
+                painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
+            else
+                painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
         }
         break;
     }
@@ -438,7 +461,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
         draw2DObjectMode = geometricShape::normal;
         break;
     }
-    lastPoint = lastPoint_2 =  QPoint(0, 0); // reset
+    lastPoint = lastPoint_2 =  QPoint(0, 0); // reset recorded position
     delegateMode = drawLineDelegateMode::none;
 }
 
