@@ -349,7 +349,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
                 update();
                 break;
             }
-        else
+        else // icoscless Triangle
         {
             painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
         }
@@ -357,6 +357,8 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
     }
     case geometricShape::parallelogram:
         painter.drawParallelogram(lastPoint, lastPoint_2, endPoint);
+        if (stateOfShape == 1)
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint));
         update();
         break;
     }
@@ -383,6 +385,8 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter, int idMode)
                 painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
             else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 2)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
+            else
+                painter->drawParallelogram(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
         }
     modified = true;
     update();

@@ -25,6 +25,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
     switch (shapeID)
     {
     case geometricShape::triangle:
+    case geometricShape::parallelogram:
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         setOfPoints.push_back(point3);
