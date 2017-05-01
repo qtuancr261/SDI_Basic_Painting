@@ -67,6 +67,12 @@ void draw2DWidget::setPenWidth(int newWidth)
     myPenWidth = newWidth;
 }
 
+void draw2DWidget::locateSelectedShape(SDI_Point &selectPos)
+{
+    if (!setOfShapes.isEmpty())
+        emit selectedShape(setOfShapes.at(0));
+}
+
 void draw2DWidget::clearImage(clearImageMode clearID)
 {
     image.fill(qRgb(255, 255, 255));
@@ -93,7 +99,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    // left mouse press handler
+    //--------------LEFT MOUSE HANDLER ----------------------------
     if (event->button() == Qt::LeftButton)
     switch (draw2DObjectMode)
     {
@@ -154,11 +160,12 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
         }
         break;
     //-------------------------------------------------------------
-    default: // scribbling mode
-        //if (event->button() == Qt::LeftButton)
-        //    lastPoint = eventPos;
+    default: // select shape mode
+        locateSelectedShape(eventPos);
         break;
     }
+
+    //--------------RIGHT MOUSE HANDLER---------------------------
     else if (event->button() == Qt::RightButton)
     {
         lastPoint = lastPoint_2 = QPoint(0, 0);
@@ -419,18 +426,12 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
 {
     if (image->size() == newSize)
         return;
-    static int callTime {0};
     QImage newImage(newSize, QImage::Format_RGB32);
     newImage.fill(qRgb(255, 255, 255));
     //-----------------------------------------
-    // draw x-axis and y-axis
     SDI_Painter painter(&newImage);
-    //paintOxy(painter);
-    //line1.push_back(QPoint(250, 200));
-   // if (callTime == 1) image->fill(qRgb(255, 255, 255));
     painter.drawImage(QPoint(0, 0), *image);
     *image = newImage;
-    callTime++;
 }
 
 void draw2DWidget::setDraw2DObjectMode(int newId)

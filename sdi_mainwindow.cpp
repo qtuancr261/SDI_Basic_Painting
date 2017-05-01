@@ -291,6 +291,11 @@ void SDI_MainWindow::showMessage(QString message)
     statusBar()->showMessage(message);
 }
 
+void SDI_MainWindow::showSelectedShape(const SDI_GeometricShape *shape)
+{
+
+}
+
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
       leftSideDockWidget{new QDockWidget(this)},

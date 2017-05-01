@@ -37,7 +37,7 @@ public:
     bool isModified() const {return modified;} // check if image has been modified
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
-
+    void locateSelectedShape(SDI_Point& selectPos);
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -72,6 +72,9 @@ private:
 
 signals:
     void mouseMoveTo(QString currentPos);
+    void selectedShape(const SDI_GeometricShape* shape);
+
+
 public slots:
     void setDraw2DObjectMode(int newId);
     void setGraphicsMode(int newId);

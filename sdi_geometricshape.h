@@ -14,6 +14,7 @@ class SDI_GeometricShape
 private:
     QVector<SDI_Point> setOfPoints;
     geometricShape shapeID;
+    static QVector<QString> shapeName;
 public:
     SDI_GeometricShape() = default;
     SDI_GeometricShape(geometricShape id, const SDI_Point& point1, const SDI_Point& point2);
@@ -22,6 +23,7 @@ public:
     ~SDI_GeometricShape() = default;
     geometricShape getShapeId() const;
     QVector<SDI_Point>& getSetOfPoints();
+    QString getInfo() const;
 };
 
 #endif // SDI_GEOMETRICSHAPE_H

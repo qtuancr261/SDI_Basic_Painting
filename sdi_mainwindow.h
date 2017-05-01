@@ -80,6 +80,7 @@ private slots:
 public slots:
     void showDockWidget(bool enable);
     void showMessage(QString message);
+    void showSelectedShape(const SDI_GeometricShape* shape);
 signals:
     void triangleTypeChanged(int triangleTypeID);
 };

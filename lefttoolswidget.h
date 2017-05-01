@@ -20,6 +20,8 @@ class leftToolsWidget : public QWidget
 public:
     explicit leftToolsWidget(QWidget *parent = nullptr);
     ~leftToolsWidget() = default;
+
+private:
     QPushButton* graphic2DMode;
     QPushButton* graphic3DMode;
     QPushButton* helpMode;
@@ -43,7 +45,6 @@ public:
     QSpinBox* zoomBox;
     QLabel* shapeName;
     QTextEdit* shapeInfo;
-private:
     void setupGUI();
     void setDrawModeButtonStyle(QPushButton* button);
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
