@@ -23,7 +23,7 @@ public:
     ~SDI_GeometricShape() = default;
     geometricShape getShapeId() const;
     QVector<SDI_Point>& getSetOfPoints();
-    QString getInfo() const;
+    QString getShapeName() const;
 };
 
 #endif // SDI_GEOMETRICSHAPE_H

@@ -51,9 +51,10 @@ QVector<SDI_Point> &SDI_GeometricShape::getSetOfPoints()
     return setOfPoints;
 }
 
-QString SDI_GeometricShape::getInfo() const
+QString SDI_GeometricShape::getShapeName() const
 {
     return shapeName.at(static_cast<int>(shapeID));
 }
+
 
 

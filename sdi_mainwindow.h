@@ -35,8 +35,9 @@ private:
     QMenu* ViewMenu;
     QMenu* ToolsMenu;
     QMenu* HelpMenu;
-    QDockWidget* leftSideDockWidget;
+    QDockWidget* dockWidget;
     draw2DWidget* central2DWidget;
+    leftToolsWidget* mainToolsWidget;
     // File Actions
     QAction* openAct;
     QList<QAction*> saveAsActs;

@@ -5,6 +5,12 @@ leftToolsWidget::leftToolsWidget(QWidget *parent) : QWidget(parent)
     setupGUI();
 }
 
+void leftToolsWidget::setInfoBox(QString shapeName, QString shapeData)
+{
+    shapeNameLabel->setText(shapeName);
+    shapeDataTEdit->setText(shapeData);
+}
+
 void leftToolsWidget::setupGUI()
 {
     // select graphic mode
@@ -90,14 +96,14 @@ void leftToolsWidget::setupGUI()
     zoomGroupBox->setLayout(zoomLayout);
     //---------------------------------------------------------------------
     // geometric shape infomation
-    shapeName = new QLabel("Noname");
-    shapeInfo = new QTextEdit();
-    shapeInfo->setReadOnly(true);
-    shapeInfo->setText("Read-Only");
+    shapeNameLabel = new QLabel("Noname");
+    shapeDataTEdit = new QTextEdit();
+    shapeDataTEdit->setReadOnly(true);
+    shapeDataTEdit->setText("Read-Only");
     QVBoxLayout* infoLayout{new QVBoxLayout(this)};
-    shapeName->setAlignment(Qt::AlignCenter);
-    infoLayout->addWidget(shapeName);
-    infoLayout->addWidget(shapeInfo);
+    shapeNameLabel->setAlignment(Qt::AlignCenter);
+    infoLayout->addWidget(shapeNameLabel);
+    infoLayout->addWidget(shapeDataTEdit);
     QGroupBox* infoGroupBox{new QGroupBox(tr("Thông tin hinh dang chon"))};
     infoGroupBox->setLayout(infoLayout);
     //---------------------------------------------------------------------

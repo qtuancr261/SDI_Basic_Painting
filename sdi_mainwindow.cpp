@@ -174,16 +174,16 @@ void SDI_MainWindow::createToolsBar()
 void SDI_MainWindow::createDockWidget()
 {
     QGroupBox* leftToolsBox{new QGroupBox(tr("Thanh công cụ chính"), this)};
-    leftToolsWidget* widget{new leftToolsWidget(this)};
-    QObject::connect(widget, SIGNAL(changeGraphicsMode(int)), central2DWidget, SLOT(setGraphicsMode(int)));
+    //leftToolsWidget* widget{new leftToolsWidget(this)};
+    QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(int)), central2DWidget, SLOT(setGraphicsMode(int)));
     //QObject::connect(widget, SIGNAL(changeGraphicMode(int)), this, SLOT(mayBeSaveToChangeGraphicMode(int)));
     QVBoxLayout* leftToolsBoxLayout{new QVBoxLayout(leftToolsBox)};
-    leftToolsBoxLayout->addWidget(widget);
+    leftToolsBoxLayout->addWidget(mainToolsWidget);
     leftToolsBox->setLayout(leftToolsBoxLayout);
-    leftSideDockWidget->setWidget(leftToolsBox);
-    leftSideDockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
-    leftSideDockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
-    addDockWidget(Qt::RightDockWidgetArea, leftSideDockWidget);
+    dockWidget->setWidget(leftToolsBox);
+    dockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
+    dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+    addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
 
 void SDI_MainWindow::setupDrawAct(QAction *drawAct)
@@ -281,9 +281,9 @@ void SDI_MainWindow::aboutSDI_Painting()
 void SDI_MainWindow::showDockWidget(bool enable)
 {
     if (enable)
-        restoreDockWidget(leftSideDockWidget);
+        restoreDockWidget(dockWidget);
     else
-        removeDockWidget(leftSideDockWidget);
+        removeDockWidget(dockWidget);
 }
 
 void SDI_MainWindow::showMessage(QString message)
@@ -293,13 +293,14 @@ void SDI_MainWindow::showMessage(QString message)
 
 void SDI_MainWindow::showSelectedShape(const SDI_GeometricShape *shape)
 {
-
+    mainToolsWidget->setInfoBox(shape->getShapeName(), "BT");
 }
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      leftSideDockWidget{new QDockWidget(this)},
+      dockWidget{new QDockWidget(this)},
       central2DWidget{new draw2DWidget(this)},
+      mainToolsWidget{new leftToolsWidget(this)},
       draw2DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
       penWidthBox{new QSpinBox(this)}
@@ -313,6 +314,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setWindowTitle("SDI Basic Painting");
     statusBar()->showMessage("Demo 0.3 - 18/04/2017 - Chế độ vẽ tự do - hoàn thành vẽ 7 đối tượng hình học cơ bản");
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)), this, SLOT(showMessage(QString)));
+    QObject::connect(central2DWidget, SIGNAL(selectedShape(const SDI_GeometricShape*)), this, SLOT(showSelectedShape(const SDI_GeometricShape*)));
 }
 
 SDI_MainWindow::~SDI_MainWindow()
