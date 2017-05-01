@@ -172,7 +172,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     SDI_Point eventPos(event->pos());
     switch (draw2DObjectMode)
     {
-    case geometricShape::normal:
+    case geometricShape::selectShape:
         //if (event->button() == Qt::LeftButton)
         //    drawObject(eventPos,1);
         break;
@@ -235,7 +235,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->button() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal)
+    if (event->button() == Qt::LeftButton  && draw2DObjectMode == geometricShape::selectShape)
     {
         drawObject(eventPos, 0);
         //scribbling = false;
@@ -287,7 +287,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
         painter.drawPoint(endPoint);
         update(QRect(endPoint, endPoint + QPoint(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
         break;
-    case geometricShape::normal:
+    case geometricShape::selectShape:
         break;
     case geometricShape::line:
         switch (delegateMode)
@@ -458,7 +458,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
         draw2DObjectMode = geometricShape::triangle;
         break;
     default:
-        draw2DObjectMode = geometricShape::normal;
+        draw2DObjectMode = geometricShape::selectShape;
         break;
     }
     lastPoint = lastPoint_2 =  QPoint(0, 0); // reset recorded position

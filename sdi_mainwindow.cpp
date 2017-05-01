@@ -56,10 +56,10 @@ void SDI_MainWindow::createActions()
     aboutQtAct = new QAction(QIcon(":/images/icons/QtIcon.png"), tr("Thông tin về Qt/Bản quyền"), this);
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
-    QAction* drawAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Vẽ tự do"), this)};
-    drawAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
-    drawAct->setStatusTip(tr("Vẽ tự do, nhấn và giữ chuột để vẽ ..."));
-    setupDrawAct(drawAct);
+    QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Vẽ tự do"), this)};
+    selectShapeAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    selectShapeAct->setStatusTip(tr("Che do chon hinh ..."));
+    setupDrawAct(selectShapeAct);
 
     QAction* drawPointAct{new QAction(QIcon(":/images/icons/point.png"), tr("Vẽ điểm"), this)};
     drawPointAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
@@ -105,7 +105,7 @@ void SDI_MainWindow::createActions()
         QObject::connect(draw2DObjectActs[i], SIGNAL(toggled(bool)), draw2DObjectMapper, SLOT(map()));
     }
     QObject::connect(draw2DObjectMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
-    drawAct->setChecked(true); // default draw mode
+    selectShapeAct->setChecked(true); // default draw mode
 }
 
 void SDI_MainWindow::createMenus()

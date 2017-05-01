@@ -81,13 +81,25 @@ void leftToolsWidget::setupGUI()
     zoomSlider = new QSlider(Qt::Horizontal, this);
     zoomBox = new QSpinBox(this);
     setSlider_BoxSytle(zoomSlider, zoomBox, -5, 5);
+    //QObject::connect(zoomSlider, SIGNAL(valueChanged(int)), infoText, SLOT(zoomIn(int)));
     QGridLayout* zoomLayout{new QGridLayout(this)};
     zoomLayout->addWidget(new QLabel(tr("Tỉ lệ")), 0, 0);
     zoomLayout->addWidget(zoomSlider, 0, 1);
     zoomLayout->addWidget(zoomBox, 0, 2);
     QGroupBox* zoomGroupBox{new QGroupBox(tr("Phép biến đổi tỉ lệ"), this)};
     zoomGroupBox->setLayout(zoomLayout);
-
+    //---------------------------------------------------------------------
+    // geometric shape infomation
+    shapeName = new QLabel("Noname");
+    shapeInfo = new QTextEdit();
+    shapeInfo->setReadOnly(true);
+    shapeInfo->setText("Read-Only");
+    QVBoxLayout* infoLayout{new QVBoxLayout(this)};
+    shapeName->setAlignment(Qt::AlignCenter);
+    infoLayout->addWidget(shapeName);
+    infoLayout->addWidget(shapeInfo);
+    QGroupBox* infoGroupBox{new QGroupBox(tr("Thông tin hinh dang chon"))};
+    infoGroupBox->setLayout(infoLayout);
     //---------------------------------------------------------------------
     QSpacerItem* verticalSpacer{new QSpacerItem(20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
@@ -96,6 +108,7 @@ void leftToolsWidget::setupGUI()
     mainLayout->addWidget(rotateGroupBox);
     mainLayout->addWidget(symmetryGroupBox);
     mainLayout->addWidget(zoomGroupBox);
+    mainLayout->addWidget(infoGroupBox);
     mainLayout->addItem(verticalSpacer);
     setLayout(mainLayout);
 

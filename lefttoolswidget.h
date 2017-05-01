@@ -9,6 +9,7 @@
 #include <QSpinBox>
 #include <QRadioButton>
 #include <QGroupBox>
+#include <QTextEdit>
 #include <QColorDialog>
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -40,6 +41,8 @@ public:
 
     QSlider* zoomSlider;
     QSpinBox* zoomBox;
+    QLabel* shapeName;
+    QTextEdit* shapeInfo;
 private:
     void setupGUI();
     void setDrawModeButtonStyle(QPushButton* button);

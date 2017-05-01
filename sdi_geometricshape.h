@@ -6,7 +6,7 @@
 #include <QVector>
 enum class geometricShape
 {
-    normal = 0, point, line, rect, square, parallelogram, circle, triangle
+    selectShape = 0, point, line, rect, square, parallelogram, circle, triangle
 };
 
 class SDI_GeometricShape
