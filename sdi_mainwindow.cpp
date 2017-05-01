@@ -56,7 +56,7 @@ void SDI_MainWindow::createActions()
     aboutQtAct = new QAction(QIcon(":/images/icons/QtIcon.png"), tr("Thông tin về Qt/Bản quyền"), this);
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
-    QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Vẽ tự do"), this)};
+    QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Chon hinh"), this)};
     selectShapeAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
     selectShapeAct->setStatusTip(tr("Che do chon hinh ..."));
     setupDrawAct(selectShapeAct);

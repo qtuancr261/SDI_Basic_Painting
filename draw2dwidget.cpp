@@ -438,27 +438,35 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
     switch (newId) {
     case 1:
         draw2DObjectMode = geometricShape::point;
+        setCursor(Qt::ClosedHandCursor);
         break;
     case 2:
         draw2DObjectMode = geometricShape::line;
+        setCursor(Qt::ClosedHandCursor);
         break;
     case 3:
         draw2DObjectMode = geometricShape::rect;
+        setCursor(Qt::ClosedHandCursor);
         break;
     case 4:
         draw2DObjectMode = geometricShape::square;
+        setCursor(Qt::ClosedHandCursor);
         break;
     case 5:
         draw2DObjectMode = geometricShape::parallelogram;
+        setCursor(Qt::ClosedHandCursor);
         break;
     case 6:
         draw2DObjectMode = geometricShape::circle;
+        setCursor(Qt::ClosedHandCursor);
         break;
     case 7:
         draw2DObjectMode = geometricShape::triangle;
+        setCursor(Qt::ClosedHandCursor);
         break;
     default:
         draw2DObjectMode = geometricShape::selectShape;
+        setCursor(Qt::PointingHandCursor);
         break;
     }
     lastPoint = lastPoint_2 =  QPoint(0, 0); // reset recorded position
