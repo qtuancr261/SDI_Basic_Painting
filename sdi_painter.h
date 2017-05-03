@@ -21,7 +21,7 @@ public:
     virtual void drawLine(const SDI_Point &p1, const SDI_Point &p2);
     static QString getLineData(const SDI_Point &p1, const SDI_Point &p2, const SDI_Point& Origin, QRect& boundinREct);
     virtual void drawRect(const SDI_Point& topLeft, const SDI_Point& bottomRight);
-    static QString getRectData(const SDI_Point&topLeft, const SDI_Point& bottomRight, const SDI_Point& Origin);
+    static QString getRectData(const SDI_Point&topLeft, const SDI_Point& bottomRight, const SDI_Point& Origin, QRect& boundinREct);
     virtual void drawSquare(const SDI_Point &firstPoint, const SDI_Point &lastPoint);
     static QString getSquareData(const SDI_Point& firstPoint, const SDI_Point& lastPoint, const SDI_Point& Origin);
     virtual void drawCircle(const SDI_Point& centralPoint, const SDI_Point& pointOnCircle);

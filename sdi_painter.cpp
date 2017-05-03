@@ -96,6 +96,7 @@ QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const
                    "                  <li>(%3; %4)</li>"
                    "            </ol>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
                                           .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()));
+    //----------------Calculate bounding rect---------------------------------
     int xLeft{(p1.x() < p2.x() ? p1.x() : p2.x())};
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
     int height{qAbs(p1.y() - p2.y())};
@@ -116,7 +117,7 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(bottomLeft, bottomRight);
 }
 
-QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bottomRight, const SDI_Point &Origin)
+QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bottomRight, const SDI_Point &Origin, QRect &boundinREct)
 {
     SDI_Point topRight{bottomRight.x(), topLeft.y()};
     SDI_Point bottomLeft{topLeft.x(), bottomRight.y()};
@@ -137,6 +138,14 @@ QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bott
                                           .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
                                           .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
                                           .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
+
+    //----------------Calculate bounding rect---------------------------------
+    int xLeft{(topLeft.x() < bottomRight.x() ? topLeft.x() : bottomRight.x())};
+    int yLeft{(topLeft.y() < bottomRight.y() ? topLeft.y() : bottomRight.y())};
+    int height{qAbs(topLeft.y() - bottomRight.y())};
+    int width{qAbs(topLeft.x() - bottomRight.x())};
+    boundinREct.setTopLeft(QPoint(xLeft, yLeft));
+    boundinREct.setSize(QSize(width, height));
     return data;
 }
 

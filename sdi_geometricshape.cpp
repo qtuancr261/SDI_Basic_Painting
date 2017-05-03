@@ -77,7 +77,7 @@ void SDI_GeometricShape::setShapeData(const SDI_Point &Origin)
         shapeData = SDI_Painter::getLineData(setOfPoints.at(0), setOfPoints.at(1), Origin, shapeBoundingRect);
         break;
     case geometricShape::rect:
-        shapeData = SDI_Painter::getRectData(setOfPoints.at(0), setOfPoints.at(1), Origin);
+        shapeData = SDI_Painter::getRectData(setOfPoints.at(0), setOfPoints.at(1), Origin, shapeBoundingRect);
         break;
     case geometricShape::square:
         shapeData = SDI_Painter::getSquareData(setOfPoints.at(0), setOfPoints.at(1), Origin);
