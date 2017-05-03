@@ -99,7 +99,7 @@ QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const
     int xLeft{(p1.x() < p2.x() ? p1.x() : p2.x())};
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
     int height{qAbs(p1.y() - p2.y())};
-    int width{qAbs(p1.x() - p2.y())};
+    int width{qAbs(p1.x() - p2.x())};
     boundinREct.setTopLeft(QPoint(xLeft, yLeft));
     boundinREct.setSize(QSize(width, height));
 
