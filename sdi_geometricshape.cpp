@@ -30,6 +30,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         setOfPoints.push_back(point3);
+        calculateShape(Origin);
         break;
     default:
         break;
@@ -95,6 +96,9 @@ void SDI_GeometricShape::calculateShape(const SDI_Point &Origin)
         break;
     case geometricShape::circle:
         SDI_Painter::getCircleData(*this, Origin);
+        break;
+    case geometricShape::triangle:
+        SDI_Painter::getTriangleData(*this, Origin);
         break;
     default:
         break;

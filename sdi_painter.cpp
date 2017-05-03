@@ -288,6 +288,28 @@ void SDI_Painter::getTriangleData(SDI_GeometricShape &shape, const SDI_Point &Or
     SDI_Point point1{shape.getSetOfPoints().at(0)};
     SDI_Point point2{shape.getSetOfPoints().at(1)};
     SDI_Point point3{shape.getSetOfPoints().at(2)};
+
+    int xLeft{qMin(qMin(point1.x(), point2.x()), point3.x())};
+    int xRight{qMax(qMax(point1.x(), point2.x()), point3.x())};
+    int yLeft{qMin(qMin(point1.y(), point2.y()), point3.y())};
+    int yRight{qMax(qMax(point1.y(), point2.y()), point3.y())};
+
+    SDI_Point userP1{SDI_Point::convertToUserSystem(point1, Origin)};
+    SDI_Point userP2{SDI_Point::convertToUserSystem(point2, Origin)};
+    SDI_Point userP3{SDI_Point::convertToUserSystem(point3, Origin)};
+
+    QString data;
+    data = QString("<ul>"
+                   "            <li>Ba đinh cua tam giac:</li>"
+                   "            <ol>"
+                   "                  <li>(%1; %2)</li>"
+                   "                  <li>(%3; %4)</li>"
+                   "                  <li>(%5; %6)</li>"
+                   "            </ol>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
+                                       .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()))
+                                       .arg(QString::number(userP3.x())).arg(QString::number(userP3.y()));
+    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
+    shape.setShapeData(data);
 }
 
 void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_Point &epoint)
