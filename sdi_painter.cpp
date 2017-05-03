@@ -84,7 +84,7 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
     }
 }
 
-QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const SDI_Point &Origin, QRect &boundinREct)
+QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const SDI_Point &Origin, QRect &boundinRect)
 {
     SDI_Point userP1(SDI_Point::convertToUserSystem(p1, Origin));
     SDI_Point userP2(SDI_Point::convertToUserSystem(p2, Origin));
@@ -101,8 +101,8 @@ QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
     int height{qAbs(p1.y() - p2.y())};
     int width{qAbs(p1.x() - p2.x())};
-    boundinREct.setTopLeft(QPoint(xLeft, yLeft));
-    boundinREct.setSize(QSize(width, height));
+    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
+    boundinRect.setSize(QSize(width, height));
 
     return data;
 }
@@ -117,7 +117,7 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(bottomLeft, bottomRight);
 }
 
-QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bottomRight, const SDI_Point &Origin, QRect &boundinREct)
+QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bottomRight, const SDI_Point &Origin, QRect &boundinRect)
 {
     SDI_Point topRight{bottomRight.x(), topLeft.y()};
     SDI_Point bottomLeft{topLeft.x(), bottomRight.y()};
@@ -144,8 +144,8 @@ QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bott
     int yLeft{(topLeft.y() < bottomRight.y() ? topLeft.y() : bottomRight.y())};
     int height{qAbs(topLeft.y() - bottomRight.y())};
     int width{qAbs(topLeft.x() - bottomRight.x())};
-    boundinREct.setTopLeft(QPoint(xLeft, yLeft));
-    boundinREct.setSize(QSize(width, height));
+    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
+    boundinRect.setSize(QSize(width, height));
     return data;
 }
 
@@ -176,7 +176,7 @@ void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPo
     drawLine(bottomLeft, exactPoint);
 }
 
-QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point &lastPoint, const SDI_Point &Origin)
+QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point &lastPoint, const SDI_Point &Origin, QRect &boundinRect)
 {
     SDI_Point exactPoint{lastPoint};
     int rectWidth{qAbs(exactPoint.x() - firstPoint.x())};
@@ -214,8 +214,14 @@ QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point 
                                           .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
                                           .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
                                           .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
-    return data;
 
+    int xLeft{(topRight.x() < bottomLeft.x() ? topRight.x() : bottomLeft.x())};
+    int yLeft{(topRight.y() < bottomLeft.y() ? topRight.y() : bottomLeft.y())};
+    int height{qAbs(topRight.y() - bottomLeft.y())};
+    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
+    boundinRect.setSize(QSize(height, height));
+
+    return data;
 }
 
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
@@ -226,9 +232,9 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
 
-QString SDI_Painter::getCircleData(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle, const SDI_Point &Origin)
+QString SDI_Painter::getCircleData(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle, const SDI_Point &Origin, QRect &boundinRect)
 {
-    double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
+    int radius {static_cast<int>(SDI_Point::distance(centralPoint, pointOnCircle))};
     SDI_Point userCentralPoint(SDI_Point::convertToUserSystem(centralPoint, Origin));
     QString data;
     data = QString("<ul>"
@@ -238,6 +244,11 @@ QString SDI_Painter::getCircleData(const SDI_Point &centralPoint, const SDI_Poin
                    "                  <li>Bán kính: %3</li>"
                    "            </ol>").arg(QString::number(userCentralPoint.x())).arg(QString::number(userCentralPoint.y()))
                                           .arg(QString::number(radius));
+
+    int xLeft{centralPoint.x() - radius};
+    int yLeft{centralPoint.y() - radius};
+    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
+    boundinRect.setSize(QSize(radius*2, radius*2));
     return data;
 
 }
