@@ -405,18 +405,16 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter, int idMode)
         for (SDI_GeometricShape* shape:setOfShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
-            geometricShape currentShapeName{shape->getShapeId()};
-            if (currentShapeName == geometricShape::rect)
-                painter->drawRect(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::line)
+            geometricShape shapeName{shape->getShapeId()};
+            if (shapeName == geometricShape::rect || shapeName == geometricShape::square)
+                painter->drawTetragon(setOfPoints);
+            else if (shapeName == geometricShape::line)
                 painter->drawLine(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::square)
-                painter->drawSquare(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::circle)
+            else if (shapeName == geometricShape::circle)
                 painter->drawCircle(setOfPoints.at(0), setOfPoints.at(1));
-            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 3)
+            else if (shapeName == geometricShape::triangle && setOfPoints.size() == 3)
                 painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
-            else if (currentShapeName == geometricShape::triangle && setOfPoints.size() == 2)
+            else if (shapeName == geometricShape::triangle && setOfPoints.size() == 2)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
             else
                 painter->drawParallelogram(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));

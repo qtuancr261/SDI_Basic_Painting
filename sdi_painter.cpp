@@ -65,6 +65,14 @@ void SDI_Painter::drawPoint(int x, int y)
     QPainter::drawPoint(x,y);
 }
 
+void SDI_Painter::drawTetragon(QVector<SDI_Point> &points)
+{
+    drawLine(points.at(0), points.at(1));
+    drawLine(points.at(1), points.at(2));
+    drawLine(points.at(2), points.at(3));
+    drawLine(points.at(3), points.at(0));
+}
+
 void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
 {
      //QPainter::drawLine(p1, p2);
@@ -84,8 +92,10 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
     }
 }
 
-QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const SDI_Point &Origin, QRect &boundinRect)
+void SDI_Painter::getLineData(SDI_GeometricShape &shape, const SDI_Point &Origin)
 {
+    SDI_Point p1(shape.getSetOfPoints().at(0));
+    SDI_Point p2(shape.getSetOfPoints().at(1));
     SDI_Point userP1(SDI_Point::convertToUserSystem(p1, Origin));
     SDI_Point userP2(SDI_Point::convertToUserSystem(p2, Origin));
     QString data;
@@ -101,10 +111,8 @@ QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
     int height{qAbs(p1.y() - p2.y())};
     int width{qAbs(p1.x() - p2.x())};
-    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
-    boundinRect.setSize(QSize(width, height));
-
-    return data;
+    shape.setShapeData(data);
+    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width, height));
 }
 
 void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRight)
@@ -117,10 +125,18 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(bottomLeft, bottomRight);
 }
 
-QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bottomRight, const SDI_Point &Origin, QRect &boundinRect)
+void SDI_Painter::getRectData(SDI_GeometricShape& shape, const SDI_Point &Origin)
 {
+    SDI_Point topLeft(shape.getSetOfPoints().at(0));
+    SDI_Point bottomRight(shape.getSetOfPoints().at(1));
     SDI_Point topRight{bottomRight.x(), topLeft.y()};
     SDI_Point bottomLeft{topLeft.x(), bottomRight.y()};
+    shape.getSetOfPoints().clear();
+    shape.getSetOfPoints().push_back(topLeft);
+    shape.getSetOfPoints().push_back(topRight);
+    shape.getSetOfPoints().push_back(bottomRight);
+    shape.getSetOfPoints().push_back(bottomLeft);
+
     SDI_Point userTopL(SDI_Point::convertToUserSystem(topLeft, Origin));
     SDI_Point userTopR(SDI_Point::convertToUserSystem(topRight, Origin));
     SDI_Point userBotR(SDI_Point::convertToUserSystem(bottomRight, Origin));
@@ -144,9 +160,8 @@ QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bott
     int yLeft{(topLeft.y() < bottomRight.y() ? topLeft.y() : bottomRight.y())};
     int height{qAbs(topLeft.y() - bottomRight.y())};
     int width{qAbs(topLeft.x() - bottomRight.x())};
-    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
-    boundinRect.setSize(QSize(width, height));
-    return data;
+    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width, height));
+    shape.setShapeData(data);
 }
 
 void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPoint)
@@ -176,9 +191,10 @@ void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPo
     drawLine(bottomLeft, exactPoint);
 }
 
-QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point &lastPoint, const SDI_Point &Origin, QRect &boundinRect)
+void SDI_Painter::getSquareData(SDI_GeometricShape& shape, const SDI_Point &Origin)
 {
-    SDI_Point exactPoint{lastPoint};
+    SDI_Point firstPoint(shape.getSetOfPoints().at(0));
+    SDI_Point exactPoint{shape.getSetOfPoints().at(1)};
     int rectWidth{qAbs(exactPoint.x() - firstPoint.x())};
     int rectHeight{qAbs(exactPoint.y() - firstPoint.y())};
     if (rectWidth > rectHeight)
@@ -197,6 +213,12 @@ QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point 
     }
     SDI_Point topRight{exactPoint.x(), firstPoint.y()};
     SDI_Point bottomLeft{firstPoint.x(), exactPoint.y()};
+    shape.getSetOfPoints().clear();
+    shape.getSetOfPoints().push_back(firstPoint);
+    shape.getSetOfPoints().push_back(topRight);
+    shape.getSetOfPoints().push_back(exactPoint);
+    shape.getSetOfPoints().push_back(bottomLeft);
+
     SDI_Point userTopL(SDI_Point::convertToUserSystem(firstPoint, Origin));
     SDI_Point userTopR(SDI_Point::convertToUserSystem(topRight, Origin));
     SDI_Point userBotR(SDI_Point::convertToUserSystem(exactPoint, Origin));
@@ -218,10 +240,8 @@ QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point 
     int xLeft{(topRight.x() < bottomLeft.x() ? topRight.x() : bottomLeft.x())};
     int yLeft{(topRight.y() < bottomLeft.y() ? topRight.y() : bottomLeft.y())};
     int height{qAbs(topRight.y() - bottomLeft.y())};
-    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
-    boundinRect.setSize(QSize(height, height));
-
-    return data;
+    shape.setShapeBoundinRect(QPoint(xLeft,yLeft), QSize(height, height));
+    shape.setShapeData(data);
 }
 
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
@@ -232,8 +252,10 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
 
-QString SDI_Painter::getCircleData(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle, const SDI_Point &Origin, QRect &boundinRect)
+void SDI_Painter::getCircleData(SDI_GeometricShape& shape, const SDI_Point &Origin)
 {
+    SDI_Point centralPoint{shape.getSetOfPoints().at(0)};
+    SDI_Point pointOnCircle{shape.getSetOfPoints().at(1)};
     int radius {static_cast<int>(SDI_Point::distance(centralPoint, pointOnCircle))};
     SDI_Point userCentralPoint(SDI_Point::convertToUserSystem(centralPoint, Origin));
     QString data;
@@ -247,10 +269,8 @@ QString SDI_Painter::getCircleData(const SDI_Point &centralPoint, const SDI_Poin
 
     int xLeft{centralPoint.x() - radius};
     int yLeft{centralPoint.y() - radius};
-    boundinRect.setTopLeft(QPoint(xLeft, yLeft));
-    boundinRect.setSize(QSize(radius*2, radius*2));
-    return data;
-
+    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(radius*2, radius*2));
+    shape.setShapeData(data);
 }
 
 void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3)
@@ -261,6 +281,13 @@ void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2,
     drawLine(point1, point2);
     drawLine(point2, point3);
     drawLine(point3, point1);
+}
+
+void SDI_Painter::getTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+{
+    SDI_Point point1{shape.getSetOfPoints().at(0)};
+    SDI_Point point2{shape.getSetOfPoints().at(1)};
+    SDI_Point point3{shape.getSetOfPoints().at(2)};
 }
 
 void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_Point &epoint)

@@ -13,7 +13,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
     case geometricShape::triangle: // isosceless Triangle
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
-        setShapeData(Origin);
+        calculateShape(Origin);
         break;
     default:
         break;
@@ -65,25 +65,36 @@ QString SDI_GeometricShape::getShapeData() const
     return shapeData;
 }
 
+void SDI_GeometricShape::setShapeData(QString newData)
+{
+    shapeData = newData;
+}
+
 const QRect &SDI_GeometricShape::getShapeBoundinRect() const
 {
     return shapeBoundingRect;
 }
 
-void SDI_GeometricShape::setShapeData(const SDI_Point &Origin)
+void SDI_GeometricShape::setShapeBoundinRect(const QPoint &topLeft, const QSize &rectSize)
+{
+    shapeBoundingRect.setTopLeft(topLeft);
+    shapeBoundingRect.setSize(rectSize);
+}
+
+void SDI_GeometricShape::calculateShape(const SDI_Point &Origin)
 {
     switch (shapeID) {
     case geometricShape::line:
-        shapeData = SDI_Painter::getLineData(setOfPoints.at(0), setOfPoints.at(1), Origin, shapeBoundingRect);
+        SDI_Painter::getLineData(*this, Origin);
         break;
     case geometricShape::rect:
-        shapeData = SDI_Painter::getRectData(setOfPoints.at(0), setOfPoints.at(1), Origin, shapeBoundingRect);
+        SDI_Painter::getRectData(*this, Origin);
         break;
     case geometricShape::square:
-        shapeData = SDI_Painter::getSquareData(setOfPoints.at(0), setOfPoints.at(1), Origin, shapeBoundingRect);
+        SDI_Painter::getSquareData(*this, Origin);
         break;
     case geometricShape::circle:
-        shapeData = SDI_Painter::getCircleData(setOfPoints.at(0), setOfPoints.at(1), Origin, shapeBoundingRect);
+        SDI_Painter::getCircleData(*this, Origin);
         break;
     default:
         break;
