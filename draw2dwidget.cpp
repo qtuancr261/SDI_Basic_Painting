@@ -70,7 +70,10 @@ void draw2DWidget::setPenWidth(int newWidth)
 void draw2DWidget::locateSelectedShape(SDI_Point &selectPos)
 {
     if (!setOfShapes.isEmpty())
-        emit selectedShape(setOfShapes.at(0));
+        for (int i{}; i < setOfShapes.size(); i++)
+            if (setOfShapes.at(i)->getShapeBoundinRect().contains(selectPos))
+                emit selectedShape(setOfShapes.at(i));
+
 }
 
 void draw2DWidget::clearImage(clearImageMode clearID)
@@ -317,7 +320,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
             painter.drawLine(lastPoint, endPoint);
             if (stateOfShape == 1)
             {
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
                 update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
             }
             else
@@ -336,7 +339,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
             painter.drawRect(endPoint, lastPoint);
         if (stateOfShape == 1)
         {
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
             update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         }
         else
@@ -347,7 +350,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
         painter.drawSquare(lastPoint, endPoint);
         if(stateOfShape == 1)
         {
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
             update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         }
         else
@@ -357,7 +360,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
     case geometricShape::circle:
         painter.drawCircle(lastPoint, endPoint);
         if (stateOfShape == 1)
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
         update();
         break;
     case geometricShape::triangle:
@@ -367,12 +370,12 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
             {
             case 0: //triangle
                 painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint));
+                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
                 update();
                 break;
             case 1:// // Isosceles Right Triangle
                 painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint));
+                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint,origin));
                 update();
                 break;
             }
@@ -388,7 +391,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
     case geometricShape::parallelogram:
         painter.drawParallelogram(lastPoint, lastPoint_2, endPoint);
         if (stateOfShape == 1)
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint));
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
         update();
         break;
     }

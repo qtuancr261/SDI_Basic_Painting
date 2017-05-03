@@ -44,3 +44,4 @@ HEADERS  += sdi_mainwindow.h \
 
 RESOURCES += \
     resource.qrc
+RC_FILE = appinfo.rc

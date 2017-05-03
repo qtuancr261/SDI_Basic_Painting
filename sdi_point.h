@@ -21,6 +21,7 @@ public:
     SDI_Point centralSymmetry(const QPoint& centralPoint) const;
 
     static double distance(const QPoint& p1, const QPoint& p2); // calculate the distance between two point in the system coordinate machine
+    static SDI_Point convertToUserSystem(const SDI_Point& cvtPoint, const SDI_Point& Origin);
 };
 
 #endif // SDI_POINT_H

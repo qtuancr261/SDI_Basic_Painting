@@ -84,6 +84,28 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
     }
 }
 
+QString SDI_Painter::getLineData(const SDI_Point &p1, const SDI_Point &p2, const SDI_Point &Origin, QRect &boundinREct)
+{
+    SDI_Point userP1(SDI_Point::convertToUserSystem(p1, Origin));
+    SDI_Point userP2(SDI_Point::convertToUserSystem(p2, Origin));
+    QString data;
+    data = QString("<ul>"
+                   "            <li>Hai điểm mút:</li>"
+                   "            <ol>"
+                   "                  <li>(%1; %2)</li>"
+                   "                  <li>(%3; %4)</li>"
+                   "            </ol>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
+                                          .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()));
+    int xLeft{(p1.x() < p2.x() ? p1.x() : p2.x())};
+    int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
+    int height{qAbs(p1.y() - p2.y())};
+    int width{qAbs(p1.x() - p2.y())};
+    boundinREct.setTopLeft(QPoint(xLeft, yLeft));
+    boundinREct.setSize(QSize(width, height));
+
+    return data;
+}
+
 void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRight)
 {
     SDI_Point topRight{bottomRight.x(), topLeft.y()};
@@ -92,6 +114,30 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(topLeft, bottomLeft);
     drawLine(topRight, bottomRight);
     drawLine(bottomLeft, bottomRight);
+}
+
+QString SDI_Painter::getRectData(const SDI_Point &topLeft, const SDI_Point &bottomRight, const SDI_Point &Origin)
+{
+    SDI_Point topRight{bottomRight.x(), topLeft.y()};
+    SDI_Point bottomLeft{topLeft.x(), bottomRight.y()};
+    SDI_Point userTopL(SDI_Point::convertToUserSystem(topLeft, Origin));
+    SDI_Point userTopR(SDI_Point::convertToUserSystem(topRight, Origin));
+    SDI_Point userBotR(SDI_Point::convertToUserSystem(bottomRight, Origin));
+    SDI_Point userBotL(SDI_Point::convertToUserSystem(bottomLeft, Origin));
+
+    QString data;
+    data = QString("<ul>"
+                   "            <li>Bốn điểm mút:</li>"
+                   "            <ol>"
+                   "                  <li>(%1; %2)</li>"
+                   "                  <li>(%3; %4)</li>"
+                   "                  <li>(%5; %6)</li>"
+                   "                  <li>(%7; %8)</li>"
+                   "            </ol>").arg(QString::number(userTopL.x())).arg(QString::number(userTopL.y()))
+                                          .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
+                                          .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
+                                          .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
+    return data;
 }
 
 void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPoint)
@@ -121,12 +167,70 @@ void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPo
     drawLine(bottomLeft, exactPoint);
 }
 
+QString SDI_Painter::getSquareData(const SDI_Point &firstPoint, const SDI_Point &lastPoint, const SDI_Point &Origin)
+{
+    SDI_Point exactPoint{lastPoint};
+    int rectWidth{qAbs(exactPoint.x() - firstPoint.x())};
+    int rectHeight{qAbs(exactPoint.y() - firstPoint.y())};
+    if (rectWidth > rectHeight)
+    {
+        if (exactPoint.x() > firstPoint.x())
+            exactPoint.rx() -= (rectWidth - rectHeight);
+        else
+            exactPoint.rx() += (rectWidth - rectHeight);
+    }
+    else if (rectWidth < rectHeight)
+    {
+        if (exactPoint.y() > firstPoint.y())
+            exactPoint.ry() -= (rectHeight - rectWidth);
+        else
+            exactPoint.ry() += (rectHeight - rectWidth);
+    }
+    SDI_Point topRight{exactPoint.x(), firstPoint.y()};
+    SDI_Point bottomLeft{firstPoint.x(), exactPoint.y()};
+    SDI_Point userTopL(SDI_Point::convertToUserSystem(firstPoint, Origin));
+    SDI_Point userTopR(SDI_Point::convertToUserSystem(topRight, Origin));
+    SDI_Point userBotR(SDI_Point::convertToUserSystem(exactPoint, Origin));
+    SDI_Point userBotL(SDI_Point::convertToUserSystem(bottomLeft, Origin));
+
+    QString data;
+    data = QString("<ul>"
+                   "            <li>Bốn điểm mút:</li>"
+                   "            <ol>"
+                   "                  <li>(%1; %2)</li>"
+                   "                  <li>(%3; %4)</li>"
+                   "                  <li>(%5; %6)</li>"
+                   "                  <li>(%7; %8)</li>"
+                   "            </ol>").arg(QString::number(userTopL.x())).arg(QString::number(userTopL.y()))
+                                          .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
+                                          .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
+                                          .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
+    return data;
+
+}
+
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
 {
     double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
     SDI_Point topCirclePoint(centralPoint.translate(0, -radius));
     drawPoint(centralPoint);
     midPointXYCircle(topCirclePoint, centralPoint, radius);
+}
+
+QString SDI_Painter::getCircleData(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle, const SDI_Point &Origin)
+{
+    double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
+    SDI_Point userCentralPoint(SDI_Point::convertToUserSystem(centralPoint, Origin));
+    QString data;
+    data = QString("<ul>"
+                   "            <li>Thông số đường tròn:</li>"
+                   "            <ol>"
+                   "                  <li>Tâm: (%1; %2)</li>"
+                   "                  <li>Bán kính: %3</li>"
+                   "            </ol>").arg(QString::number(userCentralPoint.x())).arg(QString::number(userCentralPoint.y()))
+                                          .arg(QString::number(radius));
+    return data;
+
 }
 
 void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3)

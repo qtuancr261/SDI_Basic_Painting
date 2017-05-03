@@ -2,6 +2,7 @@
 
 leftToolsWidget::leftToolsWidget(QWidget *parent) : QWidget(parent)
 {
+    //setFont(QFont("Tahoma", 10));
     setupGUI();
 }
 
@@ -28,19 +29,19 @@ void leftToolsWidget::setupGUI()
     selectModeLayout->addWidget(graphic2DMode);
     selectModeLayout->addWidget(graphic3DMode);
     selectModeLayout->addWidget(helpMode);
-    QGroupBox* selectModeGroupBox{new QGroupBox(tr("Chọn chế độ"), this)};
+    QGroupBox* selectModeGroupBox{new QGroupBox(tr("CHỌN CHẾ ĐỘ"), this)};
     selectModeGroupBox->setLayout(selectModeLayout);
     //----------------------------------------------------------------------
     // translate mode
     OxTranslateSlider = new QSlider(Qt::Horizontal, this);
     OxTranslateBox = new QSpinBox(this);
-    setSlider_BoxSytle(OxTranslateSlider, OxTranslateBox, -50, 50);
+    setSlider_BoxSytle(OxTranslateSlider, OxTranslateBox, -500, 500);
     OyTranslateSlider = new QSlider(Qt::Horizontal, this);
     OyTranslateBox = new QSpinBox(this);
-    setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -50, 50);
+    setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -500, 500);
     OzTranslateSlider = new QSlider(Qt::Horizontal, this);
     OzTranslateBox = new QSpinBox(this);
-    setSlider_BoxSytle(OzTranslateSlider, OzTranslateBox, -50, 50);
+    setSlider_BoxSytle(OzTranslateSlider, OzTranslateBox, -500, 500);
     OzTranslateBox->setDisabled(true);
     OzTranslateSlider->setDisabled(true);
     QGridLayout* translationLayout{new QGridLayout(this)};
@@ -53,7 +54,7 @@ void leftToolsWidget::setupGUI()
     translationLayout->addWidget(new QLabel("Oz"), 2, 0);
     translationLayout->addWidget(OzTranslateSlider, 2, 1);
     translationLayout->addWidget(OzTranslateBox, 2, 2);
-    QGroupBox* translationGroupBox{new QGroupBox(tr("Phép tịnh tiến"), this)};
+    QGroupBox* translationGroupBox{new QGroupBox(tr("PHÉP TỊNH TIẾN"), this)};
     translationGroupBox->setLayout(translationLayout);
     //--------------------------------------------------------------------
     // rotate mode
@@ -80,7 +81,7 @@ void leftToolsWidget::setupGUI()
     symmetryLayout->addWidget(OxSymmetry);
     symmetryLayout->addWidget(OySymmetry);
     symmetryLayout->addWidget(takeSymmetry);
-    QGroupBox* symmetryGroupBox{new QGroupBox(tr("Phép đối xứng"), this)};
+    QGroupBox* symmetryGroupBox{new QGroupBox(tr("PHÉP ĐỐI XỨNG"), this)};
     symmetryGroupBox->setLayout(symmetryLayout);
     //---------------------------------------------------------------------
     // zoom mode
@@ -92,7 +93,7 @@ void leftToolsWidget::setupGUI()
     zoomLayout->addWidget(new QLabel(tr("Tỉ lệ")), 0, 0);
     zoomLayout->addWidget(zoomSlider, 0, 1);
     zoomLayout->addWidget(zoomBox, 0, 2);
-    QGroupBox* zoomGroupBox{new QGroupBox(tr("Phép biến đổi tỉ lệ"), this)};
+    QGroupBox* zoomGroupBox{new QGroupBox(tr("PHÉP BIẾN ĐỔI TỈ LỆ"), this)};
     zoomGroupBox->setLayout(zoomLayout);
     //---------------------------------------------------------------------
     // geometric shape infomation
@@ -104,7 +105,7 @@ void leftToolsWidget::setupGUI()
     shapeNameLabel->setAlignment(Qt::AlignCenter);
     infoLayout->addWidget(shapeNameLabel);
     infoLayout->addWidget(shapeDataTEdit);
-    QGroupBox* infoGroupBox{new QGroupBox(tr("Thông tin hinh dang chon"))};
+    QGroupBox* infoGroupBox{new QGroupBox(tr("ĐỐI TƯỢNG ĐANG ĐƯỢC CHỌN"))};
     infoGroupBox->setLayout(infoLayout);
     //---------------------------------------------------------------------
     QSpacerItem* verticalSpacer{new QSpacerItem(20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding)};

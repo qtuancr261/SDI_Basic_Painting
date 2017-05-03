@@ -81,3 +81,8 @@ double SDI_Point::distance(const QPoint &p1, const QPoint &p2) // static functio
 {
     return qSqrt(qPow(p1.x() - p2.x(), 2.0) + qPow(p1.y() - p2.y(), 2.0));
 }
+
+SDI_Point SDI_Point::convertToUserSystem(const SDI_Point &cvtPoint, const SDI_Point &Origin)
+{
+    return SDI_Point(cvtPoint.x() - Origin.x(), Origin.y() - cvtPoint.y());
+}

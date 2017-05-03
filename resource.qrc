@@ -18,5 +18,6 @@
         <file>icons/circle.png</file>
         <file>icons/triangle.png</file>
         <file>icons/penColor.png</file>
+        <file>icons/SDI_Basic_Painting.ico</file>
     </qresource>
 </RCC>
