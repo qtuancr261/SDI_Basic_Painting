@@ -31,8 +31,11 @@ public:
     static void getCircleData(SDI_GeometricShape &shape, const SDI_Point& Origin);
     virtual void drawTriangle(const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3);
     static void getTriangleData(SDI_GeometricShape& shape, const SDI_Point& Origin);
+    static void updataTriangleData(SDI_GeometricShape& shape, const SDI_Point& Origin);
     virtual void drawIsoscelesRightTriangle(const SDI_Point& cpoint, const SDI_Point& epoint);
+    static void getIRTriangleData(SDI_GeometricShape& shape, const SDI_Point& Origin);
     virtual void drawParallelogram(const SDI_Point& pointA, const SDI_Point& pointB,const SDI_Point& pointC);
+    static void getParallelogramData(SDI_GeometricShape& shape, const SDI_Point& Origin);
     void midPointYLine(const SDI_Point& p1, const SDI_Point& p2); // drawLine using midpoint algorithm if yValue > xValue
     void midPointXLine(const SDI_Point& p1, const SDI_Point& p2); // drawLine using midpoint algorithm if xValue > yValue
     void midPointXYCircle(const SDI_Point& topCirclePoint, const SDI_Point& centralCirclePoint, double radius); // draw circle using midpoint algorithm

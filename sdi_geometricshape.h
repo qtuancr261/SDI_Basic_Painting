@@ -19,8 +19,11 @@ private:
     geometricShape shapeID;
     QString shapeData;
     QRect shapeBoundingRect;
-    static QVector<QString> shapeName;
+    QString shapeName;
+    void setShapeName();
 
+    //---------static memmbert---------------
+    static QVector<QString> shapeNames;
 public:
     SDI_GeometricShape() = default;
     SDI_GeometricShape(geometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& Origin);

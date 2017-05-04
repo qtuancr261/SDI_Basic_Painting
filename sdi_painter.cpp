@@ -322,6 +322,20 @@ void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_
     drawLine(topLegPoint, sideLegPoint); // draw hypotenuse
 }
 
+void SDI_Painter::getIRTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+{
+    SDI_Point cpoint{shape.getSetOfPoints().at(0)};
+    SDI_Point epoint{shape.getSetOfPoints().at(1)};
+    double legLength{SDI_Point::distance(cpoint,epoint)};
+    SDI_Point topLegPoint(cpoint.translate(0, cpoint.y() > epoint.y() ? -legLength : legLength));
+    SDI_Point sideLegPoint(cpoint.translate((cpoint.x() < epoint.x() ? legLength : -legLength), 0));
+
+    shape.getSetOfPoints().pop_back();
+    shape.getSetOfPoints().push_back(topLegPoint);
+    shape.getSetOfPoints().push_back(sideLegPoint);
+    getTriangleData(shape, Origin);
+}
+
 void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &pointB, const SDI_Point &pointC)
 {
     SDI_Point pointD;
@@ -331,6 +345,44 @@ void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &po
     drawLine(pointB, pointC);
     drawLine(pointC, pointD);
     drawLine(pointD, pointA);
+}
+
+void SDI_Painter::getParallelogramData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+{
+    SDI_Point pointA{shape.getSetOfPoints().at(0)};
+    SDI_Point pointB{shape.getSetOfPoints().at(1)};
+    SDI_Point pointC{shape.getSetOfPoints().at(2)};
+    SDI_Point pointD;
+    pointD.setX(pointC.x() + pointA.x() - pointB.x());
+    pointD.setY(pointA.y() - pointB.y() + pointC.y());
+
+    shape.getSetOfPoints().push_back(pointD);
+
+    SDI_Point userTopL(SDI_Point::convertToUserSystem(pointA, Origin));
+    SDI_Point userTopR(SDI_Point::convertToUserSystem(pointB, Origin));
+    SDI_Point userBotR(SDI_Point::convertToUserSystem(pointC, Origin));
+    SDI_Point userBotL(SDI_Point::convertToUserSystem(pointD, Origin));
+
+    int xLeft{qMin(qMin(pointA.x(), pointB.x()), qMin(pointC.x(), pointD.x()))};
+    int xRight{qMax(qMax(pointA.x(), pointB.x()), qMax(pointC.x(), pointD.x()))};
+    int yLeft{qMin(qMin(pointA.y(), pointB.y()), qMin(pointC.y(), pointD.y()))};
+    int yRight{qMax(qMax(pointA.y(), pointB.y()), qMax(pointC.y(), pointD.y()))};
+
+    QString data;
+    data = QString("<ul>"
+                   "            <li>Bốn điểm mút:</li>"
+                   "            <ol>"
+                   "                  <li>(%1; %2)</li>"
+                   "                  <li>(%3; %4)</li>"
+                   "                  <li>(%5; %6)</li>"
+                   "                  <li>(%7; %8)</li>"
+                   "            </ol>").arg(QString::number(userTopL.x())).arg(QString::number(userTopL.y()))
+                                          .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
+                                          .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
+                                          .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
+
+    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
+    shape.setShapeData(data);
 }
 
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)

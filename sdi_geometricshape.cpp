@@ -1,5 +1,13 @@
 #include "sdi_geometricshape.h"
 
+void SDI_GeometricShape::setShapeName()
+{
+    if (shapeID == geometricShape::triangle && setOfPoints.size() == 2)
+        shapeName = shapeNames.at(static_cast<int>(shapeID) + 1);
+    else
+        shapeName = shapeNames.at(static_cast<int>(shapeID));
+}
+
 SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &Origin)
     : shapeID(id)
 {
@@ -13,6 +21,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
     case geometricShape::triangle: // isosceless Triangle
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
+        setShapeName();
         calculateShape(Origin);
         break;
     default:
@@ -30,6 +39,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         setOfPoints.push_back(point3);
+        setShapeName();
         calculateShape(Origin);
         break;
     default:
@@ -55,10 +65,7 @@ QVector<SDI_Point> &SDI_GeometricShape::getSetOfPoints()
 
 QString SDI_GeometricShape::getShapeName() const
 {
-    if (shapeID == geometricShape::triangle && setOfPoints.size() == 2)
-        return shapeName.at(static_cast<int>(shapeID) + 1);
-    else
-        return shapeName.at(static_cast<int>(shapeID));
+    return shapeName;
 }
 
 QString SDI_GeometricShape::getShapeData() const
@@ -84,7 +91,8 @@ void SDI_GeometricShape::setShapeBoundinRect(const QPoint &topLeft, const QSize 
 
 void SDI_GeometricShape::calculateShape(const SDI_Point &Origin)
 {
-    switch (shapeID) {
+    switch (shapeID)
+    {
     case geometricShape::line:
         SDI_Painter::getLineData(*this, Origin);
         break;
@@ -98,7 +106,13 @@ void SDI_GeometricShape::calculateShape(const SDI_Point &Origin)
         SDI_Painter::getCircleData(*this, Origin);
         break;
     case geometricShape::triangle:
-        SDI_Painter::getTriangleData(*this, Origin);
+        if (this->getShapeName() == "Tam giác")
+            SDI_Painter::getTriangleData(*this, Origin);
+        else
+            SDI_Painter::getIRTriangleData(*this, Origin);
+        break;
+    case geometricShape::parallelogram:
+        SDI_Painter::getParallelogramData(*this, Origin);
         break;
     default:
         break;
