@@ -9,7 +9,7 @@ void SDI_GeometricShape::setShapeName()
 }
 
 SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &Origin)
-    : shapeID(id)
+    : shapeID(id), OriginPos(Origin)
 {
     switch (shapeID)
     {
@@ -30,7 +30,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
 }
 
 SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin)
-    : shapeID(id)
+    : shapeID(id), OriginPos(Origin)
 {
     switch (shapeID)
     {
@@ -117,6 +117,13 @@ void SDI_GeometricShape::calculateShape(const SDI_Point &Origin)
     default:
         break;
     }
+}
+
+void SDI_GeometricShape::translate(int xtrans, int ytrans)
+{
+    for (SDI_Point& point : setOfPoints)
+        point = point.translate(xtrans, ytrans);
+    //calculateShape(OriginPos);
 }
 
 

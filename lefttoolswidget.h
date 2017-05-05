@@ -29,16 +29,16 @@ public:
     QSpinBox* OxTranslateBox;
     QSlider* OyTranslateSlider;
     QSpinBox* OyTranslateBox;
-    QSlider* OzTranslateSlider;
-    QSpinBox* OzTranslateBox;    
+    QPushButton* doTranslate;
 
     QSlider* rotateSlider;
     QSpinBox* rotateBox;
+    QPushButton* doRotate;
 
     QRadioButton* centralSymmetry;
     QRadioButton* OxSymmetry;
     QRadioButton* OySymmetry;
-    QPushButton* takeSymmetry;
+    QPushButton* doSymmetry;
 
     QSlider* zoomSlider;
     QSpinBox* zoomBox;
@@ -51,8 +51,10 @@ private:
 
 signals:
     void changeGraphicsMode(int newID);
+    void translateSelectedShape(int xtrans, int ytrans);
 private slots:
     void decideNewGraphicMode();
+    void takeTranslateParameters();
 };
 
 #endif // LEFTTOOLSWIDGET_H

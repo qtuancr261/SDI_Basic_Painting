@@ -60,6 +60,7 @@ private:
     QList<QAction*> draw2DObjectActs;
     QComboBox* triangleTypes;
     QSpinBox* penWidthBox;
+    SDI_GeometricShape* activatedShape;
     //Private Functions
     void createActions();
     void createMenus();
@@ -81,7 +82,8 @@ private slots:
 public slots:
     void showDockWidget(bool enable);
     void showMessage(QString message);
-    void showSelectedShape(const SDI_GeometricShape* shape);
+    void showSelectedShape(SDI_GeometricShape *shape);
+    void translateShape(int xtrans, int ytrans);
 signals:
     void triangleTypeChanged(int triangleTypeID);
 };

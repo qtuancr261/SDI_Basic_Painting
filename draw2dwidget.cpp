@@ -67,7 +67,7 @@ void draw2DWidget::setPenWidth(int newWidth)
     myPenWidth = newWidth;
 }
 
-void draw2DWidget::locateSelectedShape(SDI_Point &selectPos)
+void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
 {
     if (!setOfShapes.isEmpty())
     {

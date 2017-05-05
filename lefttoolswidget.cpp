@@ -38,11 +38,9 @@ void leftToolsWidget::setupGUI()
     OyTranslateSlider = new QSlider(Qt::Horizontal, this);
     OyTranslateBox = new QSpinBox(this);
     setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -500, 500);
-    OzTranslateSlider = new QSlider(Qt::Horizontal, this);
-    OzTranslateBox = new QSpinBox(this);
-    setSlider_BoxSytle(OzTranslateSlider, OzTranslateBox, -500, 500);
-    OzTranslateBox->setDisabled(true);
-    OzTranslateSlider->setDisabled(true);
+    doTranslate = new QPushButton(tr("Tịnh tiến đối tượng"), this);
+    doTranslate->setAutoRepeat(true);
+    QObject::connect(doTranslate, SIGNAL(pressed()), this, SLOT(takeTranslateParameters()));
     QGridLayout* translationLayout{new QGridLayout(this)};
     translationLayout->addWidget(new QLabel("Ox"), 0, 0);
     translationLayout->addWidget(OxTranslateSlider, 0, 1);
@@ -50,9 +48,7 @@ void leftToolsWidget::setupGUI()
     translationLayout->addWidget(new QLabel("Oy"), 1, 0);
     translationLayout->addWidget(OyTranslateSlider, 1, 1);
     translationLayout->addWidget(OyTranslateBox, 1, 2);
-    translationLayout->addWidget(new QLabel("Oz"), 2, 0);
-    translationLayout->addWidget(OzTranslateSlider, 2, 1);
-    translationLayout->addWidget(OzTranslateBox, 2, 2);
+    translationLayout->addWidget(doTranslate, 2, 0, 1, 3);
     QGroupBox* translationGroupBox{new QGroupBox(tr("PHÉP TỊNH TIẾN"), this)};
     translationGroupBox->setLayout(translationLayout);
     //--------------------------------------------------------------------
@@ -60,10 +56,12 @@ void leftToolsWidget::setupGUI()
     rotateSlider = new QSlider(Qt::Horizontal, this);
     rotateBox = new QSpinBox(this);
     setSlider_BoxSytle(rotateSlider, rotateBox, -360, 360);
+    doRotate = new QPushButton(tr("Xoay đối tượng"));
     QGridLayout* rotateLayout{new QGridLayout(this)};
     rotateLayout->addWidget(new QLabel(tr("Góc quay")), 0, 0);
     rotateLayout->addWidget(rotateSlider, 0, 1);
     rotateLayout->addWidget(rotateBox, 0, 2);
+    rotateLayout->addWidget(doRotate, 1, 0, 1, 3);
     QGroupBox* rotateGroupBox{new QGroupBox(tr("Phép xoay"), this)};
     rotateGroupBox->setLayout(rotateLayout);
     //---------------------------------------------------------------------
@@ -74,12 +72,12 @@ void leftToolsWidget::setupGUI()
     OxSymmetry->setAutoExclusive(true);
     OySymmetry = new QRadioButton(tr("Đối xứng qua Oy"), this);
     OySymmetry->setAutoExclusive(true);
-    takeSymmetry = new QPushButton(tr("Lấy đối xứng đối tượng"));
+    doSymmetry = new QPushButton(tr("Lấy đối xứng đối tượng"));
     QVBoxLayout* symmetryLayout{new QVBoxLayout()};
     symmetryLayout->addWidget(centralSymmetry);
     symmetryLayout->addWidget(OxSymmetry);
     symmetryLayout->addWidget(OySymmetry);
-    symmetryLayout->addWidget(takeSymmetry);
+    symmetryLayout->addWidget(doSymmetry);
     QGroupBox* symmetryGroupBox{new QGroupBox(tr("PHÉP ĐỐI XỨNG"), this)};
     symmetryGroupBox->setLayout(symmetryLayout);
     //---------------------------------------------------------------------
@@ -142,3 +140,9 @@ void leftToolsWidget::decideNewGraphicMode()
     else if (graphic3DMode->isChecked())
         emit changeGraphicsMode(3);
 }
+
+void leftToolsWidget::takeTranslateParameters()
+{
+    emit translateSelectedShape(OxTranslateBox->value(), OyTranslateBox->value());
+}
+

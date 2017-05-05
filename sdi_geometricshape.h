@@ -20,6 +20,7 @@ private:
     QString shapeData;
     QRect shapeBoundingRect;
     QString shapeName;
+    QPoint OriginPos;
     void setShapeName();
 
     //---------static memmbert---------------
@@ -42,6 +43,8 @@ public:
     void setShapeBoundinRect(const QPoint& topLeft, const QSize& rectSize);
 
     void calculateShape(const SDI_Point& Origin);
+public slots:
+    void translate(int xtrans, int ytrans);
 };
 
 #endif // SDI_GEOMETRICSHAPE_H

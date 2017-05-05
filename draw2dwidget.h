@@ -37,7 +37,8 @@ public:
     bool isModified() const {return modified;} // check if image has been modified
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
-    void locateSelectedShape(SDI_Point& selectPos);
+    void locateSelectedShape(const SDI_Point &selectPos);
+    void drawObject(const SDI_Point &endPoint, int stateOfShape);
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -46,7 +47,6 @@ protected: // handle events
     virtual void resizeEvent(QResizeEvent *event) override;
 
 private:
-    void drawObject(const SDI_Point &endPoint, int stateOfShape);
     // draw 2D Objects -> stateOFShape : 0 means temporary | 1 means permanent
     void drawExistentObject(SDI_Painter *painter, int idMode);
     void resizeImage(QImage* image, const QSize& newSize);
@@ -69,11 +69,9 @@ private:
     QColor myPenColor;
 
     QVector<SDI_GeometricShape*> setOfShapes;
-
 signals:
     void mouseMoveTo(QString currentPos);
-    void selectedShape(const SDI_GeometricShape* shape);
-
+    void selectedShape(SDI_GeometricShape* shape);
 
 public slots:
     void setDraw2DObjectMode(int newId);
