@@ -50,15 +50,15 @@ void SDI_MainWindow::createActions()
     clearScreenAct->setShortcut(Qt::CTRL + Qt::Key_L);
     QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(clearImage()));
 
-    aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("SDI Basic Painting"), this);
+    aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/SDI_Basic_Painting.ico"), tr("Thông tin chương trình"), this);
     QObject::connect(aboutSDI_PaintingAct, SIGNAL(triggered()), this, SLOT(aboutSDI_Painting()));
 
     aboutQtAct = new QAction(QIcon(":/images/icons/QtIcon.png"), tr("Thông tin về Qt/Bản quyền"), this);
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
-    QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Chon hinh"), this)};
+    QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Chọn hình"), this)};
     selectShapeAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
-    selectShapeAct->setStatusTip(tr("Che do chon hinh ..."));
+    selectShapeAct->setStatusTip(tr("Chế độ chọn hình dựa trên tọa độ điểm được chỉ ra trên hệ trục tọa độ ..."));
     setupDrawAct(selectShapeAct);
 
     QAction* drawPointAct{new QAction(QIcon(":/images/icons/point.png"), tr("Vẽ điểm"), this)};
@@ -167,8 +167,6 @@ void SDI_MainWindow::createToolsBar()
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
     mainToolBar->addWidget(triangleTypes);
 
-
-
 }
 
 void SDI_MainWindow::createDockWidget()
@@ -267,7 +265,10 @@ void SDI_MainWindow::penWidth(int newWidth)
 
 void SDI_MainWindow::aboutSDI_Painting()
 {
-    QMessageBox::information(this, tr("Thông tin đồ án SDI Basic Painting"),
+    QString osInfo{"Linux"};
+    if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
+        osInfo = QString("Windows");
+    QMessageBox::about(this, tr("Thông tin"),
                              tr("<h1> Đồ án Kỹ thuật Đồ họa</h1>"
                                 "<p> Nhóm thực hiện: "
                                 "   <ol>"
@@ -275,7 +276,13 @@ void SDI_MainWindow::aboutSDI_Painting()
                                 "       <li> Lê Hoàng Tùng - N14DCCN113 </li>"
                                 "       <li> Hoàng Lê Anh Minh - N14DCCN138</li>"
                                 "   </ol>"
-                                "</p>"));
+                                "</p>"
+                                "</p> Thông số kỹ thuật:"
+                                "   <ul>"
+                                "       <li> Tên chương trình: SDI Basic Painting</li>"
+                                "       <li> Phiên bản dành cho %1 %2</li>"
+                                "   </ul>"
+                                "</p>").arg(osInfo).arg(QSysInfo::buildCpuArchitecture()));
 }
 
 void SDI_MainWindow::showDockWidget(bool enable)
@@ -293,7 +300,10 @@ void SDI_MainWindow::showMessage(QString message)
 
 void SDI_MainWindow::showSelectedShape(const SDI_GeometricShape *shape)
 {
-    mainToolsWidget->setInfoBox("<b>"+shape->getShapeName() + "</b>", shape->getShapeData());
+    if (shape == nullptr)
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
+    else
+        mainToolsWidget->setInfoBox("<b>"+shape->getShapeName() + "</b>", shape->getShapeData());
 }
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
@@ -310,9 +320,11 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     createToolsBar();
     createDockWidget();
     setCentralWidget(central2DWidget);
-    setFont(QFont("Tahoma", 10));
+    if (QSysInfo::WindowsVersion == QSysInfo::WV_WINDOWS10)
+        setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
-    statusBar()->showMessage("Demo 0.3 - 18/04/2017 - Chế độ vẽ tự do - hoàn thành vẽ 7 đối tượng hình học cơ bản");
+    setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
+    statusBar()->showMessage("Demo 0.4 - 04/05/2017");
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)), this, SLOT(showMessage(QString)));
     QObject::connect(central2DWidget, SIGNAL(selectedShape(const SDI_GeometricShape*)), this, SLOT(showSelectedShape(const SDI_GeometricShape*)));
 }

@@ -18,7 +18,6 @@ void leftToolsWidget::setupGUI()
     graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Hệ trục tọa độ Oxy"), this);
     setDrawModeButtonStyle(graphic2DMode);
     QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
-
     graphic3DMode = new QPushButton(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Hệ trục tọa độ Oxyz"), this);
     setDrawModeButtonStyle(graphic3DMode);
     QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
@@ -108,7 +107,7 @@ void leftToolsWidget::setupGUI()
     QGroupBox* infoGroupBox{new QGroupBox(tr("ĐỐI TƯỢNG ĐANG ĐƯỢC CHỌN"))};
     infoGroupBox->setLayout(infoLayout);
     //---------------------------------------------------------------------
-    QSpacerItem* verticalSpacer{new QSpacerItem(20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding)};
+    QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
     mainLayout->addWidget(translationGroupBox);

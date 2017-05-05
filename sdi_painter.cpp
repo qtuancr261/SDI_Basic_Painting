@@ -144,7 +144,7 @@ void SDI_Painter::getRectData(SDI_GeometricShape& shape, const SDI_Point &Origin
 
     QString data;
     data = QString("<ul>"
-                   "            <li>Bốn điểm mút:</li>"
+                   "            <li>Bốn đỉnh của hình chữ nhật:</li>"
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"
@@ -226,7 +226,7 @@ void SDI_Painter::getSquareData(SDI_GeometricShape& shape, const SDI_Point &Orig
 
     QString data;
     data = QString("<ul>"
-                   "            <li>Bốn điểm mút:</li>"
+                   "            <li>Bốn đỉnh của hình vuông:</li>"
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"
@@ -300,7 +300,7 @@ void SDI_Painter::getTriangleData(SDI_GeometricShape &shape, const SDI_Point &Or
 
     QString data;
     data = QString("<ul>"
-                   "            <li>Ba đinh cua tam giac:</li>"
+                   "            <li>Ba đỉnh của tam giác:</li>"
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"
@@ -370,7 +370,7 @@ void SDI_Painter::getParallelogramData(SDI_GeometricShape &shape, const SDI_Poin
 
     QString data;
     data = QString("<ul>"
-                   "            <li>Bốn điểm mút:</li>"
+                   "            <li>Bốn đỉnh của hình bình hành:</li>"
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"
