@@ -122,7 +122,7 @@ void SDI_GeometricShape::calculateShape(const SDI_Point &Origin)
 void SDI_GeometricShape::translate(int xtrans, int ytrans)
 {
     for (SDI_Point& point : setOfPoints)
-        point = point.translate(xtrans, ytrans);
+        point = point.translate(xtrans, -ytrans);
     //calculateShape(OriginPos);
 }
 

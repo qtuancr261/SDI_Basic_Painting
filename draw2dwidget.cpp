@@ -69,17 +69,16 @@ void draw2DWidget::setPenWidth(int newWidth)
 
 void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
 {
-    if (!setOfShapes.isEmpty())
+    if (!setOfShapes.isEmpty() && graphicMode == graphicsMode::graphic2D)
     {
         for (int i{setOfShapes.size() - 1}; i >=0 ; i--)
             if (setOfShapes.at(i)->getShapeBoundinRect().contains(selectPos))
             {
                 emit selectedShape(setOfShapes.at(i));
-                break;
+                return;
             }
     }
-    else
-                emit selectedShape(nullptr);
+    emit selectedShape(nullptr);
 }
 
 void draw2DWidget::clearImage(clearImageMode clearID)
@@ -488,30 +487,34 @@ void draw2DWidget::setGraphicsMode(int newId)
     if (modified)
     {
         drawPausing = true;
-        if (graphicMode == graphicsMode::graphic2D)
-            saveImage(QDir::currentPath() + "/temp2D", "PNG");
-        else
-            saveImage(QDir::currentPath() + "/temp3D", "PNG");
+        //if (graphicMode == graphicsMode::graphic2D)
+         //   saveImage(QDir::currentPath() + "/temp2D", "PNG");
+        //else
+         //   saveImage(QDir::currentPath() + "/temp3D", "PNG");
     }
     //-------------------------finish-------------------------------
 
     // change graphics mode and clear for new session
     if (newId == 2)
+    {
         graphicMode = graphicsMode::graphic2D;
+    }
     else
+    {
         graphicMode = graphicsMode::graphic3D;
-    clearImage(clearImageMode::clearForNewSession);
+    }
+    clearImage(clearImageMode::clearAll);
     //-------------------------finish-------------------------------
 
     // reload the previous session if the painter was paused
-    if (drawPausing)
-    {
-        if (graphicMode == graphicsMode::graphic2D)
-            openImage(QDir::currentPath() + "/temp2D");
-        else
-            openImage(QDir::currentPath() + "/temp3D");
-        modified = true;
-    }
+    //if (drawPausing)
+    //{
+        //if (graphicMode == graphicsMode::graphic2D)
+            //openImage(QDir::currentPath() + "/temp2D");
+        //else
+            //openImage(QDir::currentPath() + "/temp3D");
+        //modified = true;
+    //}
     //-------------------------finish-------------------------------
 }
 
