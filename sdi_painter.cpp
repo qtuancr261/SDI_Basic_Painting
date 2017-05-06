@@ -95,8 +95,13 @@ void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
     int height{qAbs(p1.y() - p2.y())};
     int width{qAbs(p1.x() - p2.x())};
+    if (height == 0 || width == 0)
+    {
+        xLeft -= 20;
+        yLeft -= 20;
+    }
     shape.setShapeData(data);
-    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width, height));
+    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width > 20 ? width : 30, height > 20 ? height : 30));
 }
 
 void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRight)
