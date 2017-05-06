@@ -88,8 +88,10 @@ void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"
+                   "            <li>Do dai doan thang: %5 </li>"
                    "            </ol>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
-                                          .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()));
+                                          .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()))
+                                          .arg(QString::number(SDI_Point::distance(p1, p2)));
     //----------------Calculate bounding rect---------------------------------
     int xLeft{(p1.x() < p2.x() ? p1.x() : p2.x())};
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
@@ -102,6 +104,7 @@ void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
     }
     shape.setShapeData(data);
     shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width > 20 ? width : 30, height > 20 ? height : 30));
+    shape.setCentralPoint(QPoint((p1.x() + p2.x())/2, (p1.y() + p2.y())/2));
 }
 
 void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRight)
@@ -212,6 +215,7 @@ void SDI_Painter::updateCircleData(SDI_GeometricShape& shape)
     int yLeft{centralPoint.y() - radius};
     shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(radius*2, radius*2));
     shape.setShapeData(data);
+    shape.setCentralPoint(centralPoint);
 }
 
 void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3)
@@ -251,6 +255,10 @@ void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape)
                                        .arg(QString::number(userP3.x())).arg(QString::number(userP3.y()));
     shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
     shape.setShapeData(data);
+
+    SDI_Point centralP1P2{(point1.x() + point2.x())/2, (point1.y() + point2.y())/2};
+    SDI_Point centralP1P3{(point1.x() + point3.x())/2, (point1.y() + point3.y())/2};
+    shape.setCentralPoint(QPoint((centralP1P2.x() + centralP1P3.x())/2, (centralP1P2.y() + centralP1P3.y())/2));
 }
 
 void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_Point &epoint)
@@ -330,6 +338,7 @@ void SDI_Painter::updateTetragonData(SDI_GeometricShape &shape)
 
     shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
     shape.setShapeData(data);
+    shape.setCentralPoint(QPoint((pointA.x() + pointC.x())/2, (pointA.y() + pointC.y())/2));
 }
 
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)

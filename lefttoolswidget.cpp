@@ -82,14 +82,16 @@ void leftToolsWidget::setupGUI()
     symmetryGroupBox->setLayout(symmetryLayout);
     //---------------------------------------------------------------------
     // zoom mode
-    zoomSlider = new QSlider(Qt::Horizontal, this);
-    zoomBox = new QSpinBox(this);
-    setSlider_BoxSytle(zoomSlider, zoomBox, -5, 5);
-    //QObject::connect(zoomSlider, SIGNAL(valueChanged(int)), infoText, SLOT(zoomIn(int)));
+    zoomBox = new QDoubleSpinBox(this);
+    zoomBox->setRange(-5.0, 5.0);
+    zoomBox->setSingleStep(0.1);
+    doZoom = new QPushButton(tr("Biến đồi tỉ lệ đối tượng"), this);
+    doZoom->setAutoRepeat(true);
+    QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
     QGridLayout* zoomLayout{new QGridLayout(this)};
     zoomLayout->addWidget(new QLabel(tr("Tỉ lệ")), 0, 0);
-    zoomLayout->addWidget(zoomSlider, 0, 1);
-    zoomLayout->addWidget(zoomBox, 0, 2);
+    zoomLayout->addWidget(zoomBox, 0, 1);
+    zoomLayout->addWidget(doZoom, 0,2);
     QGroupBox* zoomGroupBox{new QGroupBox(tr("PHÉP BIẾN ĐỔI TỈ LỆ"), this)};
     zoomGroupBox->setLayout(zoomLayout);
     //---------------------------------------------------------------------
@@ -105,7 +107,7 @@ void leftToolsWidget::setupGUI()
     QGroupBox* infoGroupBox{new QGroupBox(tr("ĐỐI TƯỢNG ĐANG ĐƯỢC CHỌN"))};
     infoGroupBox->setLayout(infoLayout);
     //---------------------------------------------------------------------
-    QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
+    //QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
     mainLayout->addWidget(translationGroupBox);
@@ -113,7 +115,6 @@ void leftToolsWidget::setupGUI()
     mainLayout->addWidget(symmetryGroupBox);
     mainLayout->addWidget(zoomGroupBox);
     mainLayout->addWidget(infoGroupBox);
-    mainLayout->addItem(verticalSpacer);
     setLayout(mainLayout);
 
 }
@@ -144,5 +145,10 @@ void leftToolsWidget::decideNewGraphicMode()
 void leftToolsWidget::takeTranslateParameters()
 {
     emit translateSelectedShape(OxTranslateBox->value(), OyTranslateBox->value());
+}
+
+void leftToolsWidget::takeScaleParameters()
+{
+    emit scaleSelectedShape(zoomBox->value(), zoomBox->value());
 }
 

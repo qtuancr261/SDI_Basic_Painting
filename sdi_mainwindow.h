@@ -84,6 +84,7 @@ public slots:
     void showMessage(QString message);
     void showSelectedShape(SDI_GeometricShape *shape);
     void translateShape(int xtrans, int ytrans);
+    void scaleShape(double xscale, double yscale);
 signals:
     void triangleTypeChanged(int triangleTypeID);
 };

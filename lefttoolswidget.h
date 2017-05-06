@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QSlider>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QRadioButton>
 #include <QGroupBox>
 #include <QTextEdit>
@@ -40,8 +41,9 @@ public:
     QRadioButton* OySymmetry;
     QPushButton* doSymmetry;
 
-    QSlider* zoomSlider;
-    QSpinBox* zoomBox;
+    QDoubleSpinBox* zoomBox;
+    QPushButton* doZoom;
+
     QLabel* shapeNameLabel;
     QTextEdit* shapeDataTEdit;
 private:
@@ -52,9 +54,11 @@ private:
 signals:
     void changeGraphicsMode(int newID);
     void translateSelectedShape(int xtrans, int ytrans);
+    void scaleSelectedShape(double xscale, double yscale);
 private slots:
     void decideNewGraphicMode();
     void takeTranslateParameters();
+    void takeScaleParameters();
 };
 
 #endif // LEFTTOOLSWIDGET_H

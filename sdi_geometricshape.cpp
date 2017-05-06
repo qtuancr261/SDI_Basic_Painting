@@ -94,6 +94,11 @@ const QPoint &SDI_GeometricShape::getOriginPos() const
     return OriginPos;
 }
 
+void SDI_GeometricShape::setCentralPoint(const QPoint &src)
+{
+    centralPoint = src;
+}
+
 void SDI_GeometricShape::initShapeData()
 {
     switch (shapeID)
@@ -153,6 +158,18 @@ void SDI_GeometricShape::translate(int xtrans, int ytrans)
     {
         point.rx() += xtrans;
         point.ry() -= ytrans;
+    }
+    updateShapeData();
+}
+
+void SDI_GeometricShape::scale(double xscale, double yscale)
+{
+    for (SDI_Point& point : setOfPoints)
+    {
+        int xtransValue{point.x() - centralPoint.x()};
+        int ytransValue{point.y() - centralPoint.y()};
+        point.rx() = centralPoint.x() + xscale*xtransValue;
+        point.ry() = centralPoint.y() + yscale*ytransValue;
     }
     updateShapeData();
 }

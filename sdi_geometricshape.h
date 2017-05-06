@@ -21,6 +21,7 @@ private:
     QRect shapeBoundingRect;
     QString shapeName;
     QPoint OriginPos;
+    QPoint centralPoint;
     void setShapeName();
 
     //---------static memmbert---------------
@@ -44,10 +45,13 @@ public:
 
     const QPoint& getOriginPos() const;
 
+    void setCentralPoint(const QPoint&src);
+
     void initShapeData();
     void updateShapeData();
 public slots:
     void translate(int xtrans, int ytrans);
+    void scale(double xscale, double yscale);
 };
 
 #endif // SDI_GEOMETRICSHAPE_H

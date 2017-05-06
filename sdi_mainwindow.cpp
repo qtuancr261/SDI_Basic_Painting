@@ -313,6 +313,18 @@ void SDI_MainWindow::translateShape(int xtrans, int ytrans)
     }
 }
 
+void SDI_MainWindow::scaleShape(double xscale, double yscale)
+{
+    if (activatedShape == nullptr)
+        showSelectedShape(nullptr);
+    else
+    {
+        activatedShape->scale(xscale, yscale);
+        central2DWidget->drawObject(QPoint(0,0), 3);
+        showSelectedShape(activatedShape);
+    }
+}
+
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
       dockWidget{new QDockWidget(this)},
@@ -335,6 +347,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)), this, SLOT(showMessage(QString)));
     QObject::connect(central2DWidget, SIGNAL(selectedShape(SDI_GeometricShape*)), this, SLOT(showSelectedShape(SDI_GeometricShape*)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
+    QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
 }
 
 SDI_MainWindow::~SDI_MainWindow()
