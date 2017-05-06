@@ -22,21 +22,6 @@ void SDI_Painter::drawOxy(int width, int height, SDI_Point &Origin)
     drawLine(topMostOy, bottomMostOy);
     drawText(topMostOy + SDI_Point(20, 20), "y"); // draw y-axis
     drawText(Origin + SDI_Point(10, -10), "O");
-
-    /*int yUP{Origin.y() + factor/2};
-    int yDOWN{Origin.y() - factor/2};
-    for (int xleft{Origin.x()}, xright{Origin.x()}; xleft < width; xleft += factor, xright -= factor)
-    {
-        drawLine(SDI_Point(xleft, yUP), SDI_Point(xleft, yDOWN));
-        drawLine(SDI_Point(xright, yUP), SDI_Point(xright, yDOWN));
-    }
-    int xLEFT{Origin.x() + factor/2};
-    int xRIGHT{Origin.x() - factor/2};
-    for (int yup{Origin.y() - factor}, ydown{Origin.y() + factor}; yup > 0; yup -= factor, ydown += factor)
-    {
-        drawLine(SDI_Point(xLEFT, yup), SDI_Point(xRIGHT, yup));
-        drawLine(SDI_Point(xLEFT, ydown), SDI_Point(xRIGHT, ydown));
-    }*/
 }
 
 void SDI_Painter::drawOxyz(int width, int height, SDI_Point &Origin)
@@ -75,7 +60,6 @@ void SDI_Painter::drawTetragon(QVector<SDI_Point> &points)
 
 void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
 {
-     //QPainter::drawLine(p1, p2);
     if (std::abs(p1.y() - p2.y()) >= std::abs(p1.x() - p2.x()))
     {
         if (p1.x() < p2.x())
@@ -136,32 +120,7 @@ void SDI_Painter::getRectData(SDI_GeometricShape& shape, const SDI_Point &Origin
     shape.getSetOfPoints().push_back(topRight);
     shape.getSetOfPoints().push_back(bottomRight);
     shape.getSetOfPoints().push_back(bottomLeft);
-
-    SDI_Point userTopL(SDI_Point::convertToUserSystem(topLeft, Origin));
-    SDI_Point userTopR(SDI_Point::convertToUserSystem(topRight, Origin));
-    SDI_Point userBotR(SDI_Point::convertToUserSystem(bottomRight, Origin));
-    SDI_Point userBotL(SDI_Point::convertToUserSystem(bottomLeft, Origin));
-
-    QString data;
-    data = QString("<ul>"
-                   "            <li>Bốn đỉnh của hình chữ nhật:</li>"
-                   "            <ol>"
-                   "                  <li>(%1; %2)</li>"
-                   "                  <li>(%3; %4)</li>"
-                   "                  <li>(%5; %6)</li>"
-                   "                  <li>(%7; %8)</li>"
-                   "            </ol>").arg(QString::number(userTopL.x())).arg(QString::number(userTopL.y()))
-                                          .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
-                                          .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
-                                          .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
-
-    //----------------Calculate bounding rect---------------------------------
-    int xLeft{(topLeft.x() < bottomRight.x() ? topLeft.x() : bottomRight.x())};
-    int yLeft{(topLeft.y() < bottomRight.y() ? topLeft.y() : bottomRight.y())};
-    int height{qAbs(topLeft.y() - bottomRight.y())};
-    int width{qAbs(topLeft.x() - bottomRight.x())};
-    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width, height));
-    shape.setShapeData(data);
+    updateTetragonData(shape, Origin);
 }
 
 void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPoint)
@@ -218,30 +177,7 @@ void SDI_Painter::getSquareData(SDI_GeometricShape& shape, const SDI_Point &Orig
     shape.getSetOfPoints().push_back(topRight);
     shape.getSetOfPoints().push_back(exactPoint);
     shape.getSetOfPoints().push_back(bottomLeft);
-
-    SDI_Point userTopL(SDI_Point::convertToUserSystem(firstPoint, Origin));
-    SDI_Point userTopR(SDI_Point::convertToUserSystem(topRight, Origin));
-    SDI_Point userBotR(SDI_Point::convertToUserSystem(exactPoint, Origin));
-    SDI_Point userBotL(SDI_Point::convertToUserSystem(bottomLeft, Origin));
-
-    QString data;
-    data = QString("<ul>"
-                   "            <li>Bốn đỉnh của hình vuông:</li>"
-                   "            <ol>"
-                   "                  <li>(%1; %2)</li>"
-                   "                  <li>(%3; %4)</li>"
-                   "                  <li>(%5; %6)</li>"
-                   "                  <li>(%7; %8)</li>"
-                   "            </ol>").arg(QString::number(userTopL.x())).arg(QString::number(userTopL.y()))
-                                          .arg(QString::number(userTopR.x())).arg(QString::number(userTopR.y()))
-                                          .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
-                                          .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
-
-    int xLeft{(topRight.x() < bottomLeft.x() ? topRight.x() : bottomLeft.x())};
-    int yLeft{(topRight.y() < bottomLeft.y() ? topRight.y() : bottomLeft.y())};
-    int height{qAbs(topRight.y() - bottomLeft.y())};
-    shape.setShapeBoundinRect(QPoint(xLeft,yLeft), QSize(height, height));
-    shape.setShapeData(data);
+    updateTetragonData(shape, Origin);
 }
 
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
@@ -349,14 +285,20 @@ void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &po
 
 void SDI_Painter::getParallelogramData(SDI_GeometricShape &shape, const SDI_Point &Origin)
 {
+    SDI_Point pointD;
+    pointD.setX(shape.getSetOfPoints().at(2).x() + shape.getSetOfPoints().at(0).x() - shape.getSetOfPoints().at(1).x());
+    pointD.setY(shape.getSetOfPoints().at(0).y() - shape.getSetOfPoints().at(1).y() + shape.getSetOfPoints().at(2).y());
+    shape.getSetOfPoints().push_back(pointD);
+    updateTetragonData(shape, Origin);
+
+}
+
+void SDI_Painter::updateTetragonData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+{
     SDI_Point pointA{shape.getSetOfPoints().at(0)};
     SDI_Point pointB{shape.getSetOfPoints().at(1)};
     SDI_Point pointC{shape.getSetOfPoints().at(2)};
-    SDI_Point pointD;
-    pointD.setX(pointC.x() + pointA.x() - pointB.x());
-    pointD.setY(pointA.y() - pointB.y() + pointC.y());
-
-    shape.getSetOfPoints().push_back(pointD);
+    SDI_Point pointD{shape.getSetOfPoints().at(3)};
 
     SDI_Point userTopL(SDI_Point::convertToUserSystem(pointA, Origin));
     SDI_Point userTopR(SDI_Point::convertToUserSystem(pointB, Origin));
@@ -370,7 +312,7 @@ void SDI_Painter::getParallelogramData(SDI_GeometricShape &shape, const SDI_Poin
 
     QString data;
     data = QString("<ul>"
-                   "            <li>Bốn đỉnh của hình bình hành:</li>"
+                   "            <li>Bốn đỉnh của hình:</li>"
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"

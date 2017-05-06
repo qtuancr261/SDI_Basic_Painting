@@ -411,7 +411,7 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter, int idMode)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
             geometricShape shapeName{shape->getShapeId()};
-            if (shapeName == geometricShape::rect || shapeName == geometricShape::square)
+            if (shapeName == geometricShape::rect || shapeName == geometricShape::square || shapeName == geometricShape::parallelogram)
                 painter->drawTetragon(setOfPoints);
             else if (shapeName == geometricShape::line)
                 painter->drawLine(setOfPoints.at(0), setOfPoints.at(1));
@@ -421,8 +421,6 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter, int idMode)
                 painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
             else if (shapeName == geometricShape::triangle && setOfPoints.size() == 2)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
-            else
-                painter->drawParallelogram(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
         }
     modified = true;
     update();

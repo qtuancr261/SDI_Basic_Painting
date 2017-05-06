@@ -36,6 +36,7 @@ public:
     static void getIRTriangleData(SDI_GeometricShape& shape, const SDI_Point& Origin);
     virtual void drawParallelogram(const SDI_Point& pointA, const SDI_Point& pointB,const SDI_Point& pointC);
     static void getParallelogramData(SDI_GeometricShape& shape, const SDI_Point& Origin);
+    static void updateTetragonData(SDI_GeometricShape& shape, const SDI_Point& Origin);
     void midPointYLine(const SDI_Point& p1, const SDI_Point& p2); // drawLine using midpoint algorithm if yValue > xValue
     void midPointXLine(const SDI_Point& p1, const SDI_Point& p2); // drawLine using midpoint algorithm if xValue > yValue
     void midPointXYCircle(const SDI_Point& topCirclePoint, const SDI_Point& centralCirclePoint, double radius); // draw circle using midpoint algorithm

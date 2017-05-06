@@ -13,6 +13,7 @@ public:
     SDI_Point(); //default constructor - no parameters
     SDI_Point(int xpos, int ypos, int hValue = 1);
     SDI_Point(const QPoint& srcPoint); // copy constructor
+    SDI_Point& operator =(const SDI_Point &srcPoint);
      ~SDI_Point() = default; // default destructor
     // Transforming function
     SDI_Point translate(int xtrans, int ytrans) const;

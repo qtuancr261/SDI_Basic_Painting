@@ -15,6 +15,14 @@ SDI_Point::SDI_Point(const QPoint &srcPoint) : SDI_Point(srcPoint.x(), srcPoint.
 
 }
 
+SDI_Point &SDI_Point::operator =(const SDI_Point &srcPoint)
+{
+    rx() = srcPoint.x();
+    ry() = srcPoint.y();
+    h = srcPoint.h;
+    return *this;
+}
+
 SDI_Point SDI_Point::translate(int xtrans, int ytrans) const
 {
     QVector<QVector<int>> transMatrix; // 2D translate matrix
