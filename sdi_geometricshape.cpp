@@ -22,7 +22,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         setShapeName();
-        initShapeData(Origin);
+        initShapeData();
         break;
     default:
         break;
@@ -40,7 +40,7 @@ SDI_GeometricShape::SDI_GeometricShape(geometricShape id, const SDI_Point &point
         setOfPoints.push_back(point2);
         setOfPoints.push_back(point3);
         setShapeName();
-        initShapeData(Origin);
+        initShapeData();
         break;
     default:
         break;
@@ -89,53 +89,58 @@ void SDI_GeometricShape::setShapeBoundinRect(const QPoint &topLeft, const QSize 
     shapeBoundingRect.setSize(rectSize);
 }
 
-void SDI_GeometricShape::initShapeData(const SDI_Point &Origin)
+const QPoint &SDI_GeometricShape::getOriginPos() const
+{
+    return OriginPos;
+}
+
+void SDI_GeometricShape::initShapeData()
 {
     switch (shapeID)
     {
     case geometricShape::line:
-        SDI_Painter::updateLineData(*this, Origin);
+        SDI_Painter::updateLineData(*this);
         break;
     case geometricShape::rect:
-        SDI_Painter::updateRectData(*this, Origin);
+        SDI_Painter::updateRectData(*this);
         break;
     case geometricShape::square:
-        SDI_Painter::updateSquareData(*this, Origin);
+        SDI_Painter::updateSquareData(*this);
         break;
     case geometricShape::circle:
-        SDI_Painter::updateCircleData(*this, Origin);
+        SDI_Painter::updateCircleData(*this);
         break;
     case geometricShape::triangle:
         if (this->getShapeName() == "Tam giác")
-            SDI_Painter::updateTriangleData(*this, Origin);
+            SDI_Painter::updateTriangleData(*this);
         else
-            SDI_Painter::updateIRTriangleData(*this, Origin);
+            SDI_Painter::updateIRTriangleData(*this);
         break;
     case geometricShape::parallelogram:
-        SDI_Painter::udapteParallelogramData(*this, Origin);
+        SDI_Painter::updateParallelogramData(*this);
         break;
     default:
         break;
     }
 }
 
-void SDI_GeometricShape::updateShapeData(const SDI_Point &Origin)
+void SDI_GeometricShape::updateShapeData()
 {
     switch (shapeID)
     {
     case geometricShape::line:
-        SDI_Painter::updateLineData(*this, Origin);
+        SDI_Painter::updateLineData(*this);
         break;
     case geometricShape::rect:
     case geometricShape::square:
     case geometricShape::parallelogram:
-        SDI_Painter::updateTetragonData(*this, Origin);
+        SDI_Painter::updateTetragonData(*this);
         break;
     case geometricShape::circle:
-        SDI_Painter::updateCircleData(*this, Origin);
+        SDI_Painter::updateCircleData(*this);
         break;
     case geometricShape::triangle:
-        SDI_Painter::updateTriangleData(*this, Origin);
+        SDI_Painter::updateTriangleData(*this);
         break;
     default:
         break;
@@ -149,7 +154,7 @@ void SDI_GeometricShape::translate(int xtrans, int ytrans)
         point.rx() += xtrans;
         point.ry() -= ytrans;
     }
-    updateShapeData(OriginPos);
+    updateShapeData();
 }
 
 

@@ -76,12 +76,12 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
     }
 }
 
-void SDI_Painter::updateLineData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
 {
     SDI_Point p1(shape.getSetOfPoints().at(0));
     SDI_Point p2(shape.getSetOfPoints().at(1));
-    SDI_Point userP1(SDI_Point::convertToUserSystem(p1, Origin));
-    SDI_Point userP2(SDI_Point::convertToUserSystem(p2, Origin));
+    SDI_Point userP1(SDI_Point::convertToUserSystem(p1, shape.getOriginPos()));
+    SDI_Point userP2(SDI_Point::convertToUserSystem(p2, shape.getOriginPos()));
     QString data;
     data = QString("<ul>"
                    "            <li>Hai điểm mút:</li>"
@@ -109,7 +109,7 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(bottomLeft, bottomRight);
 }
 
-void SDI_Painter::updateRectData(SDI_GeometricShape& shape, const SDI_Point &Origin)
+void SDI_Painter::updateRectData(SDI_GeometricShape& shape)
 {
     SDI_Point topLeft(shape.getSetOfPoints().at(0));
     SDI_Point bottomRight(shape.getSetOfPoints().at(1));
@@ -120,7 +120,7 @@ void SDI_Painter::updateRectData(SDI_GeometricShape& shape, const SDI_Point &Ori
     shape.getSetOfPoints().push_back(topRight);
     shape.getSetOfPoints().push_back(bottomRight);
     shape.getSetOfPoints().push_back(bottomLeft);
-    updateTetragonData(shape, Origin);
+    updateTetragonData(shape);
 }
 
 void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPoint)
@@ -150,7 +150,7 @@ void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPo
     drawLine(bottomLeft, exactPoint);
 }
 
-void SDI_Painter::updateSquareData(SDI_GeometricShape& shape, const SDI_Point &Origin)
+void SDI_Painter::updateSquareData(SDI_GeometricShape& shape)
 {
     SDI_Point firstPoint(shape.getSetOfPoints().at(0));
     SDI_Point exactPoint{shape.getSetOfPoints().at(1)};
@@ -177,7 +177,7 @@ void SDI_Painter::updateSquareData(SDI_GeometricShape& shape, const SDI_Point &O
     shape.getSetOfPoints().push_back(topRight);
     shape.getSetOfPoints().push_back(exactPoint);
     shape.getSetOfPoints().push_back(bottomLeft);
-    updateTetragonData(shape, Origin);
+    updateTetragonData(shape);
 }
 
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
@@ -188,12 +188,12 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
 
-void SDI_Painter::updateCircleData(SDI_GeometricShape& shape, const SDI_Point &Origin)
+void SDI_Painter::updateCircleData(SDI_GeometricShape& shape)
 {
     SDI_Point centralPoint{shape.getSetOfPoints().at(0)};
     SDI_Point pointOnCircle{shape.getSetOfPoints().at(1)};
     int radius {static_cast<int>(SDI_Point::distance(centralPoint, pointOnCircle))};
-    SDI_Point userCentralPoint(SDI_Point::convertToUserSystem(centralPoint, Origin));
+    SDI_Point userCentralPoint(SDI_Point::convertToUserSystem(centralPoint, shape.getOriginPos()));
     QString data;
     data = QString("<ul>"
                    "            <li>Thông số đường tròn:</li>"
@@ -219,7 +219,7 @@ void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2,
     drawLine(point3, point1);
 }
 
-void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape)
 {
     SDI_Point point1{shape.getSetOfPoints().at(0)};
     SDI_Point point2{shape.getSetOfPoints().at(1)};
@@ -230,9 +230,9 @@ void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape, const SDI_Point 
     int yLeft{qMin(qMin(point1.y(), point2.y()), point3.y())};
     int yRight{qMax(qMax(point1.y(), point2.y()), point3.y())};
 
-    SDI_Point userP1{SDI_Point::convertToUserSystem(point1, Origin)};
-    SDI_Point userP2{SDI_Point::convertToUserSystem(point2, Origin)};
-    SDI_Point userP3{SDI_Point::convertToUserSystem(point3, Origin)};
+    SDI_Point userP1{SDI_Point::convertToUserSystem(point1, shape.getOriginPos())};
+    SDI_Point userP2{SDI_Point::convertToUserSystem(point2, shape.getOriginPos())};
+    SDI_Point userP3{SDI_Point::convertToUserSystem(point3, shape.getOriginPos())};
 
     QString data;
     data = QString("<ul>"
@@ -258,7 +258,7 @@ void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_
     drawLine(topLegPoint, sideLegPoint); // draw hypotenuse
 }
 
-void SDI_Painter::updateIRTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateIRTriangleData(SDI_GeometricShape &shape)
 {
     SDI_Point cpoint{shape.getSetOfPoints().at(0)};
     SDI_Point epoint{shape.getSetOfPoints().at(1)};
@@ -269,7 +269,7 @@ void SDI_Painter::updateIRTriangleData(SDI_GeometricShape &shape, const SDI_Poin
     shape.getSetOfPoints().pop_back();
     shape.getSetOfPoints().push_back(topLegPoint);
     shape.getSetOfPoints().push_back(sideLegPoint);
-    updateTriangleData(shape, Origin);
+    updateTriangleData(shape);
 }
 
 void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &pointB, const SDI_Point &pointC)
@@ -283,27 +283,27 @@ void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &po
     drawLine(pointD, pointA);
 }
 
-void SDI_Painter::udapteParallelogramData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateParallelogramData(SDI_GeometricShape &shape)
 {
     SDI_Point pointD;
     pointD.setX(shape.getSetOfPoints().at(2).x() + shape.getSetOfPoints().at(0).x() - shape.getSetOfPoints().at(1).x());
     pointD.setY(shape.getSetOfPoints().at(0).y() - shape.getSetOfPoints().at(1).y() + shape.getSetOfPoints().at(2).y());
     shape.getSetOfPoints().push_back(pointD);
-    updateTetragonData(shape, Origin);
+    updateTetragonData(shape);
 
 }
 
-void SDI_Painter::updateTetragonData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateTetragonData(SDI_GeometricShape &shape)
 {
     SDI_Point pointA{shape.getSetOfPoints().at(0)};
     SDI_Point pointB{shape.getSetOfPoints().at(1)};
     SDI_Point pointC{shape.getSetOfPoints().at(2)};
     SDI_Point pointD{shape.getSetOfPoints().at(3)};
 
-    SDI_Point userTopL(SDI_Point::convertToUserSystem(pointA, Origin));
-    SDI_Point userTopR(SDI_Point::convertToUserSystem(pointB, Origin));
-    SDI_Point userBotR(SDI_Point::convertToUserSystem(pointC, Origin));
-    SDI_Point userBotL(SDI_Point::convertToUserSystem(pointD, Origin));
+    SDI_Point userTopL(SDI_Point::convertToUserSystem(pointA, shape.getOriginPos()));
+    SDI_Point userTopR(SDI_Point::convertToUserSystem(pointB, shape.getOriginPos()));
+    SDI_Point userBotR(SDI_Point::convertToUserSystem(pointC, shape.getOriginPos()));
+    SDI_Point userBotL(SDI_Point::convertToUserSystem(pointD, shape.getOriginPos()));
 
     int xLeft{qMin(qMin(pointA.x(), pointB.x()), qMin(pointC.x(), pointD.x()))};
     int xRight{qMax(qMax(pointA.x(), pointB.x()), qMax(pointC.x(), pointD.x()))};
