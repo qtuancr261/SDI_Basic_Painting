@@ -76,7 +76,7 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
     }
 }
 
-void SDI_Painter::getLineData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateLineData(SDI_GeometricShape &shape, const SDI_Point &Origin)
 {
     SDI_Point p1(shape.getSetOfPoints().at(0));
     SDI_Point p2(shape.getSetOfPoints().at(1));
@@ -109,7 +109,7 @@ void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRigh
     drawLine(bottomLeft, bottomRight);
 }
 
-void SDI_Painter::getRectData(SDI_GeometricShape& shape, const SDI_Point &Origin)
+void SDI_Painter::updateRectData(SDI_GeometricShape& shape, const SDI_Point &Origin)
 {
     SDI_Point topLeft(shape.getSetOfPoints().at(0));
     SDI_Point bottomRight(shape.getSetOfPoints().at(1));
@@ -150,7 +150,7 @@ void SDI_Painter::drawSquare(const SDI_Point &firstPoint,const SDI_Point &lastPo
     drawLine(bottomLeft, exactPoint);
 }
 
-void SDI_Painter::getSquareData(SDI_GeometricShape& shape, const SDI_Point &Origin)
+void SDI_Painter::updateSquareData(SDI_GeometricShape& shape, const SDI_Point &Origin)
 {
     SDI_Point firstPoint(shape.getSetOfPoints().at(0));
     SDI_Point exactPoint{shape.getSetOfPoints().at(1)};
@@ -188,7 +188,7 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
 
-void SDI_Painter::getCircleData(SDI_GeometricShape& shape, const SDI_Point &Origin)
+void SDI_Painter::updateCircleData(SDI_GeometricShape& shape, const SDI_Point &Origin)
 {
     SDI_Point centralPoint{shape.getSetOfPoints().at(0)};
     SDI_Point pointOnCircle{shape.getSetOfPoints().at(1)};
@@ -219,7 +219,7 @@ void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2,
     drawLine(point3, point1);
 }
 
-void SDI_Painter::getTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
 {
     SDI_Point point1{shape.getSetOfPoints().at(0)};
     SDI_Point point2{shape.getSetOfPoints().at(1)};
@@ -258,7 +258,7 @@ void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_
     drawLine(topLegPoint, sideLegPoint); // draw hypotenuse
 }
 
-void SDI_Painter::getIRTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::updateIRTriangleData(SDI_GeometricShape &shape, const SDI_Point &Origin)
 {
     SDI_Point cpoint{shape.getSetOfPoints().at(0)};
     SDI_Point epoint{shape.getSetOfPoints().at(1)};
@@ -269,7 +269,7 @@ void SDI_Painter::getIRTriangleData(SDI_GeometricShape &shape, const SDI_Point &
     shape.getSetOfPoints().pop_back();
     shape.getSetOfPoints().push_back(topLegPoint);
     shape.getSetOfPoints().push_back(sideLegPoint);
-    getTriangleData(shape, Origin);
+    updateTriangleData(shape, Origin);
 }
 
 void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &pointB, const SDI_Point &pointC)
@@ -283,7 +283,7 @@ void SDI_Painter::drawParallelogram(const SDI_Point &pointA, const SDI_Point &po
     drawLine(pointD, pointA);
 }
 
-void SDI_Painter::getParallelogramData(SDI_GeometricShape &shape, const SDI_Point &Origin)
+void SDI_Painter::udapteParallelogramData(SDI_GeometricShape &shape, const SDI_Point &Origin)
 {
     SDI_Point pointD;
     pointD.setX(shape.getSetOfPoints().at(2).x() + shape.getSetOfPoints().at(0).x() - shape.getSetOfPoints().at(1).x());

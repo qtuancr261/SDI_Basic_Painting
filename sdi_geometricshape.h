@@ -42,7 +42,8 @@ public:
     const QRect& getShapeBoundinRect() const;
     void setShapeBoundinRect(const QPoint& topLeft, const QSize& rectSize);
 
-    void calculateShape(const SDI_Point& Origin);
+    void initShapeData(const SDI_Point& Origin);
+    void updateShapeData(const SDI_Point& Origin);
 public slots:
     void translate(int xtrans, int ytrans);
 };
