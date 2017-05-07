@@ -176,19 +176,24 @@ void SDI_GeometricShape::scale(double xscale, double yscale)
 
 void SDI_GeometricShape::rotate(double degree)
 {
-    int xtrans{-centralPoint.x()};
-    int ytrans{-centralPoint.y()};
-    for (SDI_Point& point : setOfPoints)
+    if (static_cast<int>(degree) % 180 != 0)
     {
-        point.rx() = point.x() + xtrans;
-        point.ry() = point.y() + ytrans;
-        double a = point.x()*qCos(qDegreesToRadians(degree)) - point.y()*qSin(qDegreesToRadians(degree));
-        double b = point.x()*qSin(qDegreesToRadians(degree)) + point.y()*qCos(qDegreesToRadians(degree));
-        point = QPointF(a, b).toPoint();
-        point.rx() = point.x() - xtrans;
-        point.ry() = point.y() - ytrans;
+        int xtrans{-centralPoint.x()};
+        int ytrans{-centralPoint.y()};
+        for (SDI_Point& point : setOfPoints)
+        {
+            point.rx() = point.x() + xtrans;
+            point.ry() = point.y() + ytrans;
+            double a = point.x()*qCos(qDegreesToRadians(degree)) - point.y()*qSin(qDegreesToRadians(degree));
+            double b = point.x()*qSin(qDegreesToRadians(degree)) + point.y()*qCos(qDegreesToRadians(degree));
+            point = QPointF(a, b).toPoint();
+            point.rx() = point.x() - xtrans;
+            point.ry() = point.y() - ytrans;
+        }
+        updateShapeData();
     }
-    updateShapeData();
+    else
+        return;
 }
 
 
