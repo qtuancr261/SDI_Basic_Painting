@@ -69,6 +69,7 @@ private:
     QColor myPenColor;
 
     QVector<SDI_GeometricShape*> setOfShapes;
+    QVector<SDI_GeometricShape*> tempShapes;
 signals:
     void mouseMoveTo(QString currentPos);
     void selectedShape(SDI_GeometricShape* shape);

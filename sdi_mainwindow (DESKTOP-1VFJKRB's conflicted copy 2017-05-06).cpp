@@ -171,8 +171,14 @@ void SDI_MainWindow::createToolsBar()
 
 void SDI_MainWindow::createDockWidget()
 {
+    QGroupBox* leftToolsBox{new QGroupBox(tr("Thanh công cụ chính"), this)};
+    //leftToolsWidget* widget{new leftToolsWidget(this)};
     QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(int)), central2DWidget, SLOT(setGraphicsMode(int)));
-    dockWidget->setWidget(mainToolsWidget);
+    //QObject::connect(widget, SIGNAL(changeGraphicMode(int)), this, SLOT(mayBeSaveToChangeGraphicMode(int)));
+    QVBoxLayout* leftToolsBoxLayout{new QVBoxLayout(leftToolsBox)};
+    leftToolsBoxLayout->addWidget(mainToolsWidget);
+    leftToolsBox->setLayout(leftToolsBoxLayout);
+    dockWidget->setWidget(leftToolsBox);
     dockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
     dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, dockWidget);
@@ -292,37 +298,12 @@ void SDI_MainWindow::showMessage(QString message)
     statusBar()->showMessage(message);
 }
 
-void SDI_MainWindow::showSelectedShape(SDI_GeometricShape *shape)
+void SDI_MainWindow::showSelectedShape(const SDI_GeometricShape *shape)
 {
-    activatedShape = shape;
     if (shape == nullptr)
-        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
+        return;
     else
         mainToolsWidget->setInfoBox("<b>"+shape->getShapeName() + "</b>", shape->getShapeData());
-}
-
-void SDI_MainWindow::translateShape(int xtrans, int ytrans)
-{
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
-    else
-    {
-        activatedShape->translate(xtrans, ytrans);
-        central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
-    }
-}
-
-void SDI_MainWindow::scaleShape(double xscale, double yscale)
-{
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
-    else
-    {
-        activatedShape->scale(xscale, yscale);
-        central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
-    }
 }
 
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
@@ -339,16 +320,13 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     createToolsBar();
     createDockWidget();
     setCentralWidget(central2DWidget);
-    //setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     if (QSysInfo::WindowsVersion == QSysInfo::WV_WINDOWS10)
         setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     statusBar()->showMessage("Demo 0.4 - 04/05/2017");
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)), this, SLOT(showMessage(QString)));
-    QObject::connect(central2DWidget, SIGNAL(selectedShape(SDI_GeometricShape*)), this, SLOT(showSelectedShape(SDI_GeometricShape*)));
-    QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
-    QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
+    QObject::connect(central2DWidget, SIGNAL(selectedShape(const SDI_GeometricShape*)), this, SLOT(showSelectedShape(const SDI_GeometricShape*)));
 }
 
 SDI_MainWindow::~SDI_MainWindow()
