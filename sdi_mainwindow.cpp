@@ -325,6 +325,18 @@ void SDI_MainWindow::scaleShape(double xscale, double yscale)
     }
 }
 
+void SDI_MainWindow::rotateShape(double degree)
+{
+    if (activatedShape == nullptr)
+        showSelectedShape(nullptr);
+    else
+    {
+        activatedShape->rotate(degree);
+        central2DWidget->drawObject(QPoint(0,0), 3);
+        showSelectedShape(activatedShape);
+    }
+}
+
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
       dockWidget{new QDockWidget(this)},
@@ -349,6 +361,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     QObject::connect(central2DWidget, SIGNAL(selectedShape(SDI_GeometricShape*)), this, SLOT(showSelectedShape(SDI_GeometricShape*)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
+    QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double)), this, SLOT(rotateShape(double)));
 }
 
 SDI_MainWindow::~SDI_MainWindow()

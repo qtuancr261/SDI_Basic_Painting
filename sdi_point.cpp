@@ -94,3 +94,61 @@ SDI_Point SDI_Point::convertToUserSystem(const SDI_Point &cvtPoint, const SDI_Po
 {
     return SDI_Point(cvtPoint.x() - Origin.x(), Origin.y() - cvtPoint.y());
 }
+
+SDI_Point SDI_Point::translate(const SDI_Point &cvtPoint, int xtrans, int ytrans)
+{
+    QVector<QVector<int>> transMatrix; // 2D scale matrix
+    transMatrix = matrix2DLibs::createTranslateMatrix(xtrans, ytrans);
+    QVector<int> currentPoint{ cvtPoint.x(), cvtPoint.y(), cvtPoint.h };
+    QVector<int> newPoint(3, 0);
+    for (int i{}; i < 3; i++)
+    {
+        for (int j{ 0 }; j < 3; j++)
+            newPoint[i] += currentPoint[j] * transMatrix[j][i];
+    }
+    return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
+}
+
+SDI_Point SDI_Point::scale(const SDI_Point &cvtPoint, int Sx, int Sy)
+{
+    QVector<QVector<int>> scaMatrix; // 2D scale matrix
+    scaMatrix = matrix2DLibs::createScaleMatrix(Sx, Sy);
+    QVector<int> currentPoint{ cvtPoint.x(), cvtPoint.y(), cvtPoint.h };
+    QVector<int> newPoint(3, 0);
+    for (int i{}; i < 3; i++)
+    {
+        for (int j{ 0 }; j < 3; j++)
+            newPoint[i] += currentPoint[j] * scaMatrix[j][i];
+    }
+    return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
+}
+
+SDI_Point SDI_Point::rotate(const SDI_Point &cvtPoint, double radian)
+{
+    QVector<QVector<double>> RotMatrix; // 2D rotate matrix
+    RotMatrix = matrix2DLibs::createRotateMatrix(radian);
+    QVector<double> currentPoint{ static_cast<double>(cvtPoint.x()), static_cast<double>(cvtPoint.y()), static_cast<double>(cvtPoint.h) };
+    QVector<double> newPoint(3, 0.0);
+    for (int i{}; i < 3; i++)
+    {
+        for (int j{}; j < 3; j++)
+        {
+          newPoint[i] += (currentPoint[j] *RotMatrix[j][i]);
+        }
+    }
+    return SDI_Point(float(newPoint[0]), float(newPoint[1]), newPoint[2]);
+}
+
+SDI_Point SDI_Point::centralSymmetry(const SDI_Point &cvtPoint, const SDI_Point &centralPoint)
+{
+    QVector<QVector<int>> centralSymMatrix; // 2D reflect matrix
+    centralSymMatrix = matrix2DLibs::createCentralSymetryMatrix(centralPoint);
+    QVector<int> currentPoint{ cvtPoint.x(), cvtPoint.y(), cvtPoint.h };
+    QVector<int> newPoint(3, 0);
+    for (int i{}; i < 3; i++)
+    {
+        for (int j{ 0 }; j < 3; j++)
+            newPoint[i] += currentPoint[j] * centralSymMatrix[j][i];
+    }
+    return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
+}

@@ -83,18 +83,18 @@ const QRect &SDI_GeometricShape::getShapeBoundinRect() const
     return shapeBoundingRect;
 }
 
-void SDI_GeometricShape::setShapeBoundinRect(const QPoint &topLeft, const QSize &rectSize)
+void SDI_GeometricShape::setShapeBoundinRect(const SDI_Point &topLeft, const QSize &rectSize)
 {
     shapeBoundingRect.setTopLeft(topLeft);
     shapeBoundingRect.setSize(rectSize);
 }
 
-const QPoint &SDI_GeometricShape::getOriginPos() const
+const SDI_Point &SDI_GeometricShape::getOriginPos() const
 {
     return OriginPos;
 }
 
-void SDI_GeometricShape::setCentralPoint(const QPoint &src)
+void SDI_GeometricShape::setCentralPoint(const SDI_Point &src)
 {
     centralPoint = src;
 }
@@ -170,6 +170,23 @@ void SDI_GeometricShape::scale(double xscale, double yscale)
         int ytransValue{point.y() - centralPoint.y()};
         point.rx() = centralPoint.x() + xscale*xtransValue;
         point.ry() = centralPoint.y() + yscale*ytransValue;
+    }
+    updateShapeData();
+}
+
+void SDI_GeometricShape::rotate(double degree)
+{
+    int xtrans{-centralPoint.x()};
+    int ytrans{-centralPoint.y()};
+    for (SDI_Point& point : setOfPoints)
+    {
+        point.rx() = point.x() + xtrans;
+        point.ry() = point.y() + ytrans;
+        double a = point.x()*qCos(qDegreesToRadians(degree)) - point.y()*qSin(qDegreesToRadians(degree));
+        double b = point.x()*qSin(qDegreesToRadians(degree)) + point.y()*qCos(qDegreesToRadians(degree));
+        point = QPointF(a, b).toPoint();
+        point.rx() = point.x() - xtrans;
+        point.ry() = point.y() - ytrans;
     }
     updateShapeData();
 }

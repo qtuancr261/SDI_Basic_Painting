@@ -141,7 +141,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             else
             {
                 drawObject(eventPos,1); // 1 means draw a permanent shape
-                lastPoint = QPoint(0, 0); // set to null
+                lastPoint = SDI_Point(0, 0); // set to null
             }
             break;
        //-------------------------------------------------------------
@@ -158,7 +158,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 else
                 {
                     drawObject(eventPos,1);
-                    lastPoint = lastPoint_2 = QPoint(0, 0); // reset to null
+                    lastPoint = lastPoint_2 = SDI_Point(0, 0); // reset to null
                 }
                 break;
             case 1: // Isosceles Right Triangle
@@ -167,7 +167,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 else
                 {
                     drawObject(eventPos,1);
-                    lastPoint = QPoint(0, 0); // set to null
+                    lastPoint = SDI_Point(0, 0); // set to null
                 }
                 break;
             }
@@ -181,7 +181,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             else
             {
                 drawObject(eventPos,1);
-                lastPoint = lastPoint_2 = QPoint(0, 0);
+                lastPoint = lastPoint_2 = SDI_Point(0, 0);
             }
             break;
         //-------------------------------------------------------------
@@ -193,9 +193,9 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     //--------------RIGHT MOUSE HANDLER---------------------------
     else if (event->button() == Qt::RightButton)
     {
-        lastPoint = lastPoint_2 = QPoint(0, 0);
+        lastPoint = lastPoint_2 = SDI_Point(0, 0);
         delegateMode = drawLineDelegateMode::none;
-        drawObject(QPoint(0,0), 3); //
+        drawObject(SDI_Point(0,0), 3); //
     }
 }
 
@@ -278,7 +278,7 @@ void draw2DWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-    origin = QPoint(width()/2, height()/2);
+    origin = SDI_Point(width()/2, height()/2);
     painter.drawImage(dirtyRect, image, dirtyRect);
 }
 
@@ -317,7 +317,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
         {
         case geometricShape::point:
             painter.drawPoint(endPoint);
-            update(QRect(endPoint, endPoint + QPoint(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
+            update(QRect(endPoint, endPoint + SDI_Point(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
             break;
         case geometricShape::selectShape:
             break;
@@ -451,7 +451,7 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
     newImage.fill(qRgb(255, 255, 255));
     //-----------------------------------------
     SDI_Painter painter(&newImage);
-    painter.drawImage(QPoint(0, 0), *image);
+    painter.drawImage(SDI_Point(0, 0), *image);
     *image = newImage;
 }
 
@@ -492,7 +492,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
         setCursor(Qt::PointingHandCursor);
         break;
     }
-    lastPoint = lastPoint_2 =  QPoint(0, 0); // reset recorded position
+    lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
     delegateMode = drawLineDelegateMode::none;
 }
 
@@ -537,7 +537,7 @@ void draw2DWidget::setGraphicsMode(int newId)
 void draw2DWidget::setTriangleTypeID(int newID)
 {
     triangleTypeID =  newID;
-    lastPoint = lastPoint_2 = QPoint(0,0);
+    lastPoint = lastPoint_2 = SDI_Point(0,0);
 }
 
 void draw2DWidget::print()

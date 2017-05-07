@@ -85,6 +85,7 @@ public slots:
     void showSelectedShape(SDI_GeometricShape *shape);
     void translateShape(int xtrans, int ytrans);
     void scaleShape(double xscale, double yscale);
+    void rotateShape(double degree);
 signals:
     void triangleTypeChanged(int triangleTypeID);
 };

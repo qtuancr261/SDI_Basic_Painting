@@ -57,6 +57,8 @@ void leftToolsWidget::setupGUI()
     rotateBox = new QSpinBox(this);
     setSlider_BoxSytle(rotateSlider, rotateBox, -360, 360);
     doRotate = new QPushButton(tr("Xoay đối tượng"));
+    doRotate->setAutoRepeat(true);
+    QObject::connect(doRotate, SIGNAL(clicked(bool)), this, SLOT(takeRotateParameters()));
     QGridLayout* rotateLayout{new QGridLayout(this)};
     rotateLayout->addWidget(new QLabel(tr("Góc quay")), 0, 0);
     rotateLayout->addWidget(rotateSlider, 0, 1);
@@ -83,8 +85,9 @@ void leftToolsWidget::setupGUI()
     //---------------------------------------------------------------------
     // zoom mode
     zoomBox = new QDoubleSpinBox(this);
-    zoomBox->setRange(-5.0, 5.0);
+    zoomBox->setRange(0.0, 5.0);
     zoomBox->setSingleStep(0.1);
+    zoomBox->setSuffix("x");
     doZoom = new QPushButton(tr("Biến đồi tỉ lệ đối tượng"), this);
     doZoom->setAutoRepeat(true);
     QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
@@ -150,5 +153,10 @@ void leftToolsWidget::takeTranslateParameters()
 void leftToolsWidget::takeScaleParameters()
 {
     emit scaleSelectedShape(zoomBox->value(), zoomBox->value());
+}
+
+void leftToolsWidget::takeRotateParameters()
+{
+    emit rotateSelectedShape(rotateBox->value());
 }
 

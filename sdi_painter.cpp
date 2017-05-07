@@ -103,8 +103,8 @@ void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
         yLeft -= 20;
     }
     shape.setShapeData(data);
-    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(width > 20 ? width : 30, height > 20 ? height : 30));
-    shape.setCentralPoint(QPoint((p1.x() + p2.x())/2, (p1.y() + p2.y())/2));
+    shape.setShapeBoundinRect(SDI_Point(xLeft, yLeft), QSize(width > 20 ? width : 30, height > 20 ? height : 30));
+    shape.setCentralPoint(SDI_Point((p1.x() + p2.x())/2, (p1.y() + p2.y())/2));
 }
 
 void SDI_Painter::drawRect(const SDI_Point &topLeft, const SDI_Point &bottomRight)
@@ -191,7 +191,7 @@ void SDI_Painter::updateSquareData(SDI_GeometricShape& shape)
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
 {
     double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
-    SDI_Point topCirclePoint(centralPoint.translate(0, -radius));
+    SDI_Point topCirclePoint(SDI_Point::translate(centralPoint, 0, -radius));
     drawPoint(centralPoint);
     midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
@@ -213,7 +213,7 @@ void SDI_Painter::updateCircleData(SDI_GeometricShape& shape)
 
     int xLeft{centralPoint.x() - radius};
     int yLeft{centralPoint.y() - radius};
-    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(radius*2, radius*2));
+    shape.setShapeBoundinRect(SDI_Point(xLeft, yLeft), QSize(radius*2, radius*2));
     shape.setShapeData(data);
     shape.setCentralPoint(centralPoint);
 }
@@ -253,19 +253,19 @@ void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape)
                    "            </ol>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
                                        .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()))
                                        .arg(QString::number(userP3.x())).arg(QString::number(userP3.y()));
-    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
+    shape.setShapeBoundinRect(SDI_Point(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
     shape.setShapeData(data);
 
     SDI_Point centralP1P2{(point1.x() + point2.x())/2, (point1.y() + point2.y())/2};
     SDI_Point centralP1P3{(point1.x() + point3.x())/2, (point1.y() + point3.y())/2};
-    shape.setCentralPoint(QPoint((centralP1P2.x() + centralP1P3.x())/2, (centralP1P2.y() + centralP1P3.y())/2));
+    shape.setCentralPoint(SDI_Point((centralP1P2.x() + centralP1P3.x())/2, (centralP1P2.y() + centralP1P3.y())/2));
 }
 
 void SDI_Painter::drawIsoscelesRightTriangle(const SDI_Point &cpoint, const SDI_Point &epoint)
 {
     double legLength{SDI_Point::distance(cpoint, epoint)};
-    SDI_Point topLegPoint(cpoint.translate(0, cpoint.y() > epoint.y() ? -legLength : legLength));
-    SDI_Point sideLegPoint(cpoint.translate((cpoint.x() < epoint.x() ? legLength : -legLength), 0));
+    SDI_Point topLegPoint(SDI_Point::translate(cpoint, 0, cpoint.y() > epoint.y() ? -legLength : legLength));
+    SDI_Point sideLegPoint(SDI_Point::translate(cpoint, (cpoint.x() < epoint.x() ? legLength : -legLength), 0));
     drawLine(cpoint, topLegPoint); // draw leg 1
     drawLine(cpoint, sideLegPoint); // draw leg 2
     drawLine(topLegPoint, sideLegPoint); // draw hypotenuse
@@ -276,8 +276,8 @@ void SDI_Painter::updateIRTriangleData(SDI_GeometricShape &shape)
     SDI_Point cpoint{shape.getSetOfPoints().at(0)};
     SDI_Point epoint{shape.getSetOfPoints().at(1)};
     double legLength{SDI_Point::distance(cpoint,epoint)};
-    SDI_Point topLegPoint(cpoint.translate(0, cpoint.y() > epoint.y() ? -legLength : legLength));
-    SDI_Point sideLegPoint(cpoint.translate((cpoint.x() < epoint.x() ? legLength : -legLength), 0));
+    SDI_Point topLegPoint(SDI_Point::translate(cpoint, 0, cpoint.y() > epoint.y() ? -legLength : legLength));
+    SDI_Point sideLegPoint(SDI_Point::translate(cpoint, (cpoint.x() < epoint.x() ? legLength : -legLength), 0));
 
     shape.getSetOfPoints().pop_back();
     shape.getSetOfPoints().push_back(topLegPoint);
@@ -336,9 +336,9 @@ void SDI_Painter::updateTetragonData(SDI_GeometricShape &shape)
                                           .arg(QString::number(userBotR.x())).arg(QString::number(userBotR.y()))
                                           .arg(QString::number(userBotL.x())).arg(QString::number(userBotL.y()));
 
-    shape.setShapeBoundinRect(QPoint(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
+    shape.setShapeBoundinRect(SDI_Point(xLeft, yLeft), QSize(xRight - xLeft, yRight - yLeft));
     shape.setShapeData(data);
-    shape.setCentralPoint(QPoint((pointA.x() + pointC.x())/2, (pointA.y() + pointC.y())/2));
+    shape.setCentralPoint(SDI_Point((pointA.x() + pointC.x())/2, (pointA.y() + pointC.y())/2));
 }
 
 void SDI_Painter::midPointYLine(const SDI_Point &p1, const SDI_Point &p2)
@@ -389,9 +389,9 @@ void SDI_Painter::midPointXYCircle(const SDI_Point &topCirclePoint, const SDI_Po
         // if (x-a)^2 + (yNext-b)^2 - radius^2 >= 0
         // y' = y + 1 -> machine coordinate system
         drawPoint(x, y); // draw next point (x, y')
-        drawPoint(SDI_Point(x,y).centralSymmetry(centralCirclePoint));
-        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(x, centralCirclePoint.y())));
-        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(centralCirclePoint.x(), y)));
+        drawPoint(SDI_Point::centralSymmetry(SDI_Point(x,y), centralCirclePoint));
+        drawPoint(SDI_Point::centralSymmetry(SDI_Point(x,y), SDI_Point(x, centralCirclePoint.y())));
+        drawPoint(SDI_Point::centralSymmetry(SDI_Point(x,y), SDI_Point(centralCirclePoint.x(), y)));
     }
 
     double x{double(topCirclePoint.x() + xMax)};
@@ -402,9 +402,9 @@ void SDI_Painter::midPointXYCircle(const SDI_Point &topCirclePoint, const SDI_Po
         // if (xNext-a)^2 + (y-b)^2 - radius^2 < 0
         // x' = x + 1 -> machine coordinate system
         drawPoint(x, y);
-        drawPoint(SDI_Point(x,y).centralSymmetry(centralCirclePoint));
-        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(x, centralCirclePoint.y())));
-        drawPoint(SDI_Point(x,y).centralSymmetry(QPoint(centralCirclePoint.x(), y)));
+        drawPoint(SDI_Point::centralSymmetry(SDI_Point(x,y), centralCirclePoint));
+        drawPoint(SDI_Point::centralSymmetry(SDI_Point(x,y), SDI_Point(x, centralCirclePoint.y())));
+        drawPoint(SDI_Point::centralSymmetry(SDI_Point(x,y), SDI_Point(centralCirclePoint.x(), y)));
     }
 
 }
