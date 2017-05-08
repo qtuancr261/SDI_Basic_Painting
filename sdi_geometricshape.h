@@ -53,6 +53,7 @@ public slots:
     void translate(int xtrans, int ytrans);
     void scale(double xscale, double yscale);
     void rotate(double degree);
+    void originPosSymmetry();
 };
 
 #endif // SDI_GEOMETRICSHAPE_H

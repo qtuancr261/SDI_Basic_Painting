@@ -16,7 +16,7 @@ public:
     SDI_Point& operator =(const SDI_Point &srcPoint);
      ~SDI_Point() = default; // default destructor
     // Transforming function
-    void translate(int xtrans, int ytrans) const;
+    void translate(int xtrans, int ytrans);
     void scale(int Sx, int Sy) const;
     void rotate(double radian) const;
     void centralSymmetry(const QPoint& centralPoint) const;

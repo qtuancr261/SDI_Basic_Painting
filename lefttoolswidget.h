@@ -56,11 +56,13 @@ signals:
     void translateSelectedShape(int xtrans, int ytrans);
     void scaleSelectedShape(double xscale, double yscale);
     void rotateSelectedShape(double degree);
+    void centralSymmetrySelectedShape();
 private slots:
     void decideNewGraphicMode();
     void takeTranslateParameters();
     void takeScaleParameters();
     void takeRotateParameters();
+    void takeSymmetryParameters();
 };
 
 #endif // LEFTTOOLSWIDGET_H

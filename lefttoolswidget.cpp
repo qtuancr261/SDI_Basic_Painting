@@ -75,6 +75,8 @@ void leftToolsWidget::setupGUI()
     OySymmetry = new QRadioButton(tr("Đối xứng qua Oy"), this);
     OySymmetry->setAutoExclusive(true);
     doSymmetry = new QPushButton(tr("Lấy đối xứng đối tượng"));
+    doSymmetry->setAutoRepeat(true);
+    QObject::connect(doSymmetry, SIGNAL(clicked(bool)), this, SLOT(takeSymmetryParameters()));
     QVBoxLayout* symmetryLayout{new QVBoxLayout()};
     symmetryLayout->addWidget(centralSymmetry);
     symmetryLayout->addWidget(OxSymmetry);
@@ -158,5 +160,11 @@ void leftToolsWidget::takeScaleParameters()
 void leftToolsWidget::takeRotateParameters()
 {
     emit rotateSelectedShape(rotateBox->value());
+}
+
+void leftToolsWidget::takeSymmetryParameters()
+{
+    if (centralSymmetry->isChecked())
+        emit centralSymmetrySelectedShape();
 }
 

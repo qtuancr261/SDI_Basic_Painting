@@ -23,9 +23,10 @@ SDI_Point &SDI_Point::operator =(const SDI_Point &srcPoint)
     return *this;
 }
 
-void SDI_Point::translate(int xtrans, int ytrans) const
+void SDI_Point::translate(int xtrans, int ytrans)
 {
-
+    rx() += xtrans;
+    ry() -= ytrans;
 }
 
 void SDI_Point::scale(int Sx, int Sy) const

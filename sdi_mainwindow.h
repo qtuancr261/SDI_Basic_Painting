@@ -86,6 +86,7 @@ public slots:
     void translateShape(int xtrans, int ytrans);
     void scaleShape(double xscale, double yscale);
     void rotateShape(double degree);
+    void centralSymmetryShape();
 signals:
     void triangleTypeChanged(int triangleTypeID);
 };

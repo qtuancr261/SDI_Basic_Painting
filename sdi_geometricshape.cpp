@@ -156,8 +156,7 @@ void SDI_GeometricShape::translate(int xtrans, int ytrans)
 {
     for (SDI_Point& point : setOfPoints)
     {
-        point.rx() += xtrans;
-        point.ry() -= ytrans;
+        point.translate(xtrans, ytrans);
     }
     updateShapeData();
 }
@@ -194,6 +193,16 @@ void SDI_GeometricShape::rotate(double degree)
     }
     else
         return;
+}
+
+void SDI_GeometricShape::originPosSymmetry()
+{
+    for (SDI_Point& point : setOfPoints)
+    {
+        point.rx() = OriginPos.x()*2 - point.x();
+        point.ry() = OriginPos.y()*2 - point.y();
+    }
+    updateShapeData();
 }
 
 

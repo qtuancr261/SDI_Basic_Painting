@@ -337,6 +337,18 @@ void SDI_MainWindow::rotateShape(double degree)
     }
 }
 
+void SDI_MainWindow::centralSymmetryShape()
+{
+    if (activatedShape == nullptr)
+        showSelectedShape(nullptr);
+    else
+    {
+        activatedShape->originPosSymmetry();
+        central2DWidget->drawObject(QPoint(0,0), 3);
+        showSelectedShape(activatedShape);
+    }
+}
+
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
       dockWidget{new QDockWidget(this)},
@@ -362,6 +374,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
     QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double)), this, SLOT(rotateShape(double)));
+    QObject::connect(mainToolsWidget, SIGNAL(centralSymmetrySelectedShape()), this, SLOT(centralSymmetryShape()));
 }
 
 SDI_MainWindow::~SDI_MainWindow()
