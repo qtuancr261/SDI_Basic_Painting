@@ -48,7 +48,7 @@ protected: // handle events
 
 private:
     // draw 2D Objects -> stateOFShape : 0 means temporary | 1 means permanent
-    void drawExistentObject(SDI_Painter *painter, int idMode);
+    void drawExistentObject(SDI_Painter *painter);
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;

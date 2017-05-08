@@ -98,7 +98,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
         {
             //setOfShapes.swap(tempShapes);
             //tempShapes.clear();
-            drawExistentObject(&painter, 1);
+            drawExistentObject(&painter);
             modified = false;
         }
     }
@@ -114,7 +114,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
         {
             //tempShapes.swap(setOfShapes);
             //setOfShapes.clear();
-            drawExistentObject(&painter, 1);
+            drawExistentObject(&painter);
             modified = false;
         }
     }
@@ -253,6 +253,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
         }
         else
             drawObject(eventPos, 0);
+        break;
     default:
         break;
     }
@@ -307,7 +308,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
     //--------------------------finish---------------------------------
 
     //Repaint existent shapes
-    drawExistentObject(&painter, stateOfShape);
+    drawExistentObject(&painter);
     //------------------------------ finish ------------------//
 
     //using painter to draw new shape
@@ -419,9 +420,9 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
         }
 }
 
-void draw2DWidget::drawExistentObject(SDI_Painter *painter, int idMode)
+void draw2DWidget::drawExistentObject(SDI_Painter *painter)
 {
-    painter->setPen(QPen(myPenColor, idMode == 0 ? 1 : myPenWidth, Qt::SolidLine, Qt::RoundCap,
+    painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
     if (!setOfShapes.isEmpty() && graphicMode == graphicsMode::graphic2D)
         for (SDI_GeometricShape* shape:setOfShapes)
