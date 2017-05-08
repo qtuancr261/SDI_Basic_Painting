@@ -166,5 +166,9 @@ void leftToolsWidget::takeSymmetryParameters()
 {
     if (centralSymmetry->isChecked())
         emit centralSymmetrySelectedShape();
+    else if (OxSymmetry->isChecked())
+        emit OxSymmetrySelectedShape();
+    else if (OySymmetry->isChecked())
+        emit OySymmetrySelectedShape();
 }
 

@@ -165,10 +165,11 @@ void SDI_GeometricShape::scale(double xscale, double yscale)
 {
     for (SDI_Point& point : setOfPoints)
     {
-        int xtransValue{point.x() - centralPoint.x()};
-        int ytransValue{point.y() - centralPoint.y()};
-        point.rx() = centralPoint.x() + xscale*xtransValue;
-        point.ry() = centralPoint.y() + yscale*ytransValue;
+        //int xtransValue{point.x() - centralPoint.x()};
+        //int ytransValue{point.y() - centralPoint.y()};
+        //point.rx() = centralPoint.x() + xscale*xtransValue;
+        //point.ry() = centralPoint.y() + yscale*ytransValue;
+        point.scale(xscale, yscale, centralPoint);
     }
     updateShapeData();
 }
@@ -181,13 +182,14 @@ void SDI_GeometricShape::rotate(double degree)
         int ytrans{-centralPoint.y()};
         for (SDI_Point& point : setOfPoints)
         {
-            point.rx() = point.x() + xtrans;
-            point.ry() = point.y() + ytrans;
-            double a = point.x()*qCos(qDegreesToRadians(degree)) - point.y()*qSin(qDegreesToRadians(degree));
-            double b = point.x()*qSin(qDegreesToRadians(degree)) + point.y()*qCos(qDegreesToRadians(degree));
-            point = QPointF(a, b).toPoint();
-            point.rx() = point.x() - xtrans;
-            point.ry() = point.y() - ytrans;
+            //point.rx() = point.x() + xtrans;
+            //point.ry() = point.y() + ytrans;
+            //double a = point.x()*qCos(qDegreesToRadians(degree)) - point.y()*qSin(qDegreesToRadians(degree));
+            //double b = point.x()*qSin(qDegreesToRadians(degree)) + point.y()*qCos(qDegreesToRadians(degree));
+            //point = QPointF(a, b).toPoint();
+            //point.rx() = point.x() - xtrans;
+            //point.ry() = point.y() - ytrans;
+            point.rotate(degree, xtrans, ytrans);
         }
         updateShapeData();
     }
@@ -199,11 +201,27 @@ void SDI_GeometricShape::originPosSymmetry()
 {
     for (SDI_Point& point : setOfPoints)
     {
-        point.rx() = OriginPos.x()*2 - point.x();
-        point.ry() = OriginPos.y()*2 - point.y();
+        //point.rx() = OriginPos.x()*2 - point.x();
+        //point.ry() = OriginPos.y()*2 - point.y();
+        point.centralSymmetry(OriginPos);
     }
     updateShapeData();
 }
 
+void SDI_GeometricShape::OxSymmetry()
+{
+    for (SDI_Point& point : setOfPoints)
+    {
+        point.OxSymmetry(OriginPos.y());
+    }
+    updateShapeData();
+}
 
-
+void SDI_GeometricShape::OySymmetry()
+{
+    for (SDI_Point& point : setOfPoints)
+    {
+        point.OySymmetry(OriginPos.x());
+    }
+    updateShapeData();
+}

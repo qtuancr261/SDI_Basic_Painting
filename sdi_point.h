@@ -17,11 +17,14 @@ public:
      ~SDI_Point() = default; // default destructor
     // Transforming function
     void translate(int xtrans, int ytrans);
-    void scale(int Sx, int Sy) const;
-    void rotate(double radian) const;
-    void centralSymmetry(const QPoint& centralPoint) const;
+    void scale(double Sx, double Sy, const QPoint& centralPoint);
+    void rotate(double degree,int xtrans, int ytrans);
+    void centralSymmetry(const QPoint& centralPoint);
+    void OxSymmetry(int yValue); // line y = value
+    void OySymmetry(int xValue); // line x = value
 
     static double distance(const QPoint& p1, const QPoint& p2); // calculate the distance between two point in the system coordinate machine
+    // static functions - create new point
     static SDI_Point convertToUserSystem(const SDI_Point& cvtPoint, const SDI_Point& Origin);
     static SDI_Point translate(const SDI_Point& cvtPoint, int xtrans, int ytrans);
     static SDI_Point scale(const SDI_Point& cvtPoint, int Sx, int Sy);

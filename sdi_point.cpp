@@ -29,19 +29,43 @@ void SDI_Point::translate(int xtrans, int ytrans)
     ry() -= ytrans;
 }
 
-void SDI_Point::scale(int Sx, int Sy) const
+void SDI_Point::scale(double Sx, double Sy, const QPoint &centralPoint)
 {
-
+    int xtrans{x() - centralPoint.x()};
+    int ytrans{y() - centralPoint.y()};
+    rx() = centralPoint.x() + Sx*xtrans;
+    ry() = centralPoint.y() + Sy*ytrans;
 }
 
-void SDI_Point::rotate(double radian) const
+void SDI_Point::rotate(double degree, int xtrans, int ytrans)
 {
-
+    if (degree == 0.0 || degree == 180.0)
+        return;
+    else
+    {
+        rx() = x() + xtrans;
+        ry() = y() + ytrans;
+        double a{x()*qCos(qDegreesToRadians(degree)) - y()*qSin(qDegreesToRadians(degree))};
+        double b{x()*qSin(qDegreesToRadians(degree)) + y()*qCos(qDegreesToRadians(degree))};
+        rx() = QPointF(a,b).toPoint().x() - xtrans;
+        ry() = QPointF(a,b).toPoint().y() - ytrans;
+    }
 }
 
-void SDI_Point::centralSymmetry(const QPoint &centralPoint) const
+void SDI_Point::centralSymmetry(const QPoint &centralPoint)
 {
+    rx() = centralPoint.x()*2 - x();
+    ry() = centralPoint.y()*2 - y();
+}
 
+void SDI_Point::OxSymmetry(int yValue)
+{
+    centralSymmetry(SDI_Point(x(), yValue));
+}
+
+void SDI_Point::OySymmetry(int xValue)
+{
+    centralSymmetry(SDI_Point(xValue, y()));
 }
 
 double SDI_Point::distance(const QPoint &p1, const QPoint &p2) // static function

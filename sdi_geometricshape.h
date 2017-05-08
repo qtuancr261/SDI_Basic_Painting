@@ -54,6 +54,8 @@ public slots:
     void scale(double xscale, double yscale);
     void rotate(double degree);
     void originPosSymmetry();
+    void OxSymmetry();
+    void OySymmetry();
 };
 
 #endif // SDI_GEOMETRICSHAPE_H

@@ -349,6 +349,30 @@ void SDI_MainWindow::centralSymmetryShape()
     }
 }
 
+void SDI_MainWindow::OxSymmetryShape()
+{
+    if (activatedShape == nullptr)
+        showSelectedShape(nullptr);
+    else
+    {
+        activatedShape->OxSymmetry();
+        central2DWidget->drawObject(QPoint(0,0), 3);
+        showSelectedShape(activatedShape);
+    }
+}
+
+void SDI_MainWindow::OySymmetryShape()
+{
+    if (activatedShape == nullptr)
+        showSelectedShape(nullptr);
+    else
+    {
+        activatedShape->OySymmetry();
+        central2DWidget->drawObject(QPoint(0,0), 3);
+        showSelectedShape(activatedShape);
+    }
+}
+
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
       dockWidget{new QDockWidget(this)},
@@ -375,6 +399,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
     QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double)), this, SLOT(rotateShape(double)));
     QObject::connect(mainToolsWidget, SIGNAL(centralSymmetrySelectedShape()), this, SLOT(centralSymmetryShape()));
+    QObject::connect(mainToolsWidget, SIGNAL(OxSymmetrySelectedShape()), this, SLOT(OxSymmetryShape()));
+    QObject::connect(mainToolsWidget, SIGNAL(OySymmetrySelectedShape()), this, SLOT(OySymmetryShape()));
 }
 
 SDI_MainWindow::~SDI_MainWindow()

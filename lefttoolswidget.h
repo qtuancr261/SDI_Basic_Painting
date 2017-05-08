@@ -57,6 +57,8 @@ signals:
     void scaleSelectedShape(double xscale, double yscale);
     void rotateSelectedShape(double degree);
     void centralSymmetrySelectedShape();
+    void OxSymmetrySelectedShape();
+    void OySymmetrySelectedShape();
 private slots:
     void decideNewGraphicMode();
     void takeTranslateParameters();
