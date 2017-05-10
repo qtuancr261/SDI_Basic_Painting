@@ -461,30 +461,26 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
     switch (newId)
     {
     case 1:
-        draw2DObjectMode = geometricShape::point;
-        setCursor(Qt::ClosedHandCursor);
-        break;
-    case 2:
         draw2DObjectMode = geometricShape::line;
         setCursor(Qt::ClosedHandCursor);
         break;
-    case 3:
+    case 2:
         draw2DObjectMode = geometricShape::rect;
         setCursor(Qt::ClosedHandCursor);
         break;
-    case 4:
+    case 3:
         draw2DObjectMode = geometricShape::square;
         setCursor(Qt::ClosedHandCursor);
         break;
-    case 5:
+    case 4:
         draw2DObjectMode = geometricShape::parallelogram;
         setCursor(Qt::ClosedHandCursor);
         break;
-    case 6:
+    case 5:
         draw2DObjectMode = geometricShape::circle;
         setCursor(Qt::ClosedHandCursor);
         break;
-    case 7:
+    case 6:
         draw2DObjectMode = geometricShape::triangle;
         setCursor(Qt::ClosedHandCursor);
         break;

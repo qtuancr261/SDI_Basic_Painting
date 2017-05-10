@@ -46,7 +46,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(pickPenColorAct, SIGNAL(triggered(bool)), this, SLOT(penColor()));
     QObject::connect(penWidthBox, SIGNAL(valueChanged(int)), this ,SLOT(penWidth(int)));
 
-    clearScreenAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Xóa màn hình"), this);
+    clearScreenAct = new QAction(QIcon(":/images/icons/clearScreen.png"), tr("Xóa màn hình"), this);
     clearScreenAct->setShortcut(Qt::CTRL + Qt::Key_L);
     QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(clearImage()));
 
@@ -57,43 +57,50 @@ void SDI_MainWindow::createActions()
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
     QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Chọn hình"), this)};
-    selectShapeAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+    selectShapeAct->setShortcut(Qt::CTRL + Qt::Key_0);
+    selectShapeAct->setToolTip(tr("Ctrl+0"));
     selectShapeAct->setStatusTip(tr("Chế độ chọn hình dựa trên tọa độ điểm được chỉ ra trên hệ trục tọa độ ..."));
     setupDrawAct(selectShapeAct);
 
-    QAction* drawPointAct{new QAction(QIcon(":/images/icons/point.png"), tr("Vẽ điểm"), this)};
+    QAction* drawPointAct{new QAction(QIcon(":/images/icons/point.png"), tr("Điểm"), this)};
     drawPointAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
     drawPointAct->setStatusTip(tr("Vẽ một điểm trên hệ trục, dùng chuột để chọn điểm vẽ hoặc dùng nút Thêm đối tượng để nhập vào thông số..."));
-    setupDrawAct(drawPointAct);
+    //setupDrawAct(drawPointAct);
 
-    QAction* drawLineAct{new QAction(QIcon(":/images/icons/line.png"), tr("Vẽ đoạn thẳng"), this)};
-    drawLineAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_L);
+    QAction* drawLineAct{new QAction(QIcon(":/images/icons/line.png"), tr("Đoạn thẳng"), this)};
+    drawLineAct->setShortcut(Qt::CTRL + Qt::Key_1);
+    drawLineAct->setToolTip(tr("Ctrl+1"));
     drawLineAct->setStatusTip(tr("Vẽ một đoạn thẳng trên hệ trục, dùng chuột để chọn 2 điểm mút hoặc dùng Thêm đối tượng để nhập vào thông số..."));
     setupDrawAct(drawLineAct);
 
-    QAction* drawRectAct{new QAction(QIcon(":/images/icons/rect.png"), tr("Vẽ hình chữ nhật"), this)};
-    drawRectAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_R);
+    QAction* drawRectAct{new QAction(QIcon(":/images/icons/rect.png"), tr("Hình chữ nhật"), this)};
+    drawRectAct->setShortcut(Qt::CTRL + Qt::Key_2);
+    drawRectAct->setToolTip(tr("Ctrl+2"));
     drawRectAct->setStatusTip(tr("Vẽ một hình chữ nhật trên hệ trục, dùng chuột để chọn 2 điểm tạo nên đường chéo hoặc dùng Thêm đối tượng để nhập vào thông số..."));
     setupDrawAct(drawRectAct);
 
-    QAction* drawSquareAct{new QAction(QIcon(":/images/icons/square"), tr("Vẽ hình vuông"), this)};
-    drawSquareAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
+    QAction* drawSquareAct{new QAction(QIcon(":/images/icons/square"), tr("Hình vuông"), this)};
+    drawSquareAct->setShortcut(Qt::CTRL + Qt::Key_3);
+    drawSquareAct->setToolTip(tr("Ctrl+3"));
     drawSquareAct->setStatusTip(tr("Vẽ một hình vuông trên hệ trục, dùng chuột để chọn 2 điểm tạo nên đường chéo hoặc dùng Thêm đối tượng để nhập vào thông số..."));
     setupDrawAct(drawSquareAct);
 
-    QAction* drawParallelogramAct{new QAction(QIcon(":/images/icons/parallelogram.png"), tr("Vẽ hình bình hảnh"), this)};
-    drawParallelogramAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
+    QAction* drawParallelogramAct{new QAction(QIcon(":/images/icons/parallelogram.png"), tr("Hình bình hành"), this)};
+    drawParallelogramAct->setShortcut(Qt::CTRL + Qt::Key_4);
+    drawParallelogramAct->setToolTip(tr("Ctrl+4"));
     drawParallelogramAct->setStatusTip(tr("Vẽ một hình binh hành trên hệ trục, dùng chuột để chọn 3 điểm tạo nên đường chéo hoặc dùng Thêm đối tượng để nhập vào thông số..."));
     setupDrawAct(drawParallelogramAct);
 
 
-    QAction* drawCircleAct{new QAction(QIcon(":/images/icons/circle.png"), tr("Vẽ hình tròn"), this)};
-    drawCircleAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+    QAction* drawCircleAct{new QAction(QIcon(":/images/icons/circle.png"), tr("Hình tròn"), this)};
+    drawCircleAct->setShortcut(Qt::CTRL + Qt::Key_5);
+    drawCircleAct->setToolTip(tr("Ctrl+5"));
     drawCircleAct->setStatusTip(tr("Vẽ một hình tròn trên hệ trục, dùng chuột để chọn tâm đường tròn và điểm thuộc đường tròn hoặc dùng Thêm đối tượng để nhập vào thông số..."));
     setupDrawAct(drawCircleAct);
 
-    QAction* drawTriangleAct{new QAction(QIcon(":/images/icons/triangle.png"), tr("Vẽ hình tam giác"), this)};
-    drawTriangleAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_T);
+    QAction* drawTriangleAct{new QAction(QIcon(":/images/icons/triangle.png"), tr("Tam giác"), this)};
+    drawTriangleAct->setShortcut(Qt::CTRL + Qt::Key_6);
+    drawTriangleAct->setToolTip(tr("Ctrl+6"));
     drawTriangleAct->setStatusTip(tr("Vẽ một hình tam giác trên hệ trục, dùng chuột để chọn 3 điểm tạo nên hình tam giác hoặc dùng Thêm đối tượng để nhập vào thông số..."));
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
     setupDrawAct(drawTriangleAct);
@@ -157,12 +164,11 @@ void SDI_MainWindow::createToolsBar()
     mainToolBar->addWidget(new QLabel(tr("Bề dày nét vẽ"), this));
     penWidthBox->setRange(1, 10);
     mainToolBar->addWidget(penWidthBox);
-    mainToolBar->setAcceptDrops(true);
+    mainToolBar->addAction(clearScreenAct);
     mainToolBar = addToolBar(tr("Vẽ các đối tượng cơ bản"));
     mainToolBar->addActions(draw2DObjectActs);
-    mainToolBar->addSeparator();
-    triangleTypes->addItem(tr("TG thường"));
-    triangleTypes->addItem(tr("TG vuông cân"));
+    triangleTypes->addItem(tr("Thường"));
+    triangleTypes->addItem(tr("Vuông cân"));
     triangleTypes->setDisabled(true);
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
     mainToolBar->addWidget(triangleTypes);
@@ -387,7 +393,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     createToolsBar();
     createDockWidget();
     setCentralWidget(central2DWidget);
-    //setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    setToolTipDuration(15);
     if (QSysInfo::WindowsVersion == QSysInfo::WV_WINDOWS10)
         setFont(QFont("Tahoma", 10));
     setWindowTitle("SDI Basic Painting");
