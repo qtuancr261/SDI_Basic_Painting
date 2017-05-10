@@ -41,7 +41,7 @@ void SDI_MainWindow::createActions()
     optionAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Tùy chỉnh..."), this);
     optionAct->setStatusTip("Tùy chỉnh giao diện, ngôn ngữ...");
 
-    pickPenColorAct = new QAction(QIcon(":/images/icons/penColor.png"), tr("Chọn màu vẽ"), this);
+    pickPenColorAct = new QAction(QIcon(":/images/icons/penColor.png"), tr("Màu vẽ"), this);
     pickPenColorAct->setStatusTip(tr("Chọn màu vẽ"));
     QObject::connect(pickPenColorAct, SIGNAL(triggered(bool)), this, SLOT(penColor()));
     QObject::connect(penWidthBox, SIGNAL(valueChanged(int)), this ,SLOT(penWidth(int)));
@@ -400,7 +400,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setWindowTitle("SDI Basic Painting");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     statusBar()->showMessage("Demo 0.4 - 04/05/2017");
-    QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)), this, SLOT(showMessage(QString)));
+    QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)),mainToolsWidget, SLOT(showPosition(QString)));
     QObject::connect(central2DWidget, SIGNAL(selectedShape(SDI_GeometricShape*)), this, SLOT(showSelectedShape(SDI_GeometricShape*)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));

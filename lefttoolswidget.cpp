@@ -111,6 +111,9 @@ void leftToolsWidget::setupGUI()
     infoLayout->addWidget(shapeDataTEdit);
     QGroupBox* infoGroupBox{new QGroupBox(tr("ĐỐI TƯỢNG ĐANG ĐƯỢC CHỌN"))};
     infoGroupBox->setLayout(infoLayout);
+
+    positionLabel = new QLabel("Tọa độ");
+    positionLabel->setAlignment(Qt::AlignCenter);
     //---------------------------------------------------------------------
     //QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
@@ -120,6 +123,7 @@ void leftToolsWidget::setupGUI()
     mainLayout->addWidget(symmetryGroupBox);
     mainLayout->addWidget(zoomGroupBox);
     mainLayout->addWidget(infoGroupBox);
+    mainLayout->addWidget(positionLabel);
     setLayout(mainLayout);
 
 }
@@ -170,5 +174,10 @@ void leftToolsWidget::takeSymmetryParameters()
         emit OxSymmetrySelectedShape();
     else if (OySymmetry->isChecked())
         emit OySymmetrySelectedShape();
+}
+
+void leftToolsWidget::showPosition(QString posInfo)
+{
+    positionLabel->setText(posInfo);
 }
 

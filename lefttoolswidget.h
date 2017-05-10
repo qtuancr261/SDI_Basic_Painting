@@ -46,6 +46,7 @@ public:
 
     QLabel* shapeNameLabel;
     QTextEdit* shapeDataTEdit;
+    QLabel* positionLabel;
 private:
     void setupGUI();
     void setDrawModeButtonStyle(QPushButton* button);
@@ -65,6 +66,8 @@ private slots:
     void takeScaleParameters();
     void takeRotateParameters();
     void takeSymmetryParameters();
+public slots:
+    void showPosition(QString posInfo);
 };
 
 #endif // LEFTTOOLSWIDGET_H
