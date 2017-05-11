@@ -14,6 +14,7 @@
 #include <QColorDialog>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QToolBox>
 #include <QSpacerItem>
 class leftToolsWidget : public QWidget
 {

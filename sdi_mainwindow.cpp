@@ -167,14 +167,13 @@ void SDI_MainWindow::createToolsBar()
     mainToolBar->addWidget(penWidthBox);
     mainToolBar->addAction(clearScreenAct);
 
-    mainToolBar = addToolBar(tr("Vẽ các đối tượng cơ bản"));
-    mainToolBar->addActions(draw2DObjectActs);
+    shape2DToolBar = addToolBar(tr("Vẽ các đối tượng 2D cơ bản"));
+    shape2DToolBar->addActions(draw2DObjectActs);
     triangleTypes->addItem(tr("Thường"));
     triangleTypes->addItem(tr("Vuông cân"));
     triangleTypes->setDisabled(true);
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
-    mainToolBar->addWidget(triangleTypes);
-
+    shape2DToolBar->addWidget(triangleTypes);
 }
 
 void SDI_MainWindow::createDockWidget()
@@ -184,6 +183,7 @@ void SDI_MainWindow::createDockWidget()
     dockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
     dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+    //dockWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 }
 
 void SDI_MainWindow::setupDrawAct(QAction *drawAct)
@@ -396,9 +396,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     createDockWidget();
     setCentralWidget(central2DWidget);
     setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    setToolTipDuration(15);
     if (QSysInfo::WindowsVersion == QSysInfo::WV_WINDOWS10)
-        setFont(QFont("Tahoma", 10));
+        setFont(QFont("Tahoma", 9));
     setWindowTitle("SDI Basic Painting");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     statusBar()->showMessage("Demo 0.4 - 04/05/2017");

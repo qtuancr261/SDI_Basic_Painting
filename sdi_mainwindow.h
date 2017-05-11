@@ -35,6 +35,8 @@ private:
     QMenu* ViewMenu;
     QMenu* ToolsMenu;
     QMenu* HelpMenu;
+    QToolBar* shape2DToolBar;
+    QToolBar* shape3DToolsBar;
     QDockWidget* dockWidget;
     draw2DWidget* central2DWidget;
     leftToolsWidget* mainToolsWidget;

@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     SDI_MainWindow w;
+    w.setMinimumSize(800, 600);
     w.showMaximized();
     //leftToolsWidget w;
     //w.show();

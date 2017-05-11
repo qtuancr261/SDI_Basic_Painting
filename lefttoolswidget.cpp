@@ -49,7 +49,7 @@ void leftToolsWidget::setupGUI()
     translationLayout->addWidget(OyTranslateSlider, 1, 1);
     translationLayout->addWidget(OyTranslateBox, 1, 2);
     translationLayout->addWidget(doTranslate, 2, 0, 1, 3);
-    QGroupBox* translationGroupBox{new QGroupBox(tr("PHÉP TỊNH TIẾN"), this)};
+    QGroupBox* translationGroupBox{new QGroupBox()};
     translationGroupBox->setLayout(translationLayout);
     //--------------------------------------------------------------------
     // rotate mode
@@ -64,7 +64,7 @@ void leftToolsWidget::setupGUI()
     rotateLayout->addWidget(rotateSlider, 0, 1);
     rotateLayout->addWidget(rotateBox, 0, 2);
     rotateLayout->addWidget(doRotate, 1, 0, 1, 3);
-    QGroupBox* rotateGroupBox{new QGroupBox(tr("Phép xoay"), this)};
+    QGroupBox* rotateGroupBox{new QGroupBox()};
     rotateGroupBox->setLayout(rotateLayout);
     //---------------------------------------------------------------------
     //symmetry mode
@@ -82,7 +82,7 @@ void leftToolsWidget::setupGUI()
     symmetryLayout->addWidget(OxSymmetry);
     symmetryLayout->addWidget(OySymmetry);
     symmetryLayout->addWidget(doSymmetry);
-    QGroupBox* symmetryGroupBox{new QGroupBox(tr("PHÉP ĐỐI XỨNG"), this)};
+    QGroupBox* symmetryGroupBox{new QGroupBox()};
     symmetryGroupBox->setLayout(symmetryLayout);
     //---------------------------------------------------------------------
     // zoom mode
@@ -90,14 +90,14 @@ void leftToolsWidget::setupGUI()
     zoomBox->setRange(0.0, 5.0);
     zoomBox->setSingleStep(0.1);
     zoomBox->setSuffix("x");
-    doZoom = new QPushButton(tr("Biến đồi tỉ lệ đối tượng"), this);
+    doZoom = new QPushButton(tr("Biến đồi đối tượng"), this);
     doZoom->setAutoRepeat(true);
     QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
     QGridLayout* zoomLayout{new QGridLayout(this)};
     zoomLayout->addWidget(new QLabel(tr("Tỉ lệ")), 0, 0);
     zoomLayout->addWidget(zoomBox, 0, 1);
     zoomLayout->addWidget(doZoom, 0,2);
-    QGroupBox* zoomGroupBox{new QGroupBox(tr("PHÉP BIẾN ĐỔI TỈ LỆ"), this)};
+    QGroupBox* zoomGroupBox{new QGroupBox()};
     zoomGroupBox->setLayout(zoomLayout);
     //---------------------------------------------------------------------
     // geometric shape infomation
@@ -115,13 +115,20 @@ void leftToolsWidget::setupGUI()
     positionLabel = new QLabel("Tọa độ");
     positionLabel->setAlignment(Qt::AlignCenter);
     //---------------------------------------------------------------------
-    QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
+    QToolBox* transformBox{new QToolBox(this)};
+    transformBox->addItem(translationGroupBox, "PHÉP TỊNH TIẾN");
+    transformBox->addItem(rotateGroupBox, "PHÉP XOAY");
+    transformBox->addItem(symmetryGroupBox, "PHÉP ĐỐI XỨNG");
+    transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI TỈ LỆ");
+    transformBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    QSpacerItem* verticalSpacer{new QSpacerItem(10, 40, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
-    mainLayout->addWidget(translationGroupBox);
-    mainLayout->addWidget(rotateGroupBox);
-    mainLayout->addWidget(symmetryGroupBox);
-    mainLayout->addWidget(zoomGroupBox);
+    //mainLayout->addWidget(translationGroupBox);
+    //mainLayout->addWidget(rotateGroupBox);
+    //mainLayout->addWidget(symmetryGroupBox);
+    //mainLayout->addWidget(zoomGroupBox);
+    mainLayout->addWidget(transformBox);
     mainLayout->addWidget(infoGroupBox);
     mainLayout->addWidget(positionLabel);
     mainLayout->addItem(verticalSpacer);
