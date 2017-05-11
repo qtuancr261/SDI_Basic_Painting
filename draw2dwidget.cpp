@@ -118,6 +118,8 @@ void draw2DWidget::clearImage(clearImageMode clearID)
             modified = false;
         }
     }
+    lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
+    delegateMode = drawLineDelegateMode::none;
     update();
 }
 
@@ -298,7 +300,6 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
 void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // handle draw Object
 {
     SDI_Painter painter(&image);
-    int rad = (myPenWidth / 2) + 2;
     //Repaint the user's coordinate  system
     image.fill(qRgb(255, 255, 255));
     if (graphicMode == graphicsMode::graphic2D)
@@ -313,53 +314,37 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
 
     //using painter to draw new shape
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    if (stateOfShape != 2)
-        switch (draw2DObjectMode)
+    if (stateOfShape != 2 && graphicMode == graphicsMode::graphic2D)
+        draw2DShape(&painter, endPoint, stateOfShape);
+
+}
+
+void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, int stateOfShape)
+{
+    int rad = (myPenWidth / 2) + 2;
+    switch (draw2DObjectMode)
+    {
+    case geometricShape::selectShape:
+        break;
+    case geometricShape::line:
+        switch (delegateMode)
         {
-        case geometricShape::point:
-            painter.drawPoint(endPoint);
-            update(QRect(endPoint, endPoint + SDI_Point(10, 10)).normalized().adjusted(-rad, -rad, +rad, +rad));
-            break;
-        case geometricShape::selectShape:
-            break;
-        case geometricShape::line:
-            switch (delegateMode)
+        case drawLineDelegateMode::triangle: //
+            if (lastPoint_2.isNull())
             {
-            case drawLineDelegateMode::triangle: //
-                if (lastPoint_2.isNull())
-                {
-                    painter.drawLine(lastPoint, endPoint);
-                    draw2DObjectMode = geometricShape::triangle; // restore draw2DObjectMode
-                }
-                break;
-            case drawLineDelegateMode::parrallelogram:
-                if (lastPoint_2.isNull())
-                {
-                    painter.drawLine(lastPoint, endPoint);
-                    draw2DObjectMode = geometricShape::parallelogram;
-                }
-                break;
-            default:
-                painter.drawLine(lastPoint, endPoint);
-                if (stateOfShape == 1)
-                {
-                    setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
-                    update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-                }
-                else
-                    update();
-                break;
+                painter->drawLine(lastPoint, endPoint);
+                draw2DObjectMode = geometricShape::triangle; // restore draw2DObjectMode
             }
-
-
-            /*
-            ;*/
             break;
-        case geometricShape::rect:
-            if (lastPoint.x() < endPoint.x())
-                painter.drawRect(lastPoint, endPoint);
-            else
-                painter.drawRect(endPoint, lastPoint);
+        case drawLineDelegateMode::parrallelogram:
+            if (lastPoint_2.isNull())
+            {
+                painter->drawLine(lastPoint, endPoint);
+                draw2DObjectMode = geometricShape::parallelogram;
+            }
+            break;
+        default:
+            painter->drawLine(lastPoint, endPoint);
             if (stateOfShape == 1)
             {
                 setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
@@ -368,56 +353,71 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
             else
                 update();
             break;
-        case geometricShape::square:
-        {
-            painter.drawSquare(lastPoint, endPoint);
-            if(stateOfShape == 1)
-            {
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
-                update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
-            }
-            else
-                update();
-            break;
         }
-        case geometricShape::circle:
-            painter.drawCircle(lastPoint, endPoint);
-            if (stateOfShape == 1)
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+        break;
+    case geometricShape::rect:
+        if (lastPoint.x() < endPoint.x())
+            painter->drawRect(lastPoint, endPoint);
+        else
+            painter->drawRect(endPoint, lastPoint);
+        if (stateOfShape == 1)
+        {
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+            update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+        }
+        else
             update();
-            break;
-        case geometricShape::triangle:
+        break;
+    case geometricShape::square:
+    {
+        painter->drawSquare(lastPoint, endPoint);
+        if(stateOfShape == 1)
         {
-            if (stateOfShape == 1)
-                switch (triangleTypeID)
-                {
-                case 0: //triangle
-                    painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
-                    setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
-                    update();
-                    break;
-                case 1:// // Isosceles Right Triangle
-                    painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
-                    setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint,origin));
-                    update();
-                    break;
-                }
-            else // icoscless Triangle
-            {
-                if (triangleTypeID == 0)
-                    painter.drawTriangle(lastPoint, lastPoint_2, endPoint);
-                else
-                    painter.drawIsoscelesRightTriangle(lastPoint, endPoint);
-            }
-            break;
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+            update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         }
-        case geometricShape::parallelogram:
-            painter.drawParallelogram(lastPoint, lastPoint_2, endPoint);
-            if (stateOfShape == 1)
+        else
+            update();
+        break;
+    }
+    case geometricShape::circle:
+        painter->drawCircle(lastPoint, endPoint);
+        if (stateOfShape == 1)
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+        update();
+        break;
+    case geometricShape::triangle:
+    {
+        if (stateOfShape == 1)
+            switch (triangleTypeID)
+            {
+            case 0: //triangle
+                painter->drawTriangle(lastPoint, lastPoint_2, endPoint);
                 setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
-            update();
-            break;
+                update();
+                break;
+            case 1:// // Isosceles Right Triangle
+                painter->drawIsoscelesRightTriangle(lastPoint, endPoint);
+                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint,origin));
+                update();
+                break;
+            }
+        else // icoscless Triangle
+        {
+            if (triangleTypeID == 0)
+                painter->drawTriangle(lastPoint, lastPoint_2, endPoint);
+            else
+                painter->drawIsoscelesRightTriangle(lastPoint, endPoint);
         }
+        break;
+    }
+    case geometricShape::parallelogram:
+        painter->drawParallelogram(lastPoint, lastPoint_2, endPoint);
+        if (stateOfShape == 1)
+            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
+        update();
+        break;
+    }
 }
 
 void draw2DWidget::drawExistentObject(SDI_Painter *painter)
@@ -487,6 +487,20 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
     default:
         draw2DObjectMode = geometricShape::selectShape;
         setCursor(Qt::PointingHandCursor);
+        break;
+    }
+    lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
+    delegateMode = drawLineDelegateMode::none;
+}
+
+void draw2DWidget::setDraw3DObjectMode(int newId)
+{
+    switch (newId)
+    {
+    case 0:
+        draw3DObjectMode = geometric3DShape::parallelepiped;
+        break;
+    default:
         break;
     }
     lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position

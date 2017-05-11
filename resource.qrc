@@ -20,5 +20,6 @@
         <file>icons/penColor.png</file>
         <file>icons/SDI_Basic_Painting.ico</file>
         <file>icons/clearScreen.png</file>
+        <file>icons/cube.png</file>
     </qresource>
 </RCC>

@@ -30,8 +30,8 @@ SOURCES += main.cpp\
     draw2dwidget.cpp \
     sdi_point.cpp \
     matrixlibs.cpp \
-    sdi_point3d.cpp \
-    sdi_geometricshape.cpp
+    sdi_geometricshape.cpp \
+    sdi_geometric3dshape.cpp
 
 HEADERS  += sdi_mainwindow.h \
     lefttoolswidget.h \
@@ -39,8 +39,8 @@ HEADERS  += sdi_mainwindow.h \
     draw2dwidget.h \
     sdi_point.h \
     matrixlibs.h \
-    sdi_point3d.h \
-    sdi_geometricshape.h
+    sdi_geometricshape.h \
+    sdi_geometric3dshape.h
 
 RESOURCES += \
     resource.qrc

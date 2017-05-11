@@ -94,7 +94,7 @@ void leftToolsWidget::setupGUI()
     doZoom->setAutoRepeat(true);
     QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
     QGridLayout* zoomLayout{new QGridLayout(this)};
-    zoomLayout->addWidget(new QLabel(tr("Tỉ lệ")), 0, 0);
+    zoomLayout->addWidget(new QLabel(tr("Hệ số")), 0, 0);
     zoomLayout->addWidget(zoomBox, 0, 1);
     zoomLayout->addWidget(doZoom, 0,2);
     QGroupBox* zoomGroupBox{new QGroupBox()};
@@ -119,7 +119,7 @@ void leftToolsWidget::setupGUI()
     transformBox->addItem(translationGroupBox, "PHÉP TỊNH TIẾN");
     transformBox->addItem(rotateGroupBox, "PHÉP XOAY");
     transformBox->addItem(symmetryGroupBox, "PHÉP ĐỐI XỨNG");
-    transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI TỈ LỆ");
+    transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI TỈ LỆ ĐỒNG DẠNG");
     transformBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     QSpacerItem* verticalSpacer{new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};

@@ -59,7 +59,9 @@ private:
     QAction* aboutQtAct;
     // Draw Actions
     QActionGroup* draw2DGroupActs;
-    QList<QAction*> draw2DObjectActs;
+    QActionGroup* draw3DGroupActs;
+    QList<QAction*> draw2DShapeActs;
+    QList<QAction*> draw3DShapeActs;
     QComboBox* triangleTypes;
     QSpinBox* penWidthBox;
     SDI_GeometricShape* activatedShape;
@@ -68,7 +70,8 @@ private:
     void createMenus();
     void createToolsBar();
     void createDockWidget();
-    void setupDrawAct(QAction* drawAct);
+    void setupDraw2DAct(QAction* drawAct);
+    void setupDraw3DAct(QAction* drawAct);
     bool mayBeSave();
     bool saveFile(const QByteArray& fileFormat);
 

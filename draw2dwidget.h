@@ -10,6 +10,7 @@
 #include "sdi_painter.h"
 #include "sdi_point.h"
 #include "sdi_geometricshape.h"
+#include "sdi_geometric3dshape.h"
 enum class graphicsMode
 {
    graphic2D = 2, graphic3D
@@ -39,6 +40,7 @@ public:
     int penWidth() const {return myPenWidth;}
     void locateSelectedShape(const SDI_Point &selectPos);
     void drawObject(const SDI_Point &endPoint, int stateOfShape);
+    void draw2DShape(SDI_Painter *painter, const SDI_Point& endPoint, int stateOfShape);
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -63,6 +65,7 @@ private:
 
     graphicsMode graphicMode;
     geometricShape draw2DObjectMode; // hold 2D Object ID
+    geometric3DShape draw3DObjectMode;
     drawLineDelegateMode delegateMode;
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
@@ -76,6 +79,7 @@ signals:
 
 public slots:
     void setDraw2DObjectMode(int newId);
+    void setDraw3DObjectMode(int newId);
     void setGraphicsMode(int newId);
     void setTriangleTypeID(int newID);
     void clearImage(clearImageMode clearID = clearImageMode::clearAll);
