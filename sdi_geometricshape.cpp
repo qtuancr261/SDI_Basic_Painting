@@ -178,8 +178,8 @@ void SDI_GeometricShape::rotate(double degree)
 {
     if (static_cast<int>(degree) % 180 != 0)
     {
-        int xtrans{-centralPoint.x()};
-        int ytrans{-centralPoint.y()};
+        int xtrans{shapeID != geometricShape::circle ? -centralPoint.x() : -OriginPos.x()};
+        int ytrans{shapeID != geometricShape::circle ? -centralPoint.y() : -OriginPos.y()};
         for (SDI_Point& point : setOfPoints)
         {
             //point.rx() = point.x() + xtrans;
