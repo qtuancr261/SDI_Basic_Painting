@@ -121,7 +121,7 @@ void leftToolsWidget::setupGUI()
     transformBox->addItem(symmetryGroupBox, "PHÉP ĐỐI XỨNG");
     transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI TỈ LỆ");
     transformBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    QSpacerItem* verticalSpacer{new QSpacerItem(10, 40, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
+    QSpacerItem* verticalSpacer{new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
     //mainLayout->addWidget(translationGroupBox);
