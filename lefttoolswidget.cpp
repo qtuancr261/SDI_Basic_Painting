@@ -22,12 +22,12 @@ void leftToolsWidget::setupGUI()
     setDrawModeButtonStyle(graphic3DMode);
     QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
 
-    helpMode = new QPushButton(QIcon(":/images/icons/about.png"), tr("Giới thiệu"), this);
-    setDrawModeButtonStyle(helpMode);
+    //helpMode = new QPushButton(QIcon(":/images/icons/about.png"), tr("Giới thiệu"), this);
+    //setDrawModeButtonStyle(helpMode);
     QVBoxLayout* selectModeLayout{new QVBoxLayout(this)};
     selectModeLayout->addWidget(graphic2DMode);
     selectModeLayout->addWidget(graphic3DMode);
-    selectModeLayout->addWidget(helpMode);
+    //selectModeLayout->addWidget(helpMode);
     QGroupBox* selectModeGroupBox{new QGroupBox(tr("CHỌN CHẾ ĐỘ"), this)};
     selectModeGroupBox->setLayout(selectModeLayout);
     //----------------------------------------------------------------------
@@ -115,7 +115,7 @@ void leftToolsWidget::setupGUI()
     positionLabel = new QLabel("Tọa độ");
     positionLabel->setAlignment(Qt::AlignCenter);
     //---------------------------------------------------------------------
-    //QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
+    QSpacerItem* verticalSpacer{new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Minimum)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
     mainLayout->addWidget(translationGroupBox);
@@ -124,6 +124,7 @@ void leftToolsWidget::setupGUI()
     mainLayout->addWidget(zoomGroupBox);
     mainLayout->addWidget(infoGroupBox);
     mainLayout->addWidget(positionLabel);
+    mainLayout->addItem(verticalSpacer);
     setLayout(mainLayout);
 
 }

@@ -195,7 +195,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     {
         lastPoint = lastPoint_2 = SDI_Point(0, 0);
         delegateMode = drawLineDelegateMode::none;
-        drawObject(SDI_Point(0,0), 3); //
+        drawObject(SDI_Point(0,0), 2); //
     }
 }
 
@@ -313,7 +313,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
 
     //using painter to draw new shape
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    if (stateOfShape != 3)
+    if (stateOfShape != 2)
         switch (draw2DObjectMode)
         {
         case geometricShape::point:

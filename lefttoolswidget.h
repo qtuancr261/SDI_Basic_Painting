@@ -24,7 +24,7 @@ public:
     void setInfoBox(QString shapeNameLabel, QString shapeData);
     QPushButton* graphic2DMode;
     QPushButton* graphic3DMode;
-    QPushButton* helpMode;
+    //QPushButton* helpMode;
 
     QSlider* OxTranslateSlider;
     QSpinBox* OxTranslateBox;
