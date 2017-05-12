@@ -108,6 +108,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
         if (clearID == clearImageMode::clearAll)
         {
             setOfShapes.clear();
+            setOf3DShapes.clear();
             modified = true;
         }
         else
@@ -462,7 +463,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
     switch (draw3DObjectMode)
     {
     case geometric3DShape::parallelepiped:
-        if (lastPoint_2.isNull())
+        if (!lastPoint.isNull() && lastPoint_2.isNull())
         {
            int xTrans{endPoint.y() - lastPoint.y()};
            SDI_Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
@@ -470,6 +471,10 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
         }
         else
             painter->drawParallelePiped(lastPoint, lastPoint_2, endPoint);
+        if (stateOfShape == 1)
+        {
+            setOf3DShapes.push_back(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
+        }
         update();
         break;
     default:
@@ -496,6 +501,14 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
                 painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
             else if (shapeName == geometricShape::triangle && setOfPoints.size() == 2)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
+        }
+    else if (!setOf3DShapes.isEmpty() && graphicMode == graphicsMode::graphic3D)
+        for (SDI_Geometric3DShape* shape:setOf3DShapes)
+        {
+            QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
+            geometric3DShape shapeName{shape->getShapeID()};
+            if (shapeName == geometric3DShape::parallelepiped)
+                painter->drawParallelePiped(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
         }
     modified = true;
     update();
@@ -556,6 +569,7 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
     {
     case 0:
         draw3DObjectMode = geometric3DShape::parallelepiped;
+        setCursor(Qt::ClosedHandCursor);
         break;
     default:
         break;
