@@ -126,7 +126,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
 void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    //--------------LEFT MOUSE HANDLER ----------------------------
+    //--------------LEFT MOUSE HANDLER  FOR 2D Mode----------------------------
     if (event->button() == Qt::LeftButton && graphicMode == graphicsMode::graphic2D)
         switch (draw2DObjectMode)
         {
@@ -191,7 +191,24 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             locateSelectedShape(eventPos);
             break;
         }
-
+    //---------------------LEFT MOUSE HANDLER for 3D Mode
+    else if (event->button() == Qt::LeftButton && graphicMode == graphicsMode::graphic3D)
+        switch (draw3DObjectMode)
+        {
+        case geometric3DShape::parallelepiped:
+            if (lastPoint.isNull())
+                lastPoint = eventPos;
+            else if (lastPoint_2.isNull())
+                lastPoint_2 = eventPos;
+            else
+            {
+                drawObject(eventPos, 1);
+                lastPoint = lastPoint_2 = SDI_Point(0,0);
+            }
+            break;
+        default:
+            break;
+        }
     //--------------RIGHT MOUSE HANDLER---------------------------
     else if (event->button() == Qt::RightButton)
     {
@@ -204,67 +221,85 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    switch (draw2DObjectMode)
+    if (graphicMode == graphicsMode::graphic2D)
     {
-    case geometricShape::selectShape:
-        //if (event->button() == Qt::LeftButton)
-        //    drawObject(eventPos,1);
-        break;
-    case geometricShape::line:
-    case geometricShape::rect:
-    case geometricShape::square:
-    case geometricShape::circle:
-        if (!lastPoint.isNull())
-            drawObject(eventPos, 0); // 0 means draw a temporary shape
-        break;
-    case geometricShape::triangle:
-        switch (triangleTypeID)
+        switch (draw2DObjectMode)
         {
-        case 0: // Triangle
+        case geometricShape::selectShape:
+            //if (event->button() == Qt::LeftButton)
+            //    drawObject(eventPos,1);
+            break;
+        case geometricShape::line:
+        case geometricShape::rect:
+        case geometricShape::square:
+        case geometricShape::circle:
+            if (!lastPoint.isNull())
+                drawObject(eventPos, 0); // 0 means draw a temporary shape
+            break;
+        case geometricShape::triangle:
+            switch (triangleTypeID)
+            {
+            case 0: // Triangle
+                if (lastPoint.isNull())
+                    break;
+                else if (lastPoint_2.isNull())
+                {
+                    draw2DObjectMode = geometricShape::line; // make a trick
+                    delegateMode = drawLineDelegateMode::triangle; // delegate drawing triangle sides to drawLine function
+                    drawObject(eventPos, 0);
+                }
+                else
+                {
+                    drawObject(eventPos,0);
+                }
+                break;
+            case 1: // Isosceles Right Triangle
+                if (lastPoint.isNull())
+                    break;
+                else
+                {
+                    drawObject(eventPos,0);
+                }
+                break;
+            }
+            break;
+        case geometricShape::parallelogram:
             if (lastPoint.isNull())
                 break;
             else if (lastPoint_2.isNull())
             {
-                draw2DObjectMode = geometricShape::line; // make a trick
-                delegateMode = drawLineDelegateMode::triangle; // delegate drawing triangle sides to drawLine function
+                draw2DObjectMode = geometricShape::line;
+                delegateMode = drawLineDelegateMode::parrallelogram;
                 drawObject(eventPos, 0);
             }
             else
-            {
-                drawObject(eventPos,0);
-            }
+                drawObject(eventPos, 0);
             break;
-        case 1: // Isosceles Right Triangle
+        default:
+            break;
+        }
+        /*if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal )
+            drawObject(eventPos);
+        //emit mouseMoveTo();*/
+        emit mouseMoveTo(QString("<b>x = %1 | y = %2 </b>").arg(QString::number((event->pos().x() - origin.x())))
+                                                    .arg(QString::number((origin.y() - event->pos().y()))));
+    }
+    else if (graphicMode == graphicsMode::graphic3D)
+    {
+        switch (draw3DObjectMode)
+        {
+        case geometric3DShape::parallelepiped:
             if (lastPoint.isNull())
                 break;
+            else if (lastPoint_2.isNull())
+                drawObject(eventPos, 0);
             else
-            {
-                drawObject(eventPos,0);
-            }
+                drawObject(eventPos, 0);
+            break;
+        default:
             break;
         }
-        break;
-    case geometricShape::parallelogram:
-        if (lastPoint.isNull())
-            break;
-        else if (lastPoint_2.isNull())
-        {
-            draw2DObjectMode = geometricShape::line;
-            delegateMode = drawLineDelegateMode::parrallelogram;
-            drawObject(eventPos, 0);
-        }
-        else
-            drawObject(eventPos, 0);
-        break;
-    default:
-        break;
     }
-    /*if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal )
-        drawObject(eventPos);
-    //emit mouseMoveTo();*/
-    emit mouseMoveTo(QString("<b>x = %1 | y = %2 </b>").arg(QString::number((event->pos().x() - origin.x())))
-                                                .arg(QString::number((origin.y() - event->pos().y()))));
-
 }
 
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -316,6 +351,8 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     if (stateOfShape != 2 && graphicMode == graphicsMode::graphic2D)
         draw2DShape(&painter, endPoint, stateOfShape);
+    else if (stateOfShape != 2 && graphicMode == graphicsMode::graphic3D)
+        draw3DShape(&painter, endPoint, stateOfShape);
 
 }
 
@@ -416,6 +453,26 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
         if (stateOfShape == 1)
             setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
         update();
+        break;
+    }
+}
+
+void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, int stateOfShape)
+{
+    switch (draw3DObjectMode)
+    {
+    case geometric3DShape::parallelepiped:
+        if (lastPoint_2.isNull())
+        {
+           int xTrans{endPoint.y() - lastPoint.y()};
+           SDI_Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
+           painter->drawParallelogram(lastPoint, tempPoint, endPoint);
+        }
+        else
+            painter->drawParallelePiped(lastPoint, lastPoint_2, endPoint);
+        update();
+        break;
+    default:
         break;
     }
 }

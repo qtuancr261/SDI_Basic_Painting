@@ -10,8 +10,15 @@ enum class geometric3DShape
 
 class SDI_Geometric3DShape
 {
+private:
+    QVector<SDI_Point>setOfPoint;
+    geometric3DShape shapeID;
+    SDI_Point OriginPos;
+    SDI_Point centralPoint;
 public:
-    SDI_Geometric3DShape();
+    SDI_Geometric3DShape() = default;
+    SDI_Geometric3DShape(geometric3DShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin);
+    void init3DShapeData();
 };
 
 #endif // SDI_GEOMETRIC3DSHAPE_H

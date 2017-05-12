@@ -41,6 +41,7 @@ public:
     void locateSelectedShape(const SDI_Point &selectPos);
     void drawObject(const SDI_Point &endPoint, int stateOfShape);
     void draw2DShape(SDI_Painter *painter, const SDI_Point& endPoint, int stateOfShape);
+    void draw3DShape(SDI_Painter* painter, const SDI_Point& endPoint, int stateOfShape);
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -72,7 +73,7 @@ private:
     QColor myPenColor;
 
     QVector<SDI_GeometricShape*> setOfShapes;
-    QVector<SDI_GeometricShape*> tempShapes;
+    QVector<SDI_Geometric3DShape*> setOf3DShapes;
 signals:
     void mouseMoveTo(QString currentPos);
     void selectedShape(SDI_GeometricShape* shape);

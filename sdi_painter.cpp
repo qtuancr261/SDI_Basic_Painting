@@ -408,3 +408,43 @@ void SDI_Painter::midPointXYCircle(const SDI_Point &topCirclePoint, const SDI_Po
     }
 
 }
+
+void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &point5)
+{
+    int xTrans{point3.y() - point1.y()};
+    SDI_Point point2(point1.x() - xTrans, point3.y());
+    SDI_Point point4(point3.x() + xTrans, point1.y());
+    int height{qAbs(point5.y() - point3.y())};
+
+    SDI_Point point5x(point1.x(), point1.y() - height);
+    SDI_Point point6(point2.x(), point2.y() - height);
+    SDI_Point point7{point3.x(), point3.y() - height};
+    SDI_Point point8{point4.x(), point4.y() - height};
+
+
+    QPainter::drawLine(point2, point6);
+    QPainter::drawLine(point3, point7);
+    QPainter::drawLine(point4, point8);
+
+    QPainter::drawLine(point2, point3);
+    QPainter::drawLine(point3, point4);
+
+    QPainter::drawLine(point5x, point6);
+    QPainter::drawLine(point6, point7);
+    QPainter::drawLine(point7, point8);
+    QPainter::drawLine(point8, point5x);
+    this->setPen(QPen(Qt::blue, 2, Qt::DashLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QPainter::drawLine(point1, point5x);
+    QPainter::drawLine(point1, point2);
+    QPainter::drawLine(point4, point1);
+
+}
+
+void SDI_Painter::updateParallelePipedData(SDI_Geometric3DShape &shape)
+{
+    SDI_Point pointD;
+    //pointD.setX(shape.getSetOfPoints().at(2).x() + shape.getSetOfPoints().at(0).x() - shape.getSetOfPoints().at(1).x());
+    //pointD.setY(shape.getSetOfPoints().at(0).y() - shape.getSetOfPoints().at(1).y() + shape.getSetOfPoints().at(2).y());
+    //shape.getSetOfPoints().push_back(pointD);
+}
