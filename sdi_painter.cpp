@@ -409,35 +409,56 @@ void SDI_Painter::midPointXYCircle(const SDI_Point &topCirclePoint, const SDI_Po
 
 }
 
-void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &point5)
+void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize)
 {
+    QPen normalPen (this->pen());
+    QPen specialPen(normalPen.color(), normalPen.width()+1, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
     int xTrans{point3.y() - point1.y()};
     SDI_Point point2(point1.x() - xTrans, point3.y());
     SDI_Point point4(point3.x() + xTrans, point1.y());
-    int height{qAbs(point5.y() - point3.y())};
+    int height{qAbs(pointHSize.y() - point3.y())};
+    QVector<SDI_Point> setP;
+    setP.push_back(point1);
+    setP.push_back(point2);
+    setP.push_back(point3);
+    setP.push_back(point4);
+    std::sort(std::begin(setP), std::end(setP));
+     SDI_Point pointA;
+     SDI_Point pointC;
+    if (qAbs(setP.at(1).x() - setP.at(3).x()) > qAbs(setP.at(1).y() - setP.at(3).y()))
+    {
+        pointA = setP.at(1);
+        pointC = setP.at(2);
+    }
+    else
+    {
+        pointA = setP.at(2);
+        pointC = setP.at(1);
+    }
+    SDI_Point pointB(setP.at(0));
+    SDI_Point pointD(setP.at(3));
+    SDI_Point pointE(pointA.x(), pointA.y() - height);
+    SDI_Point pointF(pointB.x(), pointB.y() - height);
+    SDI_Point pointG{pointC.x(), pointC.y() - height};
+    SDI_Point pointH{pointD.x(), pointD.y() - height};
 
-    SDI_Point point5x(point1.x(), point1.y() - height);
-    SDI_Point point6(point2.x(), point2.y() - height);
-    SDI_Point point7{point3.x(), point3.y() - height};
-    SDI_Point point8{point4.x(), point4.y() - height};
 
+    QPainter::drawLine(pointB, pointF);
+    QPainter::drawLine(pointC, pointG);
+    QPainter::drawLine(pointD, pointH);
 
-    QPainter::drawLine(point2, point6);
-    QPainter::drawLine(point3, point7);
-    QPainter::drawLine(point4, point8);
+    QPainter::drawLine(pointB, pointC);
+    QPainter::drawLine(pointC, pointD);
 
-    QPainter::drawLine(point2, point3);
-    QPainter::drawLine(point3, point4);
+    QPainter::drawLine(pointE, pointF);
+    QPainter::drawLine(pointF, pointG);
+    QPainter::drawLine(pointG, pointH);
+    QPainter::drawLine(pointH, pointE);
 
-    QPainter::drawLine(point5x, point6);
-    QPainter::drawLine(point6, point7);
-    QPainter::drawLine(point7, point8);
-    QPainter::drawLine(point8, point5x);
-    this->setPen(QPen(Qt::blue, 2, Qt::DashLine, Qt::RoundCap,
-                      Qt::RoundJoin));
-    QPainter::drawLine(point1, point5x);
-    QPainter::drawLine(point1, point2);
-    QPainter::drawLine(point4, point1);
+    this->setPen(specialPen);
+    QPainter::drawLine(pointA, pointE);
+    QPainter::drawLine(pointA, pointB);
+    QPainter::drawLine(pointD, pointA);
 
 }
 

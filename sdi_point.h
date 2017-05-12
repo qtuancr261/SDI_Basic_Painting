@@ -22,7 +22,7 @@ public:
     void centralSymmetry(const QPoint& centralPoint);
     void OxSymmetry(int yValue); // line y = value
     void OySymmetry(int xValue); // line x = value
-
+    bool operator <(const SDI_Point& srcPoint) const;
     static double distance(const QPoint& p1, const QPoint& p2); // calculate the distance between two point in the system coordinate machine
     // static functions - create new point
     static SDI_Point convertToUserSystem(const SDI_Point& cvtPoint, const SDI_Point& Origin);

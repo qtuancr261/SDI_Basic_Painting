@@ -68,6 +68,11 @@ void SDI_Point::OySymmetry(int xValue)
     centralSymmetry(SDI_Point(xValue, y()));
 }
 
+bool SDI_Point::operator <(const SDI_Point &srcPoint) const
+{
+    return this->x() < srcPoint.x();
+}
+
 double SDI_Point::distance(const QPoint &p1, const QPoint &p2) // static function
 {
     return qSqrt(qPow(p1.x() - p2.x(), 2.0) + qPow(p1.y() - p2.y(), 2.0));

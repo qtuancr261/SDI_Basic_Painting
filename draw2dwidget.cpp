@@ -508,7 +508,11 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
             geometric3DShape shapeName{shape->getShapeID()};
             if (shapeName == geometric3DShape::parallelepiped)
+            {
+                painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
+                                    Qt::RoundJoin));
                 painter->drawParallelePiped(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
+            }
         }
     modified = true;
     update();

@@ -194,6 +194,7 @@ void SDI_MainWindow::createToolsBar()
 void SDI_MainWindow::createDockWidget()
 {
     QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(int)), central2DWidget, SLOT(setGraphicsMode(int)));
+    QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(int)), this, SLOT(changeGraphicsMode(int)));
     dockWidget->setWidget(mainToolsWidget);
     dockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
     dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
@@ -307,6 +308,20 @@ void SDI_MainWindow::aboutSDI_Painting()
                                 "       <li> Phiên bản dành cho %1 %2</li>"
                                 "   </ul>"
                                 "</p>").arg(osInfo).arg(QSysInfo::buildCpuArchitecture()));
+}
+
+void SDI_MainWindow::changeGraphicsMode(int newMode)
+{
+    if (newMode == 2) // 2D
+    {
+        shape2DToolBar->setEnabled(true);
+        shape3DToolsBar->setDisabled(true);
+    }
+    else
+    {
+        shape3DToolsBar->setEnabled(true);
+        shape2DToolBar->setDisabled(true);
+    }
 }
 
 void SDI_MainWindow::showDockWidget(bool enable)
