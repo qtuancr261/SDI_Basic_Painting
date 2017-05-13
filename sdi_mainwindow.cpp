@@ -426,7 +426,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
       draw2DGroupActs{new QActionGroup(this)},
       draw3DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
-      penWidthBox{new QSpinBox(this)}
+      penWidthBox{new QSpinBox(this)},
+      activatedShape{nullptr}
 {
     createActions();
     createMenus();
