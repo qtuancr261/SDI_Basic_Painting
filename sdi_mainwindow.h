@@ -64,7 +64,8 @@ private:
     QList<QAction*> draw3DShapeActs;
     QComboBox* triangleTypes;
     QSpinBox* penWidthBox;
-    SDI_GeometricShape* activatedShape;
+    QSharedPointer<SDI_GeometricShape> activatedShape;
+    QWeakPointer<SDI_GeometricShape> weakActivatedShape;
     //Private Functions
     void createActions();
     void createMenus();
@@ -88,7 +89,7 @@ public slots:
     void changeGraphicsMode(int newMode);
     void showDockWidget(bool enable);
     void showMessage(QString message);
-    void showSelectedShape(SDI_GeometricShape *shape);
+    void showSelectedShape(QWeakPointer<SDI_GeometricShape> shape);
     void translateShape(int xtrans, int ytrans);
     void scaleShape(double xscale, double yscale);
     void rotateShape(double degree);

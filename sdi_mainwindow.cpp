@@ -337,84 +337,92 @@ void SDI_MainWindow::showMessage(QString message)
     statusBar()->showMessage(message);
 }
 
-void SDI_MainWindow::showSelectedShape(SDI_GeometricShape *shape)
+void SDI_MainWindow::showSelectedShape(QWeakPointer<SDI_GeometricShape> shape)
 {
-    activatedShape = shape;
-    if (shape == nullptr)
+    weakActivatedShape = shape;
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
         mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
-        mainToolsWidget->setInfoBox("<b>"+shape->getShapeName() + "</b>", shape->getShapeData());
+        mainToolsWidget->setInfoBox("<b>"+activatedShape->getShapeName() + "</b>", activatedShape->getShapeData());
+    activatedShape.clear();
 }
 
 void SDI_MainWindow::translateShape(int xtrans, int ytrans)
 {
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
         activatedShape->translate(xtrans, ytrans);
         central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
+        showSelectedShape(activatedShape.toWeakRef());
     }
 }
 
 void SDI_MainWindow::scaleShape(double xscale, double yscale)
 {
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
         activatedShape->scale(xscale, yscale);
         central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
+        showSelectedShape(activatedShape.toWeakRef());
     }
 }
 
 void SDI_MainWindow::rotateShape(double degree)
 {
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
         activatedShape->rotate(degree);
         central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
+        showSelectedShape(activatedShape.toWeakRef());
     }
 }
 
 void SDI_MainWindow::centralSymmetryShape()
 {
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
         activatedShape->originPosSymmetry();
         central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
+        showSelectedShape(activatedShape.toWeakRef());
     }
 }
 
 void SDI_MainWindow::OxSymmetryShape()
 {
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
         activatedShape->OxSymmetry();
         central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
+        showSelectedShape(activatedShape.toWeakRef());
     }
 }
 
 void SDI_MainWindow::OySymmetryShape()
 {
-    if (activatedShape == nullptr)
-        showSelectedShape(nullptr);
+    activatedShape = weakActivatedShape.toStrongRef();
+    if (activatedShape.isNull())
+        mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
         activatedShape->OySymmetry();
         central2DWidget->drawObject(QPoint(0,0), 3);
-        showSelectedShape(activatedShape);
+        showSelectedShape(activatedShape.toWeakRef());
     }
 }
 
@@ -441,7 +449,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     statusBar()->showMessage("Demo 0.4 - 04/05/2017");
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)),mainToolsWidget, SLOT(showPosition(QString)));
-    QObject::connect(central2DWidget, SIGNAL(selectedShape(SDI_GeometricShape*)), this, SLOT(showSelectedShape(SDI_GeometricShape*)));
+    QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
     QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double)), this, SLOT(rotateShape(double)));

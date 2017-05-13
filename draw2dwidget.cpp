@@ -83,11 +83,11 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
         for (int i{setOfShapes.size() - 1}; i >=0 ; i--)
             if (setOfShapes.at(i)->getShapeBoundinRect().contains(selectPos))
             {
-                emit selectedShape(setOfShapes.at(i));
+                emit selectedShape(setOfShapes.at(i).toWeakRef());
                 return;
             }
     }
-    emit selectedShape(nullptr);
+    emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
 }
 
 void draw2DWidget::clearImage(clearImageMode clearID)
@@ -393,7 +393,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             painter->drawLine(lastPoint, endPoint);
             if (stateOfShape == 1)
             {
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+                setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
                 update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
             }
             else
@@ -408,7 +408,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             painter->drawRect(endPoint, lastPoint);
         if (stateOfShape == 1)
         {
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+            setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
             update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         }
         else
@@ -419,7 +419,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
         painter->drawSquare(lastPoint, endPoint);
         if(stateOfShape == 1)
         {
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+            setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
             update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
         }
         else
@@ -429,7 +429,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     case geometricShape::circle:
         painter->drawCircle(lastPoint, endPoint);
         if (stateOfShape == 1)
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin));
+            setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
         update();
         break;
     case geometricShape::triangle:
@@ -439,12 +439,12 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             {
             case 0: //triangle
                 painter->drawTriangle(lastPoint, lastPoint_2, endPoint);
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
+                setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
                 update();
                 break;
             case 1:// // Isosceles Right Triangle
                 painter->drawIsoscelesRightTriangle(lastPoint, endPoint);
-                setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint,origin));
+                setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint,origin)));
                 update();
                 break;
             }
@@ -460,7 +460,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     case geometricShape::parallelogram:
         painter->drawParallelogram(lastPoint, lastPoint_2, endPoint);
         if (stateOfShape == 1)
-            setOfShapes.push_back(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
+            setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
         update();
         break;
     }
@@ -481,7 +481,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
             painter->drawParallelePiped(lastPoint, lastPoint_2, endPoint);
         if (stateOfShape == 1)
         {
-            setOf3DShapes.push_back(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin));
+            setOf3DShapes.push_back(QSharedPointer<SDI_Geometric3DShape>(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
         }
         update();
         break;
@@ -495,7 +495,7 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
     painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
     if (!setOfShapes.isEmpty() && graphicMode == graphicsMode::graphic2D)
-        for (SDI_GeometricShape* shape:setOfShapes)
+        for (QSharedPointer<SDI_GeometricShape>& shape:setOfShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
             geometricShape shapeName{shape->getShapeId()};
@@ -511,7 +511,7 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
         }
     else if (!setOf3DShapes.isEmpty() && graphicMode == graphicsMode::graphic3D)
-        for (SDI_Geometric3DShape* shape:setOf3DShapes)
+        for (QSharedPointer<SDI_Geometric3DShape> shape:setOf3DShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
             geometric3DShape shapeName{shape->getShapeID()};

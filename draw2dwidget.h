@@ -7,6 +7,8 @@
 #include <QImage>
 #include <QMouseEvent>
 #include <QSignalMapper>
+#include <QSharedPointer>
+#include <QWeakPointer>
 #include "sdi_painter.h"
 #include "sdi_point.h"
 #include "sdi_geometricshape.h"
@@ -74,11 +76,11 @@ private:
     int myPenWidth;
     QColor myPenColor;
 
-    QVector<SDI_GeometricShape*> setOfShapes;
-    QVector<SDI_Geometric3DShape*> setOf3DShapes;
+    QVector<QSharedPointer<SDI_GeometricShape>> setOfShapes;
+    QVector<QSharedPointer<SDI_Geometric3DShape>> setOf3DShapes;
 signals:
     void mouseMoveTo(QString currentPos);
-    void selectedShape(SDI_GeometricShape* shape);
+    void selectedShape(QWeakPointer<SDI_GeometricShape> shape);
 
 public slots:
     void setDraw2DObjectMode(int newId);
