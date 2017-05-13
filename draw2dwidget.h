@@ -55,9 +55,11 @@ private:
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
-    bool drawPausing;
+    bool loadedLayerImage;
     QImage image;
-    QImage tempImage;
+    QImage layerImage;
+    QImage transparentImg;
+    QString layerName;
     QSize originalSize; // original size of loaded image
 
     SDI_Point origin; // where the axes of the system intersect

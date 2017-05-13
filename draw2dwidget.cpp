@@ -2,6 +2,7 @@
 #ifndef QT_NO_PRINTER
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QDebug>
 #endif
 
 #include "draw2dwidget.h"
@@ -16,14 +17,15 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     graphicMode = graphicsMode::graphic2D;
     myPenColor = Qt::blue;
     triangleTypeID = 0; // normal triangle
+    loadedLayerImage = false;
     delegateMode = drawLineDelegateMode::none; // disable delegate on startup
-    drawPausing = false;
     setMouseTracking(true);
 }
 
 draw2DWidget::~draw2DWidget()
 {
     setOfShapes.clear();
+    setOf3DShapes.clear();
 }
 
 bool draw2DWidget::openImage(const QString &fileName)
@@ -32,10 +34,10 @@ bool draw2DWidget::openImage(const QString &fileName)
     if (!loadedImage.load(fileName))
         return false;
     originalSize = loadedImage.size();
-    QImage scale = loadedImage.scaled(size(), Qt::KeepAspectRatio);;
+    QImage scaledImage = loadedImage.scaled(size(), Qt::KeepAspectRatio);;
     QSize newSize = loadedImage.size().scaled(size().width(), size().height(), Qt::KeepAspectRatio);
-    resizeImage(&scale, newSize);
-    image = scale;
+    resizeImage(&scaledImage, newSize);
+    image = scaledImage;
     modified = false;
     update();
     return true;
@@ -43,7 +45,14 @@ bool draw2DWidget::openImage(const QString &fileName)
 
 bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
 {
-    QImage visibleImage = image.scaled(originalSize, Qt::IgnoreAspectRatio);
+    if (image.isNull())
+    {
+        image = QImage(size(), QImage::Format_RGB32);
+        image.fill(qRgb(255,255,255));
+    }
+    QPainter paint(&image);
+    paint.drawImage(0,0, transparentImg);
+    QImage visibleImage = image.scaled(originalSize, Qt::KeepAspectRatio);
     resizeImage(&visibleImage, originalSize);
 
     if (visibleImage.save(fileName, fileFormat))
@@ -83,9 +92,10 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
 
 void draw2DWidget::clearImage(clearImageMode clearID)
 {
-    image.fill(qRgb(255, 255, 255));
+    transparentImg.fill(qRgba(0,0,0,0));
+    image.fill(qRgb(255,255,255));
     origin = QPoint(width()/2, height()/2);
-    SDI_Painter painter(&image);
+    SDI_Painter painter(&transparentImg);
     if (graphicMode == graphicsMode::graphic2D)
     {
         painter.drawOxy(this->width(), this->height(), origin);
@@ -96,8 +106,6 @@ void draw2DWidget::clearImage(clearImageMode clearID)
         }
         else
         {
-            //setOfShapes.swap(tempShapes);
-            //tempShapes.clear();
             drawExistentObject(&painter);
             modified = false;
         }
@@ -113,8 +121,6 @@ void draw2DWidget::clearImage(clearImageMode clearID)
         }
         else
         {
-            //tempShapes.swap(setOfShapes);
-            //setOfShapes.clear();
             drawExistentObject(&painter);
             modified = false;
         }
@@ -318,16 +324,18 @@ void draw2DWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     origin = SDI_Point(width()/2, height()/2);
-    painter.drawImage(dirtyRect, image, dirtyRect);
+    if (!image.isNull())
+        painter.drawImage(dirtyRect, image, dirtyRect); // if user loaded an image and painted over it
+    painter.drawImage(dirtyRect, transparentImg, dirtyRect);
 }
 
 void draw2DWidget::resizeEvent(QResizeEvent *event)
 {
-    if (width() > image.width() || height() > image.height()) {
+    if (width() > transparentImg.width() || height() > transparentImg.height()) {
         int newWidth = width();
         int newHeight = height();
         originalSize = QSize(newWidth, newHeight);
-        resizeImage(&image, QSize(newWidth, newHeight));
+        resizeImage(&transparentImg, QSize(newWidth, newHeight));
         update();
     }
     QWidget::resizeEvent(event);
@@ -335,9 +343,9 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
 
 void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // handle draw Object
 {
-    SDI_Painter painter(&image);
+    transparentImg.fill(qRgba(0,0,0,0));
     //Repaint the user's coordinate  system
-    image.fill(qRgb(255, 255, 255));
+    SDI_Painter painter(&transparentImg);
     if (graphicMode == graphicsMode::graphic2D)
         painter.drawOxy(this->width(), this->height(), origin);
     else
@@ -522,8 +530,9 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
 {
     if (image->size() == newSize)
         return;
-    QImage newImage(newSize, QImage::Format_RGB32);
-    newImage.fill(qRgb(255, 255, 255));
+    //QImage newImage(newSize, QImage::Format_RGB32);
+    QImage newImage(newSize, QImage::Format_ARGB32);
+    newImage.fill(qRgba(0,0,0,0));
     //-----------------------------------------
     SDI_Painter painter(&newImage);
     painter.drawImage(SDI_Point(0, 0), *image);
@@ -584,18 +593,6 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
 
 void draw2DWidget::setGraphicsMode(int newId)
 {
-    // save the current session
-    //image.fill(qRgb(255, 255, 255));
-    //if (modified)
-    //{
-        //drawPausing = true;
-        //if (graphicMode == graphicsMode::graphic2D)
-         //   saveImage(QDir::currentPath() + "/temp2D", "PNG");
-        //else
-         //   saveImage(QDir::currentPath() + "/temp3D", "PNG");
-    //}
-    //-------------------------finish-------------------------------
-
     // change graphics mode and clear for new session
     if (newId == 2)
     {
@@ -606,17 +603,6 @@ void draw2DWidget::setGraphicsMode(int newId)
         graphicMode = graphicsMode::graphic3D;
     }
     clearImage(clearImageMode::clearForNewSession);
-    //-------------------------finish-------------------------------
-
-    // reload the previous session if the painter was paused
-    //if (drawPausing)
-    //{
-        //if (graphicMode == graphicsMode::graphic2D)
-            //openImage(QDir::currentPath() + "/temp2D");
-        //else
-            //openImage(QDir::currentPath() + "/temp3D");
-        //modified = true;
-    //}
     //-------------------------finish-------------------------------
 }
 
