@@ -417,26 +417,10 @@ void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &p
     SDI_Point point2(point1.x() - xTrans, point3.y());
     SDI_Point point4(point3.x() + xTrans, point1.y());
     int height{qAbs(pointHSize.y() - point3.y())};
-    QVector<SDI_Point> setP;
-    setP.push_back(point1);
-    setP.push_back(point2);
-    setP.push_back(point3);
-    setP.push_back(point4);
-    std::sort(std::begin(setP), std::end(setP));
-     SDI_Point pointA;
-     SDI_Point pointC;
-    if (qAbs(setP.at(1).x() - setP.at(3).x()) > qAbs(setP.at(1).y() - setP.at(3).y()))
-    {
-        pointA = setP.at(1);
-        pointC = setP.at(2);
-    }
-    else
-    {
-        pointA = setP.at(2);
-        pointC = setP.at(1);
-    }
-    SDI_Point pointB(setP.at(0));
-    SDI_Point pointD(setP.at(3));
+
+    SDI_Point pointA(point1), pointB(point2), pointC(point3), pointD(point4);
+    calculateBasePlaneABCD(pointA, pointB, pointC, pointD);
+
     SDI_Point pointE(pointA.x(), pointA.y() - height);
     SDI_Point pointF(pointB.x(), pointB.y() - height);
     SDI_Point pointG{pointC.x(), pointC.y() - height};
@@ -468,4 +452,69 @@ void SDI_Painter::updateParallelePipedData(SDI_Geometric3DShape &shape)
     //pointD.setX(shape.getSetOfPoints().at(2).x() + shape.getSetOfPoints().at(0).x() - shape.getSetOfPoints().at(1).x());
     //pointD.setY(shape.getSetOfPoints().at(0).y() - shape.getSetOfPoints().at(1).y() + shape.getSetOfPoints().at(2).y());
     //shape.getSetOfPoints().push_back(pointD);
+}
+
+void SDI_Painter::drawPyramid(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize)
+{
+    QPen normalPen (this->pen());
+    QPen specialPen(normalPen.color(), normalPen.width() + 1, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
+    int xTrans{point3.y() - point1.y()};
+    SDI_Point point2(point1.x() - xTrans, point3.y());
+    SDI_Point point4(point3.x() + xTrans, point1.y());
+    int height{qAbs(pointHSize.y() - point3.y())};
+
+    SDI_Point pointA(point1), pointB(point2), pointC(point3), pointD(point4);
+    calculateBasePlaneABCD(pointA, pointB, pointC, pointD);
+    SDI_Point pointE((pointA.x() + pointC.x())/2, (pointA.y() + pointC.y())/2);
+    SDI_Point pointF(pointE.x(), pointE.y() - height);
+
+    SDI_Point midPointAB((pointA.x() + pointB.x())/2, (pointA.y() + pointB.y())/2);
+    int disBetweenE_midAB(SDI_Point::distance(midPointAB, pointE));
+    int disBetweenE_F(SDI_Point::distance(pointE, pointF));
+
+
+    QPainter::drawLine(pointB, pointC);
+    QPainter::drawLine(pointC, pointD);
+    QPainter::drawLine(pointB, pointF);
+    QPainter::drawLine(pointC, pointF);
+    QPainter::drawLine(pointD, pointF);
+
+    if (disBetweenE_F > disBetweenE_midAB)
+        setPen(specialPen);
+    QPainter::drawLine(pointA, pointB);
+
+    if (pointF.y() < pointA.y())
+        setPen(specialPen);
+    else if (pointF.y() >= pointA.y())
+        setPen(normalPen);
+    QPainter::drawLine(pointD, pointA);
+
+    if (disBetweenE_F <= disBetweenE_midAB)
+        setPen(normalPen);
+    QPainter::drawLine(pointA, pointF);
+
+    setPen(specialPen);
+    QPainter::drawLine(pointE, pointF);
+    QPainter::drawLine(pointA, pointC);
+    QPainter::drawLine(pointB, pointD);
+}
+
+void SDI_Painter::calculateBasePlaneABCD(SDI_Point &pointA, SDI_Point &pointB, SDI_Point &pointC, SDI_Point &pointD)
+{
+    QVector<SDI_Point> setPoint({pointA, pointB, pointC, pointD});
+    std::sort(std::begin(setPoint), std::end(setPoint));
+
+    //---------Calculate--------------------
+    if (qAbs(setPoint.at(1).x() - setPoint.at(3).x()) > qAbs(setPoint.at(1).y() - setPoint.at(3).y()))
+    {
+        pointA = setPoint.at(1);
+        pointC = setPoint.at(2);
+    }
+    else
+    {
+        pointA = setPoint.at(2);
+        pointC = setPoint.at(1);
+    }
+    pointB = setPoint.at(0);
+    pointD = setPoint.at(3);
 }

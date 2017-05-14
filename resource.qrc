@@ -21,5 +21,6 @@
         <file>icons/SDI_Basic_Painting.ico</file>
         <file>icons/clearScreen.png</file>
         <file>icons/cube.png</file>
+        <file>icons/pyramid.png</file>
     </qresource>
 </RCC>

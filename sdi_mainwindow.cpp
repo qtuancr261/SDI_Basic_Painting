@@ -58,6 +58,7 @@ void SDI_MainWindow::createActions()
     aboutQtAct = new QAction(QIcon(":/images/icons/QtIcon.png"), tr("Thông tin về Qt/Bản quyền"), this);
     QObject::connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
+    //--------------------------------------2D Action
     QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Chọn hình"), this)};
     selectShapeAct->setShortcut(Qt::CTRL + Qt::Key_0);
     selectShapeAct->setToolTip(tr("Ctrl+0"));
@@ -116,9 +117,14 @@ void SDI_MainWindow::createActions()
     QObject::connect(draw2DShapeMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
     selectShapeAct->setChecked(true); // default draw mode
 
+
+
     //---------------------3D Actions-------------------------------
     QAction* drawParallelepipedAct{new QAction(QIcon(":/images/icons/cube.png"),tr("Hình hộp"), this)};
     setupDraw3DAct(drawParallelepipedAct);
+
+    QAction* drawPyramidAct{new QAction(QIcon(":/images/icons/pyramid.png"), tr("Hình chóp"), this)};
+    setupDraw3DAct(drawPyramidAct);
 
     QSignalMapper* draw3DShapeMapper{new QSignalMapper(this)};
     for (int i{}; i < draw3DShapeActs.size(); i++)

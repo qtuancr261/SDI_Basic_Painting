@@ -203,6 +203,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
         switch (draw3DObjectMode)
         {
         case geometric3DShape::parallelepiped:
+        case geometric3DShape::pyramid:
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else if (lastPoint_2.isNull())
@@ -296,6 +297,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
         switch (draw3DObjectMode)
         {
         case geometric3DShape::parallelepiped:
+        case geometric3DShape::pyramid:
             if (lastPoint.isNull())
                 break;
             else if (lastPoint_2.isNull())
@@ -485,6 +487,20 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
         }
         update();
         break;
+    case geometric3DShape::pyramid:
+        if (!lastPoint.isNull() && lastPoint_2.isNull())
+        {
+            int xTrans{endPoint.y() - lastPoint.y()};
+            SDI_Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
+            painter->drawParallelogram(lastPoint, tempPoint, endPoint);
+        }
+        else
+            painter->drawPyramid(lastPoint, lastPoint_2, endPoint);
+        if (stateOfShape == 1)
+        {
+            setOf3DShapes.push_back(QSharedPointer<SDI_Geometric3DShape>(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
+        }
+        update();
     default:
         break;
     }
@@ -515,12 +531,11 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
             geometric3DShape shapeName{shape->getShapeID()};
+            painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             if (shapeName == geometric3DShape::parallelepiped)
-            {
-                painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
-                                    Qt::RoundJoin));
                 painter->drawParallelePiped(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
-            }
+            else if (shapeName == geometric3DShape::pyramid)
+                painter->drawPyramid(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
         }
     modified = true;
     update();
@@ -584,7 +599,9 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
         draw3DObjectMode = geometric3DShape::parallelepiped;
         setCursor(Qt::ClosedHandCursor);
         break;
-    default:
+    case 1:
+        draw3DObjectMode = geometric3DShape::pyramid;
+        setCursor(Qt::ClosedHandCursor);
         break;
     }
     lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
@@ -603,6 +620,7 @@ void draw2DWidget::setGraphicsMode(int newId)
         graphicMode = graphicsMode::graphic3D;
     }
     clearImage(clearImageMode::clearForNewSession);
+    emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
     //-------------------------finish-------------------------------
 }
 

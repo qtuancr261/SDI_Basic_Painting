@@ -45,6 +45,10 @@ public:
 
     virtual void drawParallelePiped(const SDI_Point& point1, const SDI_Point& point3, const SDI_Point& pointHSize);
     static void updateParallelePipedData(SDI_Geometric3DShape& shape);
+    virtual void drawPyramid(const SDI_Point& point1, const SDI_Point& point3, const SDI_Point& pointHSize);
+
+
+    static void calculateBasePlaneABCD(SDI_Point& pointA, SDI_Point& pointB, SDI_Point& pointC, SDI_Point& pointD);
 };
 
 #endif // SDI_PAINTER_H
