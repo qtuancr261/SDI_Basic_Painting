@@ -18,7 +18,6 @@ private:
 public:
     SDI_Geometric3DShape() = default;
     SDI_Geometric3DShape(geometric3DShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin);
-    void init3DShapeData();
     QVector<SDI_Point>& getSetOfPoints();
     geometric3DShape getShapeID() const;
 };

@@ -88,10 +88,11 @@ void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
                    "            <ol>"
                    "                  <li>(%1; %2)</li>"
                    "                  <li>(%3; %4)</li>"
-                   "            <li>Do dai doan thang: %5 </li>"
-                   "            </ol>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
+                   "            </ol>"
+                   "            <li>Độ dài : %5 </li>"
+                   "      </ul>").arg(QString::number(userP1.x())).arg(QString::number(userP1.y()))
                                           .arg(QString::number(userP2.x())).arg(QString::number(userP2.y()))
-                                          .arg(QString::number(SDI_Point::distance(p1, p2)));
+                                          .arg(QString::number(static_cast<int>(SDI_Point::distance(p1, p2))));
     //----------------Calculate bounding rect---------------------------------
     int xLeft{(p1.x() < p2.x() ? p1.x() : p2.x())};
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
@@ -444,14 +445,6 @@ void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &p
     QPainter::drawLine(pointA, pointB);
     QPainter::drawLine(pointD, pointA);
 
-}
-
-void SDI_Painter::updateParallelePipedData(SDI_Geometric3DShape &shape)
-{
-    SDI_Point pointD;
-    //pointD.setX(shape.getSetOfPoints().at(2).x() + shape.getSetOfPoints().at(0).x() - shape.getSetOfPoints().at(1).x());
-    //pointD.setY(shape.getSetOfPoints().at(0).y() - shape.getSetOfPoints().at(1).y() + shape.getSetOfPoints().at(2).y());
-    //shape.getSetOfPoints().push_back(pointD);
 }
 
 void SDI_Painter::drawPyramid(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize)

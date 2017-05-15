@@ -57,9 +57,7 @@ private:
     void resizeImage(QImage* image, const QSize& newSize);
 
     bool modified;
-    bool loadedLayerImage;
     QImage image;
-    QImage layerImage;
     QImage transparentImg;
     QString layerName;
     QSize originalSize; // original size of loaded image

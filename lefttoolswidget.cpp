@@ -4,6 +4,8 @@ leftToolsWidget::leftToolsWidget(QWidget *parent) : QWidget(parent)
 {
     //setFont(QFont("Tahoma", 10));
     setupGUI();
+    if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
+        setFont(QFont("Segoe UI", 11));
 }
 
 void leftToolsWidget::setInfoBox(QString shapeName, QString shapeData)
@@ -49,6 +51,7 @@ void leftToolsWidget::setupGUI()
     translationLayout->addWidget(OyTranslateSlider, 1, 1);
     translationLayout->addWidget(OyTranslateBox, 1, 2);
     translationLayout->addWidget(doTranslate, 2, 0, 1, 3);
+    translationLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding),3,0,1,3);
     QGroupBox* translationGroupBox{new QGroupBox()};
     translationGroupBox->setLayout(translationLayout);
     //--------------------------------------------------------------------
@@ -64,6 +67,7 @@ void leftToolsWidget::setupGUI()
     rotateLayout->addWidget(rotateSlider, 0, 1);
     rotateLayout->addWidget(rotateBox, 0, 2);
     rotateLayout->addWidget(doRotate, 1, 0, 1, 3);
+    rotateLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding),2,0,1,3);
     QGroupBox* rotateGroupBox{new QGroupBox()};
     rotateGroupBox->setLayout(rotateLayout);
     //---------------------------------------------------------------------
@@ -82,6 +86,7 @@ void leftToolsWidget::setupGUI()
     symmetryLayout->addWidget(OxSymmetry);
     symmetryLayout->addWidget(OySymmetry);
     symmetryLayout->addWidget(doSymmetry);
+    symmetryLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     QGroupBox* symmetryGroupBox{new QGroupBox()};
     symmetryGroupBox->setLayout(symmetryLayout);
     //---------------------------------------------------------------------
@@ -94,9 +99,10 @@ void leftToolsWidget::setupGUI()
     doZoom->setAutoRepeat(true);
     QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
     QGridLayout* zoomLayout{new QGridLayout(this)};
-    zoomLayout->addWidget(new QLabel(tr("Hệ số")), 0, 0);
+    zoomLayout->addWidget(new QLabel(tr("Hệ số tỉ lệ")), 0, 0);
     zoomLayout->addWidget(zoomBox, 0, 1);
-    zoomLayout->addWidget(doZoom, 0,2);
+    zoomLayout->addWidget(doZoom, 1,0,1,2);
+    zoomLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding),2,0,1,2);
     QGroupBox* zoomGroupBox{new QGroupBox()};
     zoomGroupBox->setLayout(zoomLayout);
     //---------------------------------------------------------------------
@@ -117,9 +123,13 @@ void leftToolsWidget::setupGUI()
     //---------------------------------------------------------------------
     QToolBox* transformBox{new QToolBox(this)};
     transformBox->addItem(translationGroupBox, "PHÉP TỊNH TIẾN");
+    transformBox->setItemIcon(0, QIcon(":/images/icons/move.png"));
     transformBox->addItem(rotateGroupBox, "PHÉP XOAY");
+    transformBox->setItemIcon(1, QIcon(":/images/icons/rotate.png"));
     transformBox->addItem(symmetryGroupBox, "PHÉP ĐỐI XỨNG");
-    transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI TỈ LỆ ĐỒNG DẠNG");
+    transformBox->setItemIcon(2, QIcon(":/images/icons/symmetry.png"));
+    transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI ĐỒNG DẠNG");
+    transformBox->setItemIcon(3, QIcon(":/images/icons/zoom.png"));
     transformBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     QSpacerItem* verticalSpacer{new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};

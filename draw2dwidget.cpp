@@ -12,12 +12,10 @@ draw2DWidget::draw2DWidget(QWidget *parent)
 {
     setAttribute(Qt::WA_StaticContents);
     modified = false;
-    //scribbling = false;
     myPenWidth = 2;
     graphicMode = graphicsMode::graphic2D;
     myPenColor = Qt::blue;
     triangleTypeID = 0; // normal triangle
-    loadedLayerImage = false;
     delegateMode = drawLineDelegateMode::none; // disable delegate on startup
     setMouseTracking(true);
 }
@@ -234,8 +232,6 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
         switch (draw2DObjectMode)
         {
         case geometricShape::selectShape:
-            //if (event->button() == Qt::LeftButton)
-            //    drawObject(eventPos,1);
             break;
         case geometricShape::line:
         case geometricShape::rect:
@@ -286,9 +282,6 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
         default:
             break;
         }
-        /*if (event->buttons() == Qt::LeftButton  && draw2DObjectMode == geometricShape::normal )
-            drawObject(eventPos);
-        //emit mouseMoveTo();*/
         emit mouseMoveTo(QString("<b>x = %1 | y = %2 </b>").arg(QString::number((event->pos().x() - origin.x())))
                                                     .arg(QString::number((origin.y() - event->pos().y()))));
     }

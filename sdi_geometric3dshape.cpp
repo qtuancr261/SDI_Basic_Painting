@@ -16,17 +16,6 @@ SDI_Geometric3DShape::SDI_Geometric3DShape(geometric3DShape id, const SDI_Point 
     }
 }
 
-void SDI_Geometric3DShape::init3DShapeData()
-{
-    switch (shapeID)
-    {
-    case geometric3DShape::parallelepiped:
-        break;
-    default:
-        break;
-    }
-}
-
 QVector<SDI_Point> &SDI_Geometric3DShape::getSetOfPoints()
 {
     return setOfPoints;

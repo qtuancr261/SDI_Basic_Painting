@@ -22,5 +22,9 @@
         <file>icons/clearScreen.png</file>
         <file>icons/cube.png</file>
         <file>icons/pyramid.png</file>
+        <file>icons/zoom.png</file>
+        <file>icons/move.png</file>
+        <file>icons/rotate.png</file>
+        <file>icons/symmetry.png</file>
     </qresource>
 </RCC>

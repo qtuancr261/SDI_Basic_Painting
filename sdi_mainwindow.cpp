@@ -142,7 +142,7 @@ void SDI_MainWindow::createMenus()
     foreach(QAction* act, saveAsActs)
         saveAsMenu->addAction(act);
 
-    FileMenu = new QMenu(tr("Tập tin"), this);
+    FileMenu = new QMenu(tr("&Tập tin"), this);
     FileMenu->addAction(openAct);
     FileMenu->addMenu(saveAsMenu);
     FileMenu->addAction(printAct);
@@ -150,7 +150,7 @@ void SDI_MainWindow::createMenus()
     FileMenu->addAction(quitAct);
     menuBar()->addMenu(FileMenu);
 
-    ViewMenu = new QMenu(tr("Xem"), this);
+    ViewMenu = new QMenu(tr("&Xem"), this);
     ViewMenu->addAction(showDockWidgetAct);
     ViewMenu->addAction(showToolBarAct);
     ViewMenu->addSeparator();
@@ -158,14 +158,14 @@ void SDI_MainWindow::createMenus()
     ViewMenu->addAction(show3DModeAct);
     menuBar()->addMenu(ViewMenu);
 
-    ToolsMenu = new QMenu(tr("Công cụ"), this);
+    ToolsMenu = new QMenu(tr("&Công cụ"), this);
     ToolsMenu->addAction(pickPenColorAct);
     ToolsMenu->addSeparator();
     ToolsMenu->addAction(clearScreenAct);
     ToolsMenu->addAction(optionAct);
     menuBar()->addMenu(ToolsMenu);
 
-    HelpMenu = new QMenu(tr("Trợ giúp"), this);
+    HelpMenu = new QMenu(tr("T&hông tin"), this);
     HelpMenu->addAction(aboutSDI_PaintingAct);
     HelpMenu->addAction(aboutQtAct);
     menuBar()->addMenu(HelpMenu);
@@ -176,13 +176,16 @@ void SDI_MainWindow::createToolsBar()
     QToolBar* mainToolBar;
     mainToolBar = addToolBar(tr("Tâp tin"));
     mainToolBar->addAction(openAct);
+    mainToolBar->addSeparator();
     mainToolBar->addAction(printAct);
 
     mainToolBar = addToolBar(tr("Tùy chỉnh vẽ"));
     mainToolBar->addAction(pickPenColorAct);
+    mainToolBar->addSeparator();
     mainToolBar->addWidget(new QLabel(tr("Bề dày nét vẽ"), this));
     penWidthBox->setRange(1, 10);
     mainToolBar->addWidget(penWidthBox);
+    mainToolBar->addSeparator();
     mainToolBar->addAction(clearScreenAct);
 
     shape2DToolBar = addToolBar(tr("Các đối tượng 2D cơ bản"));
@@ -301,19 +304,16 @@ void SDI_MainWindow::aboutSDI_Painting()
         osInfo = QString("Windows");
     QMessageBox::about(this, tr("Thông tin"),
                              tr("<h1> Đồ án Kỹ thuật Đồ họa</h1>"
-                                "<p> Nhóm thực hiện: "
-                                "   <ol>"
-                                "       <li> Thiều Quang Tuấn - N14DCCN136</li>"
-                                "       <li> Lê Hoàng Tùng - N14DCCN113 </li>"
-                                "       <li> Hoàng Lê Anh Minh - N14DCCN138</li>"
-                                "   </ol>"
-                                "</p>"
-                                "</p> Thông số kỹ thuật:"
-                                "   <ul>"
-                                "       <li> Tên chương trình: SDI Basic Painting</li>"
-                                "       <li> Phiên bản dành cho %1 %2</li>"
-                                "   </ul>"
-                                "</p>").arg(osInfo).arg(QSysInfo::buildCpuArchitecture()));
+                                 "<p> SDI Basic Painting là một chương trình ứng dụng các thuật toán dựng hình cơ sở, các phép biến đổi hình học cho phép người sử dụng vẽ các hình 2D, 3D cơ bản. Thực hiện các thao tác như "
+                                "chọn các hình đã vẽ, thực hiện biến đổi hình được chọn.</p> "
+                                 "   <li> Nhóm thực hiện: "
+                                 "   <ol>"
+                                 "       <b><li> Thiều Quang Tuấn - N14DCCN136</li>"
+                                 "       <li> Lê Hoàng Tùng - N14DCCN113 </li>"
+                                 "       <li> Hoàng Lê Anh Minh - N14DCCN138</li>"
+                                 "   </ol></li>"
+                                 "   <p> Phiên bản dành cho %1 %2</p>"
+                                 "   <p> Icons from <i>www.flaticon.com</p>").arg(osInfo).arg(QSysInfo::buildCpuArchitecture()));
 }
 
 void SDI_MainWindow::changeGraphicsMode(int newMode)
@@ -449,8 +449,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     createDockWidget();
     setCentralWidget(central2DWidget);
     setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    if (QSysInfo::WindowsVersion == QSysInfo::WV_WINDOWS10)
-        setFont(QFont("Tahoma", 9));
+    if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
+        setFont(QFont("Segoe UI", 12));
     setWindowTitle("SDI Basic Painting");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     statusBar()->showMessage("Demo 0.4 - 04/05/2017");
