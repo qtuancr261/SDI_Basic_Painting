@@ -2,7 +2,6 @@
 
 leftToolsWidget::leftToolsWidget(QWidget *parent) : QWidget(parent)
 {
-    //setFont(QFont("Tahoma", 10));
     setupGUI();
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
         setFont(QFont("Segoe UI", 11));
@@ -134,10 +133,6 @@ void leftToolsWidget::setupGUI()
     QSpacerItem* verticalSpacer{new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
-    //mainLayout->addWidget(translationGroupBox);
-    //mainLayout->addWidget(rotateGroupBox);
-    //mainLayout->addWidget(symmetryGroupBox);
-    //mainLayout->addWidget(zoomGroupBox);
     mainLayout->addWidget(transformBox);
     mainLayout->addWidget(infoGroupBox);
     mainLayout->addWidget(positionLabel);
