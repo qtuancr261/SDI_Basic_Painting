@@ -182,11 +182,12 @@ void SDI_MainWindow::createToolsBar()
     mainToolBar = addToolBar(tr("Tùy chỉnh vẽ"));
     mainToolBar->addAction(pickPenColorAct);
     mainToolBar->addSeparator();
+    mainToolBar->addAction(clearScreenAct);
+    mainToolBar->addSeparator();
     mainToolBar->addWidget(new QLabel(tr("Bề dày nét vẽ"), this));
     penWidthBox->setRange(1, 10);
     mainToolBar->addWidget(penWidthBox);
-    mainToolBar->addSeparator();
-    mainToolBar->addAction(clearScreenAct);
+
 
     shape2DToolBar = addToolBar(tr("Các đối tượng 2D cơ bản"));
     shape2DToolBar->addActions(draw2DShapeActs);

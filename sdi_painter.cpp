@@ -427,6 +427,14 @@ void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &p
     SDI_Point pointG{pointC.x(), pointC.y() - height};
     SDI_Point pointH{pointD.x(), pointD.y() - height};
 
+    drawText(pointA + SDI_Point(-10, -10), "A");
+    drawText(pointB + SDI_Point(-10, -10), "B");
+    drawText(pointC + SDI_Point(10, 10), "C");
+    drawText(pointD + SDI_Point(10, -10), "D");
+    drawText(pointE + SDI_Point(-10, -10), "E");
+    drawText(pointF + SDI_Point(-10, -10), "F");
+    drawText(pointG + SDI_Point(-10, -10), "G");
+    drawText(pointH + SDI_Point(-10, -10), "H");
 
     QPainter::drawLine(pointB, pointF);
     QPainter::drawLine(pointC, pointG);
@@ -465,6 +473,12 @@ void SDI_Painter::drawPyramid(const SDI_Point &point1, const SDI_Point &point3, 
     int disBetweenE_midAB(SDI_Point::distance(midPointAB, pointE));
     int disBetweenE_F(SDI_Point::distance(pointE, pointF));
 
+    drawText(pointA + SDI_Point(-10, -10), "A");
+    drawText(pointB + SDI_Point(-10, -10), "B");
+    drawText(pointC + SDI_Point(10, 10), "C");
+    drawText(pointD + SDI_Point(10, -10), "D");
+    drawText(pointE + SDI_Point(-10, -10), "E");
+    drawText(pointF + SDI_Point(-10, 0), "F");
 
     QPainter::drawLine(pointB, pointC);
     QPainter::drawLine(pointC, pointD);
