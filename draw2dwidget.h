@@ -9,22 +9,11 @@
 #include <QSignalMapper>
 #include <QSharedPointer>
 #include <QWeakPointer>
+#include "sdi_namespace.h"
 #include "sdi_painter.h"
 #include "sdi_point.h"
 #include "sdi_geometricshape.h"
 #include "sdi_geometric3dshape.h"
-enum class graphicsMode
-{
-   graphic2D = 2, graphic3D
-};
-enum class clearImageMode
-{
-   clearAll, clearForNewSession
-};
-enum class drawLineDelegateMode
-{
-    none, triangle, parrallelogram
-};
 
 class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
 {
@@ -66,10 +55,10 @@ private:
     SDI_Point lastPoint;
     SDI_Point lastPoint_2;
 
-    graphicsMode graphicMode;
+    GraphicsMode graphicMode;
     geometricShape draw2DObjectMode; // hold 2D Object ID
     geometric3DShape draw3DObjectMode;
-    drawLineDelegateMode delegateMode;
+    DrawLineDelegateMode delegateMode;
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
     QColor myPenColor;
@@ -85,7 +74,7 @@ public slots:
     void setDraw3DObjectMode(int newId);
     void setGraphicsMode(int newId);
     void setTriangleTypeID(int newID);
-    void clearImage(clearImageMode clearID = clearImageMode::clearAll);
+    void clearImage(ClearImageMode clearID = ClearImageMode::CIM_All);
     void print();
 };
 

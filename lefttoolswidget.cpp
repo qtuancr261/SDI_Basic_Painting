@@ -99,7 +99,8 @@ void leftToolsWidget::setupGUI()
     //---------------------------------------------------------------------
     // zoom mode
     zoomBox = new QDoubleSpinBox(this);
-    zoomBox->setRange(0.0, 5.0);
+    zoomBox->setRange(0.1, 5.0);
+    zoomBox->setValue(1.0);
     zoomBox->setSingleStep(0.1);
     zoomBox->setSuffix("x");
     doZoom = new QPushButton(tr("Biến đồi đối tượng"), this);

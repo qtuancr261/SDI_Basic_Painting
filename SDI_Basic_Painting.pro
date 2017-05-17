@@ -40,7 +40,8 @@ HEADERS  += sdi_mainwindow.h \
     sdi_point.h \
     matrixlibs.h \
     sdi_geometricshape.h \
-    sdi_geometric3dshape.h
+    sdi_geometric3dshape.h \
+    sdi_namespace.h
 
 RESOURCES += \
     resource.qrc

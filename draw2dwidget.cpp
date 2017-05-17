@@ -13,10 +13,10 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     setAttribute(Qt::WA_StaticContents);
     modified = false;
     myPenWidth = 2;
-    graphicMode = graphicsMode::graphic2D;
+    graphicMode = GraphicsMode::GM_2D;
     myPenColor = Qt::blue;
     triangleTypeID = 0; // normal triangle
-    delegateMode = drawLineDelegateMode::none; // disable delegate on startup
+    delegateMode = DrawLineDelegateMode::DLDM_None; // disable delegate on startup
     setMouseTracking(true);
 }
 
@@ -76,7 +76,7 @@ void draw2DWidget::setPenWidth(int newWidth)
 
 void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
 {
-    if (!setOfShapes.isEmpty() && graphicMode == graphicsMode::graphic2D)
+    if (!setOfShapes.isEmpty() && graphicMode == GraphicsMode::GM_2D)
     {
         for (int i{setOfShapes.size() - 1}; i >=0 ; i--)
             if (setOfShapes.at(i)->getShapeBoundinRect().contains(selectPos))
@@ -88,16 +88,16 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
 }
 
-void draw2DWidget::clearImage(clearImageMode clearID)
+void draw2DWidget::clearImage(ClearImageMode clearID)
 {
     transparentImg.fill(qRgba(0,0,0,0));
     image.fill(qRgb(255,255,255));
     origin = QPoint(width()/2, height()/2);
     SDI_Painter painter(&transparentImg);
-    if (graphicMode == graphicsMode::graphic2D)
+    if (graphicMode == GraphicsMode::GM_2D)
     {
         painter.drawOxy(this->width(), this->height(), origin);
-        if (clearID == clearImageMode::clearAll)
+        if (clearID == ClearImageMode::CIM_All)
         {
             setOfShapes.clear();
             modified = true;
@@ -111,7 +111,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
     else
     {
         painter.drawOxyz(this->width(), this->height(), origin);
-        if (clearID == clearImageMode::clearAll)
+        if (clearID == ClearImageMode::CIM_All)
         {
             setOfShapes.clear();
             setOf3DShapes.clear();
@@ -124,7 +124,7 @@ void draw2DWidget::clearImage(clearImageMode clearID)
         }
     }
     lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
-    delegateMode = drawLineDelegateMode::none;
+    delegateMode = DrawLineDelegateMode::DLDM_None;
     update();
 }
 
@@ -132,7 +132,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
     //--------------LEFT MOUSE HANDLER  FOR 2D Mode----------------------------
-    if (event->button() == Qt::LeftButton && graphicMode == graphicsMode::graphic2D)
+    if (event->button() == Qt::LeftButton && graphicMode == GraphicsMode::GM_2D)
         switch (draw2DObjectMode)
         {
         case geometricShape::point:
@@ -197,7 +197,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             break;
         }
     //---------------------LEFT MOUSE HANDLER for 3D Mode
-    else if (event->button() == Qt::LeftButton && graphicMode == graphicsMode::graphic3D)
+    else if (event->button() == Qt::LeftButton && graphicMode == GraphicsMode::GM_3D)
         switch (draw3DObjectMode)
         {
         case geometric3DShape::parallelepiped:
@@ -219,7 +219,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     else if (event->button() == Qt::RightButton)
     {
         lastPoint = lastPoint_2 = SDI_Point(0, 0);
-        delegateMode = drawLineDelegateMode::none;
+        delegateMode = DrawLineDelegateMode::DLDM_None;
         drawObject(SDI_Point(0,0), 2); //
     }
 }
@@ -227,7 +227,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
 void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (graphicMode == graphicsMode::graphic2D)
+    if (graphicMode == GraphicsMode::GM_2D)
     {
         switch (draw2DObjectMode)
         {
@@ -249,7 +249,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
                 else if (lastPoint_2.isNull())
                 {
                     draw2DObjectMode = geometricShape::line; // make a trick
-                    delegateMode = drawLineDelegateMode::triangle; // delegate drawing triangle sides to drawLine function
+                    delegateMode = DrawLineDelegateMode::DLDM_Triangle; // delegate drawing triangle sides to drawLine function
                     drawObject(eventPos, 0);
                 }
                 else
@@ -273,7 +273,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
             else if (lastPoint_2.isNull())
             {
                 draw2DObjectMode = geometricShape::line;
-                delegateMode = drawLineDelegateMode::parrallelogram;
+                delegateMode = DrawLineDelegateMode::DLDM_Parrallelogram;
                 drawObject(eventPos, 0);
             }
             else
@@ -285,7 +285,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
         emit mouseMoveTo(QString("<b>x = %1 | y = %2 </b>").arg(QString::number((event->pos().x() - origin.x())))
                                                     .arg(QString::number((origin.y() - event->pos().y()))));
     }
-    else if (graphicMode == graphicsMode::graphic3D)
+    else if (graphicMode == GraphicsMode::GM_3D)
     {
         switch (draw3DObjectMode)
         {
@@ -341,7 +341,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
     transparentImg.fill(qRgba(0,0,0,0));
     //Repaint the user's coordinate  system
     SDI_Painter painter(&transparentImg);
-    if (graphicMode == graphicsMode::graphic2D)
+    if (graphicMode == GraphicsMode::GM_2D)
         painter.drawOxy(this->width(), this->height(), origin);
     else
          painter.drawOxyz(this->width(), this->height(), origin);
@@ -353,9 +353,9 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
 
     //using painter to draw new shape
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    if (stateOfShape != 2 && graphicMode == graphicsMode::graphic2D)
+    if (stateOfShape != 2 && graphicMode == GraphicsMode::GM_2D)
         draw2DShape(&painter, endPoint, stateOfShape);
-    else if (stateOfShape != 2 && graphicMode == graphicsMode::graphic3D)
+    else if (stateOfShape != 2 && graphicMode == GraphicsMode::GM_3D)
         draw3DShape(&painter, endPoint, stateOfShape);
 
 }
@@ -370,14 +370,14 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     case geometricShape::line:
         switch (delegateMode)
         {
-        case drawLineDelegateMode::triangle: //
+        case DrawLineDelegateMode::DLDM_Triangle: //
             if (lastPoint_2.isNull())
             {
                 painter->drawLine(lastPoint, endPoint);
                 draw2DObjectMode = geometricShape::triangle; // restore draw2DObjectMode
             }
             break;
-        case drawLineDelegateMode::parrallelogram:
+        case DrawLineDelegateMode::DLDM_Parrallelogram:
             if (lastPoint_2.isNull())
             {
                 painter->drawLine(lastPoint, endPoint);
@@ -503,7 +503,7 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
 {
     painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
-    if (!setOfShapes.isEmpty() && graphicMode == graphicsMode::graphic2D)
+    if (!setOfShapes.isEmpty() && graphicMode == GraphicsMode::GM_2D)
         for (QSharedPointer<SDI_GeometricShape>& shape:setOfShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
@@ -519,7 +519,7 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
             else if (shapeName == geometricShape::triangle && setOfPoints.size() == 2)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
         }
-    else if (!setOf3DShapes.isEmpty() && graphicMode == graphicsMode::graphic3D)
+    else if (!setOf3DShapes.isEmpty() && graphicMode == GraphicsMode::GM_3D)
         for (QSharedPointer<SDI_Geometric3DShape> shape:setOf3DShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
@@ -581,7 +581,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
         break;
     }
     lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
-    delegateMode = drawLineDelegateMode::none;
+    delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
 void draw2DWidget::setDraw3DObjectMode(int newId)
@@ -598,7 +598,7 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
         break;
     }
     lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
-    delegateMode = drawLineDelegateMode::none;
+    delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
 void draw2DWidget::setGraphicsMode(int newId)
@@ -606,13 +606,13 @@ void draw2DWidget::setGraphicsMode(int newId)
     // change graphics mode and clear for new session
     if (newId == 2)
     {
-        graphicMode = graphicsMode::graphic2D;
+        graphicMode = GraphicsMode::GM_2D;
     }
     else
     {
-        graphicMode = graphicsMode::graphic3D;
+        graphicMode = GraphicsMode::GM_3D;
     }
-    clearImage(clearImageMode::clearForNewSession);
+    clearImage(ClearImageMode::CIM_ForNewSession);
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
     //-------------------------finish-------------------------------
 }
