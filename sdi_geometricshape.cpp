@@ -174,12 +174,12 @@ void SDI_GeometricShape::scale(double xscale, double yscale)
     updateShapeData();
 }
 
-void SDI_GeometricShape::rotate(double degree)
+void SDI_GeometricShape::rotate(double degree, int centralPointID)
 {
     if (static_cast<int>(degree) % 180 != 0)
     {
-        int xtrans{shapeID != geometricShape::circle ? -centralPoint.x() : -OriginPos.x()};
-        int ytrans{shapeID != geometricShape::circle ? -centralPoint.y() : -OriginPos.y()};
+        int xtrans{centralPointID == 1 ? -centralPoint.x() : -OriginPos.x()};
+        int ytrans{centralPointID == 1 ? -centralPoint.y() : -OriginPos.y()};
         for (SDI_Point& point : setOfPoints)
         {
             //point.rx() = point.x() + xtrans;

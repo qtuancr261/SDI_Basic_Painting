@@ -58,14 +58,22 @@ void leftToolsWidget::setupGUI()
     rotateSlider = new QSlider(Qt::Horizontal, this);
     rotateBox = new QSpinBox(this);
     setSlider_BoxSytle(rotateSlider, rotateBox, -360, 360);
+    shapeCentralRotate = new QRadioButton(tr("Tâm đối tượng"), this);
+    shapeCentralRotate->setAutoExclusive(true);
+    userOriginPosRotate = new QRadioButton( tr("Gốc tọa độ"), this);
+    userOriginPosRotate->setAutoExclusive(true);
+
     doRotate = new QPushButton(tr("Xoay đối tượng"));
     doRotate->setAutoRepeat(true);
     QObject::connect(doRotate, SIGNAL(clicked(bool)), this, SLOT(takeRotateParameters()));
     QGridLayout* rotateLayout{new QGridLayout(this)};
-    rotateLayout->addWidget(new QLabel(tr("Góc quay")), 0, 0);
+    rotateLayout->addWidget(new QLabel(tr("Góc xoay: ")), 0, 0);
     rotateLayout->addWidget(rotateSlider, 0, 1);
     rotateLayout->addWidget(rotateBox, 0, 2);
-    rotateLayout->addWidget(doRotate, 1, 0, 1, 3);
+    rotateLayout->addWidget(new QLabel(tr("Tâm xoay: ")), 1, 0);
+    rotateLayout->addWidget(userOriginPosRotate, 1, 1, 1, 2);
+    rotateLayout->addWidget(shapeCentralRotate, 2, 1, 1, 2);
+    rotateLayout->addWidget(doRotate, 3, 0, 1, 3);
     rotateLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding),2,0,1,3);
     QGroupBox* rotateGroupBox{new QGroupBox()};
     rotateGroupBox->setLayout(rotateLayout);
@@ -138,7 +146,6 @@ void leftToolsWidget::setupGUI()
     mainLayout->addWidget(positionLabel);
     mainLayout->addItem(verticalSpacer);
     setLayout(mainLayout);
-
 }
 
 void leftToolsWidget::setDrawModeButtonStyle(QPushButton *button)
@@ -176,7 +183,10 @@ void leftToolsWidget::takeScaleParameters()
 
 void leftToolsWidget::takeRotateParameters()
 {
-    emit rotateSelectedShape(rotateBox->value());
+    if (shapeCentralRotate->isChecked())
+        emit rotateSelectedShape(rotateBox->value(), 1); // 1 : using SDI_GeometricShape::centralPoint
+    else if (userOriginPosRotate->isChecked())
+        emit rotateSelectedShape(rotateBox->value(), 0); // 0 : using SDI_GeometricShape::OriginPos
 }
 
 void leftToolsWidget::takeSymmetryParameters()

@@ -93,7 +93,7 @@ public slots:
     void showSelectedShape(QWeakPointer<SDI_GeometricShape> shape);
     void translateShape(int xtrans, int ytrans);
     void scaleShape(double xscale, double yscale);
-    void rotateShape(double degree);
+    void rotateShape(double degree, int centralPointID);
     void centralSymmetryShape();
     void OxSymmetryShape();
     void OySymmetryShape();

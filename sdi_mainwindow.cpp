@@ -388,14 +388,14 @@ void SDI_MainWindow::scaleShape(double xscale, double yscale)
     }
 }
 
-void SDI_MainWindow::rotateShape(double degree)
+void SDI_MainWindow::rotateShape(double degree, int centralPointID)
 {
     activatedShape = weakActivatedShape.toStrongRef();
     if (activatedShape.isNull())
         mainToolsWidget->setInfoBox("<b>Không định vị được</b>", "ZZZZZzzzzzZZZZZ");
     else
     {
-        activatedShape->rotate(degree);
+        activatedShape->rotate(degree, centralPointID);
         central2DWidget->drawObject(QPoint(0,0), 3);
         showSelectedShape(activatedShape.toWeakRef());
     }
@@ -468,7 +468,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
-    QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double)), this, SLOT(rotateShape(double)));
+    QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double,int)), this, SLOT(rotateShape(double, int)));
     QObject::connect(mainToolsWidget, SIGNAL(centralSymmetrySelectedShape()), this, SLOT(centralSymmetryShape()));
     QObject::connect(mainToolsWidget, SIGNAL(OxSymmetrySelectedShape()), this, SLOT(OxSymmetryShape()));
     QObject::connect(mainToolsWidget, SIGNAL(OySymmetrySelectedShape()), this, SLOT(OySymmetryShape()));

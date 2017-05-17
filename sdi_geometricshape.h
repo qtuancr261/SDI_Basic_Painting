@@ -52,7 +52,7 @@ public:
 public slots:
     void translate(int xtrans, int ytrans);
     void scale(double xscale, double yscale);
-    void rotate(double degree);
+    void rotate(double degree, int centralPointID);
     void originPosSymmetry();
     void OxSymmetry();
     void OySymmetry();

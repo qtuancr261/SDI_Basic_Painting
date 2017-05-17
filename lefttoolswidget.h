@@ -23,6 +23,8 @@ public:
     explicit leftToolsWidget(QWidget *parent = nullptr);
     ~leftToolsWidget() = default;
     void setInfoBox(QString shapeNameLabel, QString shapeData);
+
+private:
     QPushButton* graphic2DMode;
     QPushButton* graphic3DMode;
     //QPushButton* helpMode;
@@ -35,6 +37,8 @@ public:
 
     QSlider* rotateSlider;
     QSpinBox* rotateBox;
+    QRadioButton* shapeCentralRotate;
+    QRadioButton* userOriginPosRotate;
     QPushButton* doRotate;
 
     QRadioButton* centralSymmetry;
@@ -48,7 +52,6 @@ public:
     QLabel* shapeNameLabel;
     QTextEdit* shapeDataTEdit;
     QLabel* positionLabel;
-private:
     void setupGUI();
     void setDrawModeButtonStyle(QPushButton* button);
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
@@ -57,7 +60,7 @@ signals:
     void changeGraphicsMode(int newID);
     void translateSelectedShape(int xtrans, int ytrans);
     void scaleSelectedShape(double xscale, double yscale);
-    void rotateSelectedShape(double degree);
+    void rotateSelectedShape(double degree, int centralPointID);
     void centralSymmetrySelectedShape();
     void OxSymmetrySelectedShape();
     void OySymmetrySelectedShape();
