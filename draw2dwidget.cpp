@@ -135,14 +135,14 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton && graphicMode == GraphicsMode::GM_2D)
         switch (draw2DObjectMode)
         {
-        case geometricShape::point:
+        case GeometricShape::GS_Point:
             drawObject(eventPos, 1);
             break;
         //-----------------------------------------------------------
-        case geometricShape::line:
-        case geometricShape::rect:
-        case geometricShape::square:
-        case geometricShape::circle:
+        case GeometricShape::GS_Line:
+        case GeometricShape::GS_Rect:
+        case GeometricShape::GS_Square:
+        case GeometricShape::GS_Circle:
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else
@@ -152,7 +152,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             }
             break;
        //-------------------------------------------------------------
-        case geometricShape::triangle:
+        case GeometricShape::GS_Triangle:
             switch (triangleTypeID)
             {
             case 0: // Triangle
@@ -180,7 +180,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
             }
             break;
         //-------------------------------------------------------------
-        case geometricShape::parallelogram:
+        case GeometricShape::GS_Parallelogram:
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else if (lastPoint_2.isNull())
@@ -200,8 +200,8 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     else if (event->button() == Qt::LeftButton && graphicMode == GraphicsMode::GM_3D)
         switch (draw3DObjectMode)
         {
-        case geometric3DShape::parallelepiped:
-        case geometric3DShape::pyramid:
+        case Geometric3DShape::G3DS_Parallelepiped:
+        case Geometric3DShape::G3DS_Pyramid:
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else if (lastPoint_2.isNull())
@@ -231,16 +231,16 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     {
         switch (draw2DObjectMode)
         {
-        case geometricShape::selectShape:
+        case GeometricShape::GS_SelectShape:
             break;
-        case geometricShape::line:
-        case geometricShape::rect:
-        case geometricShape::square:
-        case geometricShape::circle:
+        case GeometricShape::GS_Line:
+        case GeometricShape::GS_Rect:
+        case GeometricShape::GS_Square:
+        case GeometricShape::GS_Circle:
             if (!lastPoint.isNull())
                 drawObject(eventPos, 0); // 0 means draw a temporary shape
             break;
-        case geometricShape::triangle:
+        case GeometricShape::GS_Triangle:
             switch (triangleTypeID)
             {
             case 0: // Triangle
@@ -248,7 +248,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
                     break;
                 else if (lastPoint_2.isNull())
                 {
-                    draw2DObjectMode = geometricShape::line; // make a trick
+                    draw2DObjectMode = GeometricShape::GS_Line; // make a trick
                     delegateMode = DrawLineDelegateMode::DLDM_Triangle; // delegate drawing triangle sides to drawLine function
                     drawObject(eventPos, 0);
                 }
@@ -267,12 +267,12 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
                 break;
             }
             break;
-        case geometricShape::parallelogram:
+        case GeometricShape::GS_Parallelogram:
             if (lastPoint.isNull())
                 break;
             else if (lastPoint_2.isNull())
             {
-                draw2DObjectMode = geometricShape::line;
+                draw2DObjectMode = GeometricShape::GS_Line;
                 delegateMode = DrawLineDelegateMode::DLDM_Parrallelogram;
                 drawObject(eventPos, 0);
             }
@@ -289,8 +289,8 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     {
         switch (draw3DObjectMode)
         {
-        case geometric3DShape::parallelepiped:
-        case geometric3DShape::pyramid:
+        case Geometric3DShape::G3DS_Parallelepiped:
+        case Geometric3DShape::G3DS_Pyramid:
             if (lastPoint.isNull())
                 break;
             else if (lastPoint_2.isNull())
@@ -307,7 +307,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
 void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
-    if (event->button() == Qt::LeftButton  && draw2DObjectMode == geometricShape::selectShape)
+    if (event->button() == Qt::LeftButton  && draw2DObjectMode == GeometricShape::GS_SelectShape)
     {
         drawObject(eventPos, 0);
         //scribbling = false;
@@ -365,23 +365,23 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     int rad = (myPenWidth / 2) + 2;
     switch (draw2DObjectMode)
     {
-    case geometricShape::selectShape:
+    case GeometricShape::GS_SelectShape:
         break;
-    case geometricShape::line:
+    case GeometricShape::GS_Line:
         switch (delegateMode)
         {
         case DrawLineDelegateMode::DLDM_Triangle: //
             if (lastPoint_2.isNull())
             {
                 painter->drawLine(lastPoint, endPoint);
-                draw2DObjectMode = geometricShape::triangle; // restore draw2DObjectMode
+                draw2DObjectMode = GeometricShape::GS_Triangle; // restore draw2DObjectMode
             }
             break;
         case DrawLineDelegateMode::DLDM_Parrallelogram:
             if (lastPoint_2.isNull())
             {
                 painter->drawLine(lastPoint, endPoint);
-                draw2DObjectMode = geometricShape::parallelogram;
+                draw2DObjectMode = GeometricShape::GS_Parallelogram;
             }
             break;
         default:
@@ -396,7 +396,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             break;
         }
         break;
-    case geometricShape::rect:
+    case GeometricShape::GS_Rect:
         if (lastPoint.x() < endPoint.x())
             painter->drawRect(lastPoint, endPoint);
         else
@@ -409,7 +409,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
         else
             update();
         break;
-    case geometricShape::square:
+    case GeometricShape::GS_Square:
     {
         painter->drawSquare(lastPoint, endPoint);
         if(stateOfShape == 1)
@@ -421,13 +421,13 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             update();
         break;
     }
-    case geometricShape::circle:
+    case GeometricShape::GS_Circle:
         painter->drawCircle(lastPoint, endPoint);
         if (stateOfShape == 1)
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
         update();
         break;
-    case geometricShape::triangle:
+    case GeometricShape::GS_Triangle:
     {
         if (stateOfShape == 1)
             switch (triangleTypeID)
@@ -452,7 +452,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
         }
         break;
     }
-    case geometricShape::parallelogram:
+    case GeometricShape::GS_Parallelogram:
         painter->drawParallelogram(lastPoint, lastPoint_2, endPoint);
         if (stateOfShape == 1)
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
@@ -465,7 +465,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
 {
     switch (draw3DObjectMode)
     {
-    case geometric3DShape::parallelepiped:
+    case Geometric3DShape::G3DS_Parallelepiped:
         if (!lastPoint.isNull() && lastPoint_2.isNull())
         {
            int xTrans{endPoint.y() - lastPoint.y()};
@@ -480,7 +480,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
         }
         update();
         break;
-    case geometric3DShape::pyramid:
+    case Geometric3DShape::G3DS_Pyramid:
         if (!lastPoint.isNull() && lastPoint_2.isNull())
         {
             int xTrans{endPoint.y() - lastPoint.y()};
@@ -507,27 +507,27 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
         for (QSharedPointer<SDI_GeometricShape>& shape:setOfShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
-            geometricShape shapeName{shape->getShapeId()};
-            if (shapeName == geometricShape::rect || shapeName == geometricShape::square || shapeName == geometricShape::parallelogram)
+            GeometricShape shapeName{shape->getShapeId()};
+            if (shapeName == GeometricShape::GS_Rect || shapeName == GeometricShape::GS_Square || shapeName == GeometricShape::GS_Parallelogram)
                 painter->drawTetragon(setOfPoints);
-            else if (shapeName == geometricShape::line)
+            else if (shapeName == GeometricShape::GS_Line)
                 painter->drawLine(setOfPoints.at(0), setOfPoints.at(1));
-            else if (shapeName == geometricShape::circle)
+            else if (shapeName == GeometricShape::GS_Circle)
                 painter->drawCircle(setOfPoints.at(0), setOfPoints.at(1));
-            else if (shapeName == geometricShape::triangle && setOfPoints.size() == 3)
+            else if (shapeName == GeometricShape::GS_Triangle && setOfPoints.size() == 3)
                 painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
-            else if (shapeName == geometricShape::triangle && setOfPoints.size() == 2)
+            else if (shapeName == GeometricShape::GS_Triangle && setOfPoints.size() == 2)
                 painter->drawIsoscelesRightTriangle(setOfPoints.at(0), setOfPoints.at(1));
         }
     else if (!setOf3DShapes.isEmpty() && graphicMode == GraphicsMode::GM_3D)
         for (QSharedPointer<SDI_Geometric3DShape> shape:setOf3DShapes)
         {
             QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
-            geometric3DShape shapeName{shape->getShapeID()};
+            Geometric3DShape shapeName{shape->getShapeID()};
             painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-            if (shapeName == geometric3DShape::parallelepiped)
+            if (shapeName == Geometric3DShape::G3DS_Parallelepiped)
                 painter->drawParallelePiped(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
-            else if (shapeName == geometric3DShape::pyramid)
+            else if (shapeName == Geometric3DShape::G3DS_Pyramid)
                 painter->drawPyramid(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2));
         }
     modified = true;
@@ -552,31 +552,31 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
     switch (newId)
     {
     case 1:
-        draw2DObjectMode = geometricShape::line;
+        draw2DObjectMode = GeometricShape::GS_Line;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 2:
-        draw2DObjectMode = geometricShape::rect;
+        draw2DObjectMode = GeometricShape::GS_Rect;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 3:
-        draw2DObjectMode = geometricShape::square;
+        draw2DObjectMode = GeometricShape::GS_Square;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 4:
-        draw2DObjectMode = geometricShape::parallelogram;
+        draw2DObjectMode = GeometricShape::GS_Parallelogram;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 5:
-        draw2DObjectMode = geometricShape::circle;
+        draw2DObjectMode = GeometricShape::GS_Circle;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 6:
-        draw2DObjectMode = geometricShape::triangle;
+        draw2DObjectMode = GeometricShape::GS_Triangle;
         setCursor(Qt::ClosedHandCursor);
         break;
     default:
-        draw2DObjectMode = geometricShape::selectShape;
+        draw2DObjectMode = GeometricShape::GS_SelectShape;
         setCursor(Qt::PointingHandCursor);
         break;
     }
@@ -589,11 +589,11 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
     switch (newId)
     {
     case 0:
-        draw3DObjectMode = geometric3DShape::parallelepiped;
+        draw3DObjectMode = Geometric3DShape::G3DS_Parallelepiped;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 1:
-        draw3DObjectMode = geometric3DShape::pyramid;
+        draw3DObjectMode = Geometric3DShape::G3DS_Pyramid;
         setCursor(Qt::ClosedHandCursor);
         break;
     }

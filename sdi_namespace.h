@@ -9,15 +9,34 @@ enum class GraphicsMode
 enum class ClearImageMode
 {
     CIM_All = 0,
-    CIM_ForNewSession = 1
+    CIM_ForNewSession
 };
+
 enum class DrawLineDelegateMode
 {
     DLDM_None = 0,
-    DLDM_Triangle = 1,
-    DLDM_Parrallelogram = 2
+    DLDM_Triangle,
+    DLDM_Parrallelogram
 };
 
+enum class GeometricShape
+{
+    GS_SelectShape = 0,
+    GS_Point,
+    GS_Line,
+    GS_Rect,
+    GS_Square,
+    GS_Parallelogram,
+    GS_Circle,
+    GS_Triangle
+};
+
+enum class Geometric3DShape
+{
+    G3DS_SelectShape = 0,
+    G3DS_Parallelepiped,
+    G3DS_Pyramid
+};
 
 
 

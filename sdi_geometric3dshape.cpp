@@ -1,12 +1,12 @@
 #include "sdi_geometric3dshape.h"
 
-SDI_Geometric3DShape::SDI_Geometric3DShape(geometric3DShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin)
+SDI_Geometric3DShape::SDI_Geometric3DShape(Geometric3DShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin)
     : shapeID(id), OriginPos(Origin)
 {
     switch (shapeID)
     {
-    case geometric3DShape::parallelepiped:
-    case geometric3DShape::pyramid:
+    case Geometric3DShape::G3DS_Parallelepiped:
+    case Geometric3DShape::G3DS_Pyramid:
         setOfPoints.push_back(point1);
         setOfPoints.push_back(point2);
         setOfPoints.push_back(point3);
@@ -21,7 +21,7 @@ QVector<SDI_Point> &SDI_Geometric3DShape::getSetOfPoints()
     return setOfPoints;
 }
 
-geometric3DShape SDI_Geometric3DShape::getShapeID() const
+Geometric3DShape SDI_Geometric3DShape::getShapeID() const
 {
     return shapeID;
 }

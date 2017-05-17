@@ -56,8 +56,8 @@ private:
     SDI_Point lastPoint_2;
 
     GraphicsMode graphicMode;
-    geometricShape draw2DObjectMode; // hold 2D Object ID
-    geometric3DShape draw3DObjectMode;
+    GeometricShape draw2DObjectMode; // hold 2D Object ID
+    Geometric3DShape draw3DObjectMode;
     DrawLineDelegateMode delegateMode;
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
