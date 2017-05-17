@@ -40,6 +40,7 @@ private:
     QDockWidget* dockWidget;
     draw2DWidget* central2DWidget;
     leftToolsWidget* mainToolsWidget;
+    QLabel* modeToolTip;
     // File Actions
     QAction* openAct;
     QList<QAction*> saveAsActs;

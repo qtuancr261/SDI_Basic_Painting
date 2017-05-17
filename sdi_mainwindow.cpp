@@ -111,28 +111,34 @@ void SDI_MainWindow::createActions()
     QSignalMapper* draw2DShapeMapper{new QSignalMapper(this)};
     for (int i{}; i < draw2DShapeActs.size(); i++)
     {
-        draw2DShapeMapper->setMapping(draw2DShapeActs[i], i);
-        QObject::connect(draw2DShapeActs[i], SIGNAL(toggled(bool)), draw2DShapeMapper, SLOT(map()));
+        draw2DShapeMapper->setMapping(draw2DShapeActs.at(i), i);
+        draw2DShapeMapper->setMapping(draw2DShapeActs.at(i), draw2DShapeActs.at(i)->statusTip());
+        QObject::connect(draw2DShapeActs.at(i), SIGNAL(toggled(bool)), draw2DShapeMapper, SLOT(map()));
     }
     QObject::connect(draw2DShapeMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
+    QObject::connect(draw2DShapeMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
     selectShapeAct->setChecked(true); // default draw mode
 
 
 
     //---------------------3D Actions-------------------------------
     QAction* drawParallelepipedAct{new QAction(QIcon(":/images/icons/cube.png"),tr("Hình hộp"), this)};
+    drawParallelepipedAct->setStatusTip(tr("..."));
     setupDraw3DAct(drawParallelepipedAct);
 
     QAction* drawPyramidAct{new QAction(QIcon(":/images/icons/pyramid.png"), tr("Hình chóp"), this)};
+    drawParallelepipedAct->setStatusTip(tr("..."));
     setupDraw3DAct(drawPyramidAct);
 
     QSignalMapper* draw3DShapeMapper{new QSignalMapper(this)};
     for (int i{}; i < draw3DShapeActs.size(); i++)
     {
-        draw3DShapeMapper->setMapping(draw3DShapeActs[i], i);
+        draw3DShapeMapper->setMapping(draw3DShapeActs.at(i), i);
+        draw3DShapeMapper->setMapping(draw3DShapeActs.at(i), draw3DShapeActs.at(i)->statusTip());
         QObject::connect(draw3DShapeActs[i], SIGNAL(toggled(bool)), draw3DShapeMapper, SLOT(map()));
     }
     QObject::connect(draw3DShapeMapper, SIGNAL(mapped(int)), central2DWidget, SLOT(setDraw3DObjectMode(int)));
+    QObject::connect(draw3DShapeMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
 }
 
 void SDI_MainWindow::createMenus()
@@ -341,7 +347,8 @@ void SDI_MainWindow::showDockWidget(bool enable)
 
 void SDI_MainWindow::showMessage(QString message)
 {
-    statusBar()->showMessage(message);
+    //statusBar()->showMessage(message);
+    modeToolTip->setText(message);
 }
 
 void SDI_MainWindow::showSelectedShape(QWeakPointer<SDI_GeometricShape> shape)
@@ -438,6 +445,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
       dockWidget{new QDockWidget(this)},
       central2DWidget{new draw2DWidget(this)},
       mainToolsWidget{new leftToolsWidget(this)},
+      modeToolTip{new QLabel("Release Version")},
       draw2DGroupActs{new QActionGroup(this)},
       draw3DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
@@ -454,7 +462,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
         setFont(QFont("Segoe UI", 12));
     setWindowTitle("SDI Basic Painting");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
-    statusBar()->showMessage("Demo 0.4 - 04/05/2017");
+    modeToolTip->setMinimumSize(modeToolTip->sizeHint());
+    statusBar()->addWidget(modeToolTip,1);
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)),mainToolsWidget, SLOT(showPosition(QString)));
     QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
