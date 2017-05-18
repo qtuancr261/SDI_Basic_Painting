@@ -32,9 +32,9 @@ bool draw2DWidget::openImage(const QString &fileName)
     if (!loadedImage.load(fileName))
         return false;
     originalSize = loadedImage.size();
-    QImage scaledImage = loadedImage.scaled(size(), Qt::KeepAspectRatio);;
-    QSize newSize = loadedImage.size().scaled(size().width(), size().height(), Qt::KeepAspectRatio);
-    resizeImage(&scaledImage, newSize);
+    QImage scaledImage = loadedImage.scaled(transparentImg.size(), Qt::IgnoreAspectRatio);;
+    //QSize newSize = loadedImage.size().scaled(size().width(), size().height(), Qt::IgnoreAspectRatio);
+    //resizeImage(&scaledImage, newSize);
     image = scaledImage;
     modified = false;
     update();
@@ -45,13 +45,12 @@ bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
 {
     if (image.isNull())
     {
-        image = QImage(size(), QImage::Format_RGB32);
-        image.fill(qRgb(255,255,255));
+        image = QImage(size(), QImage::QImage::Format_ARGB32);
+        image.fill(qRgba(255,255,255,255));
     }
     QPainter paint(&image);
     paint.drawImage(0,0, transparentImg);
-    QImage visibleImage = image.scaled(originalSize, Qt::KeepAspectRatio);
-    resizeImage(&visibleImage, originalSize);
+    QImage visibleImage = image.scaled(originalSize, Qt::IgnoreAspectRatio);
 
     if (visibleImage.save(fileName, fileFormat))
     {
@@ -91,7 +90,8 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
 void draw2DWidget::clearImage(ClearImageMode clearID)
 {
     transparentImg.fill(qRgba(0,0,0,0));
-    image.fill(qRgb(255,255,255));
+    if (image.isNull())
+        image.fill(qRgb(255,255,255));
     origin = QPoint(width()/2, height()/2);
     SDI_Painter painter(&transparentImg);
     if (graphicMode == GraphicsMode::GM_2D)
