@@ -25,18 +25,15 @@ void SDI_MainWindow::createActions()
     quitAct->setShortcut(QKeySequence::Quit);
     QObject::connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    showToolBarAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Hiện thanh công cụ phụ"), this);
-    showToolBarAct->setCheckable(true);
-    showToolBarAct->setChecked(true);
-
     showDockWidgetAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Hiện thanh công cụ chính"), this);
     showDockWidgetAct->setCheckable(true);
     showDockWidgetAct->setChecked(true);
     QObject::connect(showDockWidgetAct, SIGNAL(toggled(bool)), this, SLOT(showDockWidget(bool)));
 
-    show2DModeAct = new QAction(QIcon(":/images/icons/oxy_coordinate.png"), tr("Chế độ đồ họa 2D"), this);
-
-    show3DModeAct = new QAction(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Chế độ đồ họa 3D"), this);
+    showUserCoordinateAct = new QAction(QIcon(":/images/icons/oxy_coordinate.png"), tr("Hiển thị hệ trục"), this);
+    showUserCoordinateAct->setCheckable(true);
+    showUserCoordinateAct->setChecked(true);
+    QObject::connect(showUserCoordinateAct, SIGNAL(toggled(bool)), this, SLOT(enableUserCoordinate(bool)));
 
     optionAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Tùy chỉnh..."), this);
     optionAct->setStatusTip("Tùy chỉnh giao diện, ngôn ngữ...");
@@ -53,6 +50,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(clearImage()));
 
     aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/SDI_Basic_Painting.ico"), tr("Thông tin chương trình"), this);
+    aboutSDI_PaintingAct->setShortcut(Qt::Key_F1);
     QObject::connect(aboutSDI_PaintingAct, SIGNAL(triggered()), this, SLOT(aboutSDI_Painting()));
 
     aboutQtAct = new QAction(QIcon(":/images/icons/QtIcon.png"), tr("Thông tin về Qt/Bản quyền"), this);
@@ -158,10 +156,8 @@ void SDI_MainWindow::createMenus()
 
     ViewMenu = new QMenu(tr("&Xem"), this);
     ViewMenu->addAction(showDockWidgetAct);
-    ViewMenu->addAction(showToolBarAct);
     ViewMenu->addSeparator();
-    ViewMenu->addAction(show2DModeAct);
-    ViewMenu->addAction(show3DModeAct);
+    ViewMenu->addAction(showUserCoordinateAct);
     menuBar()->addMenu(ViewMenu);
 
     ToolsMenu = new QMenu(tr("&Công cụ"), this);
@@ -182,8 +178,6 @@ void SDI_MainWindow::createToolsBar()
     QToolBar* mainToolBar;
     mainToolBar = addToolBar(tr("Tâp tin"));
     mainToolBar->addAction(openAct);
-    mainToolBar->addSeparator();
-    mainToolBar->addAction(printAct);
 
     mainToolBar = addToolBar(tr("Tùy chỉnh vẽ"));
     mainToolBar->addAction(pickPenColorAct);
@@ -362,6 +356,14 @@ void SDI_MainWindow::showSelectedShape(QWeakPointer<SDI_GeometricShape> shape)
     activatedShape.clear();
 }
 
+void SDI_MainWindow::enableUserCoordinate(bool enable)
+{
+    if (enable)
+        emit displayCoordinateStateChanged(DisplayCoordinateState::DCS_Show);
+    else
+        emit displayCoordinateStateChanged(DisplayCoordinateState::DCS_Hide);
+}
+
 void SDI_MainWindow::translateShape(int xtrans, int ytrans)
 {
     activatedShape = weakActivatedShape.toStrongRef();
@@ -370,7 +372,7 @@ void SDI_MainWindow::translateShape(int xtrans, int ytrans)
     else
     {
         activatedShape->translate(xtrans, ytrans);
-        central2DWidget->drawObject(QPoint(0,0), 3);
+        central2DWidget->drawObject(QPoint(0,0), StateOfShape::SOS_AllExistentShapes);
         showSelectedShape(activatedShape.toWeakRef());
     }
 }
@@ -383,7 +385,7 @@ void SDI_MainWindow::scaleShape(double xscale, double yscale)
     else
     {
         activatedShape->scale(xscale, yscale);
-        central2DWidget->drawObject(QPoint(0,0), 3);
+        central2DWidget->drawObject(QPoint(0,0), StateOfShape::SOS_AllExistentShapes);
         showSelectedShape(activatedShape.toWeakRef());
     }
 }
@@ -396,7 +398,7 @@ void SDI_MainWindow::rotateShape(double degree, int centralPointID)
     else
     {
         activatedShape->rotate(degree, centralPointID);
-        central2DWidget->drawObject(QPoint(0,0), 3);
+        central2DWidget->drawObject(QPoint(0,0), StateOfShape::SOS_AllExistentShapes);
         showSelectedShape(activatedShape.toWeakRef());
     }
 }
@@ -409,7 +411,7 @@ void SDI_MainWindow::centralSymmetryShape()
     else
     {
         activatedShape->originPosSymmetry();
-        central2DWidget->drawObject(QPoint(0,0), 3);
+        central2DWidget->drawObject(QPoint(0,0), StateOfShape::SOS_AllExistentShapes);
         showSelectedShape(activatedShape.toWeakRef());
     }
 }
@@ -422,7 +424,7 @@ void SDI_MainWindow::OxSymmetryShape()
     else
     {
         activatedShape->OxSymmetry();
-        central2DWidget->drawObject(QPoint(0,0), 3);
+        central2DWidget->drawObject(QPoint(0,0), StateOfShape::SOS_AllExistentShapes);
         showSelectedShape(activatedShape.toWeakRef());
     }
 }
@@ -435,7 +437,7 @@ void SDI_MainWindow::OySymmetryShape()
     else
     {
         activatedShape->OySymmetry();
-        central2DWidget->drawObject(QPoint(0,0), 3);
+        central2DWidget->drawObject(QPoint(0,0), StateOfShape::SOS_AllExistentShapes);
         showSelectedShape(activatedShape.toWeakRef());
     }
 }
@@ -472,6 +474,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     QObject::connect(mainToolsWidget, SIGNAL(centralSymmetrySelectedShape()), this, SLOT(centralSymmetryShape()));
     QObject::connect(mainToolsWidget, SIGNAL(OxSymmetrySelectedShape()), this, SLOT(OxSymmetryShape()));
     QObject::connect(mainToolsWidget, SIGNAL(OySymmetrySelectedShape()), this, SLOT(OySymmetryShape()));
+    QObject::connect(this, SIGNAL(displayCoordinateStateChanged(DisplayCoordinateState)), central2DWidget, SLOT(setDisplayCoordinateMode(DisplayCoordinateState)));
 }
 
 SDI_MainWindow::~SDI_MainWindow()

@@ -30,9 +30,9 @@ public:
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
     void locateSelectedShape(const SDI_Point &selectPos);
-    void drawObject(const SDI_Point &endPoint, int stateOfShape);
-    void draw2DShape(SDI_Painter *painter, const SDI_Point& endPoint, int stateOfShape);
-    void draw3DShape(SDI_Painter* painter, const SDI_Point& endPoint, int stateOfShape);
+    void drawObject(const SDI_Point &endPoint, StateOfShape drawState);
+    void draw2DShape(SDI_Painter *painter, const SDI_Point& endPoint, StateOfShape drawState);
+    void draw3DShape(SDI_Painter* painter, const SDI_Point& endPoint, StateOfShape drawState);
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -56,6 +56,7 @@ private:
     SDI_Point lastPoint_2;
 
     GraphicsMode graphicMode;
+    DisplayCoordinateState displayCoordinateMode;
     GeometricShape draw2DObjectMode; // hold 2D Object ID
     Geometric3DShape draw3DObjectMode;
     DrawLineDelegateMode delegateMode;
@@ -73,6 +74,7 @@ public slots:
     void setDraw2DObjectMode(int newId);
     void setDraw3DObjectMode(int newId);
     void setGraphicsMode(int newId);
+    void setDisplayCoordinateMode(DisplayCoordinateState newState);
     void setTriangleTypeID(int newID);
     void clearImage(ClearImageMode clearID = ClearImageMode::CIM_All);
     void print();

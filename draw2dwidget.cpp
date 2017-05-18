@@ -10,13 +10,14 @@
 draw2DWidget::draw2DWidget(QWidget *parent)
     : QWidget(parent)
 {
-    setAttribute(Qt::WA_StaticContents);
     modified = false;
     myPenWidth = 2;
     graphicMode = GraphicsMode::GM_2D;
+    displayCoordinateMode = DisplayCoordinateState::DCS_Show;
     myPenColor = Qt::blue;
     triangleTypeID = 0; // normal triangle
     delegateMode = DrawLineDelegateMode::DLDM_None; // disable delegate on startup
+    setAttribute(Qt::WA_StaticContents);
     setMouseTracking(true);
 }
 
@@ -96,7 +97,8 @@ void draw2DWidget::clearImage(ClearImageMode clearID)
     SDI_Painter painter(&transparentImg);
     if (graphicMode == GraphicsMode::GM_2D)
     {
-        painter.drawOxy(this->width(), this->height(), origin);
+        if (displayCoordinateMode == DisplayCoordinateState::DCS_Show)
+            painter.drawOxy(this->width(), this->height(), origin);
         if (clearID == ClearImageMode::CIM_All)
         {
             setOfShapes.clear();
@@ -110,7 +112,8 @@ void draw2DWidget::clearImage(ClearImageMode clearID)
     }
     else
     {
-        painter.drawOxyz(this->width(), this->height(), origin);
+        if (displayCoordinateMode == DisplayCoordinateState::DCS_Show)
+            painter.drawOxyz(this->width(), this->height(), origin);
         if (clearID == ClearImageMode::CIM_All)
         {
             setOfShapes.clear();
@@ -136,7 +139,6 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
         switch (draw2DObjectMode)
         {
         case GeometricShape::GS_Point:
-            drawObject(eventPos, 1);
             break;
         //-----------------------------------------------------------
         case GeometricShape::GS_Line:
@@ -147,7 +149,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 lastPoint = eventPos;
             else
             {
-                drawObject(eventPos,1); // 1 means draw a permanent shape
+                drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
                 lastPoint = SDI_Point(0, 0); // set to null
             }
             break;
@@ -164,7 +166,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 }
                 else
                 {
-                    drawObject(eventPos,1);
+                    drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
                     lastPoint = lastPoint_2 = SDI_Point(0, 0); // reset to null
                 }
                 break;
@@ -173,7 +175,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                     lastPoint = eventPos;
                 else
                 {
-                    drawObject(eventPos,1);
+                    drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
                     lastPoint = SDI_Point(0, 0); // set to null
                 }
                 break;
@@ -187,7 +189,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 lastPoint_2 = eventPos;
             else
             {
-                drawObject(eventPos,1);
+                drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
                 lastPoint = lastPoint_2 = SDI_Point(0, 0);
             }
             break;
@@ -208,7 +210,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
                 lastPoint_2 = eventPos;
             else
             {
-                drawObject(eventPos, 1);
+                drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
                 lastPoint = lastPoint_2 = SDI_Point(0,0);
             }
             break;
@@ -220,7 +222,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     {
         lastPoint = lastPoint_2 = SDI_Point(0, 0);
         delegateMode = DrawLineDelegateMode::DLDM_None;
-        drawObject(SDI_Point(0,0), 2); //
+        drawObject(SDI_Point(0,0), StateOfShape::SOS_AllExistentShapes); //
     }
 }
 
@@ -238,7 +240,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
         case GeometricShape::GS_Square:
         case GeometricShape::GS_Circle:
             if (!lastPoint.isNull())
-                drawObject(eventPos, 0); // 0 means draw a temporary shape
+                drawObject(eventPos, StateOfShape::SOS_NewTempShape); // 0 means draw a temporary shape
             break;
         case GeometricShape::GS_Triangle:
             switch (triangleTypeID)
@@ -250,11 +252,11 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
                 {
                     draw2DObjectMode = GeometricShape::GS_Line; // make a trick
                     delegateMode = DrawLineDelegateMode::DLDM_Triangle; // delegate drawing triangle sides to drawLine function
-                    drawObject(eventPos, 0);
+                    drawObject(eventPos, StateOfShape::SOS_NewTempShape);
                 }
                 else
                 {
-                    drawObject(eventPos,0);
+                    drawObject(eventPos, StateOfShape::SOS_NewTempShape);
                 }
                 break;
             case 1: // Isosceles Right Triangle
@@ -262,7 +264,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
                     break;
                 else
                 {
-                    drawObject(eventPos,0);
+                    drawObject(eventPos, StateOfShape::SOS_NewTempShape);
                 }
                 break;
             }
@@ -274,10 +276,10 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
             {
                 draw2DObjectMode = GeometricShape::GS_Line;
                 delegateMode = DrawLineDelegateMode::DLDM_Parrallelogram;
-                drawObject(eventPos, 0);
+                drawObject(eventPos, StateOfShape::SOS_NewTempShape);
             }
             else
-                drawObject(eventPos, 0);
+                drawObject(eventPos, StateOfShape::SOS_NewTempShape);
             break;
         default:
             break;
@@ -294,9 +296,9 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
             if (lastPoint.isNull())
                 break;
             else if (lastPoint_2.isNull())
-                drawObject(eventPos, 0);
+                drawObject(eventPos, StateOfShape::SOS_NewTempShape);
             else
-                drawObject(eventPos, 0);
+                drawObject(eventPos, StateOfShape::SOS_NewTempShape);
             break;
         default:
             break;
@@ -309,7 +311,7 @@ void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
     SDI_Point eventPos(event->pos());
     if (event->button() == Qt::LeftButton  && draw2DObjectMode == GeometricShape::GS_SelectShape)
     {
-        drawObject(eventPos, 0);
+        drawObject(eventPos, StateOfShape::SOS_NewTempShape);
         //scribbling = false;
     }
 }
@@ -336,14 +338,14 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // handle draw Object
+void draw2DWidget::drawObject(const SDI_Point &endPoint, StateOfShape drawState) // handle draw Object
 {
     transparentImg.fill(qRgba(0,0,0,0));
     //Repaint the user's coordinate  system
     SDI_Painter painter(&transparentImg);
-    if (graphicMode == GraphicsMode::GM_2D)
+    if (graphicMode == GraphicsMode::GM_2D && displayCoordinateMode == DisplayCoordinateState::DCS_Show)
         painter.drawOxy(this->width(), this->height(), origin);
-    else
+    else if (graphicMode == GraphicsMode::GM_3D && displayCoordinateMode == DisplayCoordinateState::DCS_Show)
          painter.drawOxyz(this->width(), this->height(), origin);
     //--------------------------finish---------------------------------
 
@@ -353,14 +355,14 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, int stateOfShape) // ha
 
     //using painter to draw new shape
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    if (stateOfShape != 2 && graphicMode == GraphicsMode::GM_2D)
-        draw2DShape(&painter, endPoint, stateOfShape);
-    else if (stateOfShape != 2 && graphicMode == GraphicsMode::GM_3D)
-        draw3DShape(&painter, endPoint, stateOfShape);
+    if (drawState != StateOfShape::SOS_AllExistentShapes && graphicMode == GraphicsMode::GM_2D)
+        draw2DShape(&painter, endPoint, drawState);
+    else if (drawState != StateOfShape::SOS_AllExistentShapes && graphicMode == GraphicsMode::GM_3D)
+        draw3DShape(&painter, endPoint, drawState);
 
 }
 
-void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, int stateOfShape)
+void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, StateOfShape drawState)
 {
     int rad = (myPenWidth / 2) + 2;
     switch (draw2DObjectMode)
@@ -386,7 +388,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             break;
         default:
             painter->drawLine(lastPoint, endPoint);
-            if (stateOfShape == 1)
+            if (drawState == StateOfShape::SOS_NewPermanentShape)
             {
                 setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
                 update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
@@ -401,7 +403,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             painter->drawRect(lastPoint, endPoint);
         else
             painter->drawRect(endPoint, lastPoint);
-        if (stateOfShape == 1)
+        if (drawState == StateOfShape::SOS_NewPermanentShape)
         {
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
             update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
@@ -412,7 +414,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     case GeometricShape::GS_Square:
     {
         painter->drawSquare(lastPoint, endPoint);
-        if(stateOfShape == 1)
+        if(drawState == StateOfShape::SOS_NewPermanentShape)
         {
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
             update(QRect(lastPoint,endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
@@ -423,13 +425,13 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     }
     case GeometricShape::GS_Circle:
         painter->drawCircle(lastPoint, endPoint);
-        if (stateOfShape == 1)
+        if (drawState == StateOfShape::SOS_NewPermanentShape)
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, endPoint, origin)));
         update();
         break;
     case GeometricShape::GS_Triangle:
     {
-        if (stateOfShape == 1)
+        if (drawState == StateOfShape::SOS_NewPermanentShape)
             switch (triangleTypeID)
             {
             case 0: //triangle
@@ -454,14 +456,14 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     }
     case GeometricShape::GS_Parallelogram:
         painter->drawParallelogram(lastPoint, lastPoint_2, endPoint);
-        if (stateOfShape == 1)
+        if (drawState == StateOfShape::SOS_NewPermanentShape)
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
         update();
         break;
     }
 }
 
-void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, int stateOfShape)
+void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, StateOfShape drawState)
 {
     switch (draw3DObjectMode)
     {
@@ -474,7 +476,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
         }
         else
             painter->drawParallelePiped(lastPoint, lastPoint_2, endPoint);
-        if (stateOfShape == 1)
+        if (drawState == StateOfShape::SOS_NewPermanentShape)
         {
             setOf3DShapes.push_back(QSharedPointer<SDI_Geometric3DShape>(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
         }
@@ -489,7 +491,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
         }
         else
             painter->drawPyramid(lastPoint, lastPoint_2, endPoint);
-        if (stateOfShape == 1)
+        if (drawState == StateOfShape::SOS_NewPermanentShape)
         {
             setOf3DShapes.push_back(QSharedPointer<SDI_Geometric3DShape>(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin)));
         }
@@ -615,6 +617,12 @@ void draw2DWidget::setGraphicsMode(int newId)
     clearImage(ClearImageMode::CIM_ForNewSession);
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
     //-------------------------finish-------------------------------
+}
+
+void draw2DWidget::setDisplayCoordinateMode(DisplayCoordinateState newState)
+{
+    displayCoordinateMode = newState;
+    drawObject(SDI_Point(0,0), StateOfShape::SOS_AllExistentShapes);
 }
 
 void draw2DWidget::setTriangleTypeID(int newID)

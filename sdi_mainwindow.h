@@ -47,10 +47,8 @@ private:
     QAction* printAct;
     QAction* quitAct;
     // View Actions
-    QAction* showToolBarAct;
     QAction* showDockWidgetAct;
-    QAction* show2DModeAct;
-    QAction* show3DModeAct;
+    QAction* showUserCoordinateAct;
     // Tools Actions
     QAction* optionAct;
     QAction* pickPenColorAct;
@@ -91,6 +89,7 @@ public slots:
     void showDockWidget(bool enable);
     void showMessage(QString message);
     void showSelectedShape(QWeakPointer<SDI_GeometricShape> shape);
+    void enableUserCoordinate(bool enable);
     void translateShape(int xtrans, int ytrans);
     void scaleShape(double xscale, double yscale);
     void rotateShape(double degree, int centralPointID);
@@ -99,6 +98,7 @@ public slots:
     void OySymmetryShape();
 signals:
     void triangleTypeChanged(int triangleTypeID);
+    void displayCoordinateStateChanged(DisplayCoordinateState newState);
 };
 
 #endif // SDI_MAINWINDOW_H

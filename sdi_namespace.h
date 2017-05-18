@@ -38,6 +38,19 @@ enum class Geometric3DShape
     G3DS_Pyramid
 };
 
+enum class DisplayCoordinateState
+{
+    DCS_Hide = 0,
+    DCS_Show
+};
+
+enum class StateOfShape
+{
+    SOS_NewTempShape,
+    SOS_NewPermanentShape,
+    SOS_AllExistentShapes
+};
+
 
 
 
