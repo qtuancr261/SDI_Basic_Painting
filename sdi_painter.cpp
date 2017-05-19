@@ -58,6 +58,12 @@ void SDI_Painter::drawTetragon(QVector<SDI_Point> &points)
     drawLine(points.at(3), points.at(0));
 }
 
+void SDI_Painter::drawTetragon(QVector<SDI_Point> &points, const QPen &tetragonPen)
+{
+    setPen(tetragonPen);
+    drawTetragon(points);
+}
+
 void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
 {
     if (std::abs(p1.y() - p2.y()) >= std::abs(p1.x() - p2.x()))
@@ -74,6 +80,12 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
         else
             midPointXLine(p2, p1);
     }
+}
+
+void SDI_Painter::drawLine(const SDI_Point &p1, const SDI_Point &p2, const QPen &linePen)
+{
+    setPen(linePen);
+    drawLine(p1, p2);
 }
 
 void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
@@ -197,6 +209,12 @@ void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &poi
     midPointXYCircle(topCirclePoint, centralPoint, radius);
 }
 
+void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle, const QPen &circlePen)
+{
+    setPen(circlePen);
+    drawCircle(centralPoint, pointOnCircle);
+}
+
 void SDI_Painter::updateCircleData(SDI_GeometricShape& shape)
 {
     SDI_Point centralPoint{shape.getSetOfPoints().at(0)};
@@ -227,6 +245,12 @@ void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2,
     drawLine(point1, point2);
     drawLine(point2, point3);
     drawLine(point3, point1);
+}
+
+void SDI_Painter::drawTriangle(const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const QPen &trianglePen)
+{
+    setPen(trianglePen);
+    drawTriangle(point1, point2, point3);
 }
 
 void SDI_Painter::updateTriangleData(SDI_GeometricShape &shape)
@@ -410,10 +434,10 @@ void SDI_Painter::midPointXYCircle(const SDI_Point &topCirclePoint, const SDI_Po
 
 }
 
-void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize)
+void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize, const QPen &shapePen)
 {
-    QPen normalPen (this->pen());
-    QPen specialPen(normalPen.color(), normalPen.width()+1, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
+    setPen(shapePen);
+    QPen specialPen(shapePen.color(), shapePen.width()+1, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
     int xTrans{point3.y() - point1.y()};
     SDI_Point point2(point1.x() - xTrans, point3.y());
     SDI_Point point4(point3.x() + xTrans, point1.y());
@@ -455,10 +479,10 @@ void SDI_Painter::drawParallelePiped(const SDI_Point &point1, const SDI_Point &p
 
 }
 
-void SDI_Painter::drawPyramid(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize)
+void SDI_Painter::drawPyramid(const SDI_Point &point1, const SDI_Point &point3, const SDI_Point &pointHSize, const QPen &shapePen)
 {
-    QPen normalPen (this->pen());
-    QPen specialPen(normalPen.color(), normalPen.width() + 1, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
+    setPen(shapePen);
+    QPen specialPen(shapePen.color(), shapePen.width() + 1, Qt::DashLine, Qt::RoundCap, Qt::RoundJoin);
     int xTrans{point3.y() - point1.y()};
     SDI_Point point2(point1.x() - xTrans, point3.y());
     SDI_Point point4(point3.x() + xTrans, point1.y());
@@ -493,11 +517,11 @@ void SDI_Painter::drawPyramid(const SDI_Point &point1, const SDI_Point &point3, 
     if (pointF.y() < pointA.y())
         setPen(specialPen);
     else if (pointF.y() >= pointA.y())
-        setPen(normalPen);
+        setPen(shapePen);
     QPainter::drawLine(pointD, pointA);
 
     if (disBetweenE_F <= disBetweenE_midAB)
-        setPen(normalPen);
+        setPen(shapePen);
     QPainter::drawLine(pointA, pointF);
 
     setPen(specialPen);

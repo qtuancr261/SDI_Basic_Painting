@@ -8,8 +8,8 @@ void SDI_GeometricShape::setShapeName()
         shapeName = shapeNames.at(static_cast<int>(shapeID));
 }
 
-SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &Origin)
-    : shapeID(id), OriginPos(Origin)
+SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &Origin, const QPen &pen)
+    : shapeID(id), shapePen(pen),OriginPos(Origin)
 {
     switch (shapeID)
     {
@@ -29,8 +29,8 @@ SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point
     }
 }
 
-SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin)
-    : shapeID(id), OriginPos(Origin)
+SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin, const QPen &pen)
+    : shapeID(id), shapePen(pen), OriginPos(Origin)
 {
     switch (shapeID)
     {
@@ -51,6 +51,11 @@ SDI_GeometricShape::SDI_GeometricShape(const SDI_GeometricShape &srcShape)
 {
     setOfPoints = srcShape.setOfPoints;
     shapeID = srcShape.shapeID;
+    shapeBoundingRect = srcShape.shapeBoundingRect;
+    shapePen = srcShape.shapePen;
+    shapeName = srcShape.shapeName;
+    OriginPos = srcShape.OriginPos;
+    centralPoint = srcShape.centralPoint;
 }
 
 GeometricShape SDI_GeometricShape::getShapeId() const
@@ -61,6 +66,11 @@ GeometricShape SDI_GeometricShape::getShapeId() const
 QVector<SDI_Point> &SDI_GeometricShape::getSetOfPoints()
 {
     return setOfPoints;
+}
+
+QPen SDI_GeometricShape::getShapePen() const
+{
+    return shapePen;
 }
 
 QString SDI_GeometricShape::getShapeName() const

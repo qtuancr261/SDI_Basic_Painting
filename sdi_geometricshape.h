@@ -15,6 +15,7 @@ private:
     GeometricShape shapeID;
     QString shapeData;
     QRect shapeBoundingRect;
+    QPen shapePen;
     QString shapeName;
     SDI_Point OriginPos;
     SDI_Point centralPoint;
@@ -24,13 +25,14 @@ private:
     static QVector<QString> shapeNames;
 public:
     SDI_GeometricShape() = default;
-    SDI_GeometricShape(GeometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& Origin);
-    SDI_GeometricShape(GeometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin);
+    SDI_GeometricShape(GeometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& Origin, const QPen& pen);
+    SDI_GeometricShape(GeometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin, const QPen& pen);
     SDI_GeometricShape(const SDI_GeometricShape& srcShape);
     ~SDI_GeometricShape() = default;
 
     GeometricShape getShapeId() const;
     QVector<SDI_Point>& getSetOfPoints();
+    QPen getShapePen() const;
     QString getShapeName() const;
 
     QString getShapeData() const;

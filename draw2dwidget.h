@@ -48,7 +48,6 @@ private:
     bool modified;
     QImage image;
     QImage transparentImg;
-    QString layerName;
     QSize originalSize; // original size of loaded image
 
     SDI_Point origin; // where the axes of the system intersect
@@ -63,6 +62,7 @@ private:
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
     QColor myPenColor;
+    QPen currentPen;
 
     QVector<QSharedPointer<SDI_GeometricShape>> setOfShapes;
     QVector<QSharedPointer<SDI_Geometric3DShape>> setOf3DShapes;

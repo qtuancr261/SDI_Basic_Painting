@@ -1,7 +1,7 @@
 #include "sdi_geometric3dshape.h"
 
-SDI_Geometric3DShape::SDI_Geometric3DShape(Geometric3DShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin)
-    : shapeID(id), OriginPos(Origin)
+SDI_Geometric3DShape::SDI_Geometric3DShape(Geometric3DShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin, const QPen &currentPen)
+    : shapeID(id), OriginPos(Origin), shapePen(currentPen)
 {
     switch (shapeID)
     {
@@ -24,4 +24,9 @@ QVector<SDI_Point> &SDI_Geometric3DShape::getSetOfPoints()
 Geometric3DShape SDI_Geometric3DShape::getShapeID() const
 {
     return shapeID;
+}
+
+QPen SDI_Geometric3DShape::getShapePen() const
+{
+    return shapePen;
 }
