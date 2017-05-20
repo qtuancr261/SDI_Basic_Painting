@@ -125,7 +125,7 @@ void SDI_MainWindow::createActions()
     setupDraw3DAct(drawParallelepipedAct);
 
     QAction* drawPyramidAct{new QAction(QIcon(":/images/icons/pyramid.png"), tr("Hình chóp"), this)};
-    drawParallelepipedAct->setStatusTip(tr("Vẽ hình chóp trên hệ trục, dùng chuột di chuyển để chọn 2 điểm tạo nên mặt đáy và di chuyển để xác định chiều cao"));
+    drawPyramidAct->setStatusTip(tr("Vẽ hình chóp trên hệ trục, dùng chuột di chuyển để chọn 2 điểm tạo nên mặt đáy và di chuyển để xác định chiều cao"));
     setupDraw3DAct(drawPyramidAct);
 
     QSignalMapper* draw3DShapeMapper{new QSignalMapper(this)};
@@ -464,10 +464,11 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
         setFont(QFont("Segoe UI", 12));
-    setWindowTitle("SDI Basic Painting");
+    setWindowTitle("SDI Basic Painting | untitled[*].png");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     modeToolTip->setMinimumSize(modeToolTip->sizeHint());
     statusBar()->addWidget(modeToolTip,1);
+    QObject::connect(central2DWidget, SIGNAL(modificationChanged(bool)), this , SLOT(setWindowModified(bool)));
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)),mainToolsWidget, SLOT(showPosition(QString)));
     QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));

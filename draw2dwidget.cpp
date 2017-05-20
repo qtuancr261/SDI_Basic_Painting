@@ -39,6 +39,7 @@ bool draw2DWidget::openImage(const QString &fileName)
     //resizeImage(&scaledImage, newSize);
     image = scaledImage;
     modified = false;
+    emit modificationChanged(modified);
     update();
     return true;
 }
@@ -57,6 +58,7 @@ bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
     if (visibleImage.save(fileName, fileFormat))
     {
         modified = false;
+        emit modificationChanged(modified);
         return true;
     }
     else
@@ -106,11 +108,13 @@ void draw2DWidget::clearImage(ClearImageMode clearID)
         {
             setOfShapes.clear();
             modified = true;
+            emit modificationChanged(modified);
         }
         else
         {
             drawExistentObject(&painter);
             modified = false;
+            emit modificationChanged(modified);
         }
     }
     else
@@ -462,7 +466,11 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
             setOfShapes.push_back(QSharedPointer<SDI_GeometricShape>(new SDI_GeometricShape(draw2DObjectMode, lastPoint, lastPoint_2, endPoint, origin, currentPen)));
         update();
         break;
+    default:
+        break;
     }
+    modified = true;
+    emit modificationChanged(modified);
 }
 
 void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, StateOfShape drawState)
@@ -501,6 +509,8 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
     default:
         break;
     }
+    modified = true;
+    emit modificationChanged(modified);
 }
 
 void draw2DWidget::drawExistentObject(SDI_Painter *painter)
@@ -532,7 +542,6 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
             else if (shapeName == Geometric3DShape::G3DS_Pyramid)
                 painter->drawPyramid(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2), shape->getShapePen());
         }
-    modified = true;
     update();
 }
 
