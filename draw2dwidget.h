@@ -73,7 +73,7 @@ signals:
 public slots:
     void setDraw2DObjectMode(int newId);
     void setDraw3DObjectMode(int newId);
-    void setGraphicsMode(int newId);
+    void setGraphicsMode(GraphicsMode newMode);
     void setDisplayCoordinateMode(DisplayCoordinateState newState);
     void setTriangleTypeID(int newID);
     void clearImage(ClearImageMode clearID = ClearImageMode::CIM_All);

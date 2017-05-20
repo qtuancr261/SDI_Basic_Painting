@@ -16,7 +16,7 @@ void SDI_MainWindow::createActions()
         saveAsActs.append(saveAct);
     }
 
-    printAct = new QAction(QIcon(":/images/icons/print.png"), tr("In ảnh"), this);
+    printAct = new QAction(QIcon(":/images/icons/print.png"), tr("Tạo file PDF"), this);
     printAct->setShortcut(QKeySequence::Print);
     printAct->setStatusTip(tr("In thành tập tin văn bản"));
     QObject::connect(printAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(print()));
@@ -121,11 +121,11 @@ void SDI_MainWindow::createActions()
 
     //---------------------3D Actions-------------------------------
     QAction* drawParallelepipedAct{new QAction(QIcon(":/images/icons/cube.png"),tr("Hình hộp"), this)};
-    drawParallelepipedAct->setStatusTip(tr("..."));
+    drawParallelepipedAct->setStatusTip(tr("Vẽ hình hộp chữ nhật trên hệ trục, dùng chuột di chuyển để chọn 2 điểm tạo nên mặt đáy và di chuyển để xác định chiều cao<"));
     setupDraw3DAct(drawParallelepipedAct);
 
     QAction* drawPyramidAct{new QAction(QIcon(":/images/icons/pyramid.png"), tr("Hình chóp"), this)};
-    drawParallelepipedAct->setStatusTip(tr("..."));
+    drawParallelepipedAct->setStatusTip(tr("Vẽ hình chóp trên hệ trục, dùng chuột di chuyển để chọn 2 điểm tạo nên mặt đáy và di chuyển để xác định chiều cao"));
     setupDraw3DAct(drawPyramidAct);
 
     QSignalMapper* draw3DShapeMapper{new QSignalMapper(this)};
@@ -203,8 +203,8 @@ void SDI_MainWindow::createToolsBar()
 
 void SDI_MainWindow::createDockWidget()
 {
-    QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(int)), central2DWidget, SLOT(setGraphicsMode(int)));
-    QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(int)), this, SLOT(changeGraphicsMode(int)));
+    QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(GraphicsMode)), central2DWidget, SLOT(setGraphicsMode(GraphicsMode)));
+    QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(GraphicsMode)), this, SLOT(changeGraphicsMode(GraphicsMode)));
     dockWidget->setWidget(mainToolsWidget);
     dockWidget->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable);
     dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
@@ -317,17 +317,19 @@ void SDI_MainWindow::aboutSDI_Painting()
                                  "   <p> Icons from <i>www.flaticon.com</p>").arg(osInfo).arg(QSysInfo::buildCpuArchitecture()));
 }
 
-void SDI_MainWindow::changeGraphicsMode(int newMode)
+void SDI_MainWindow::changeGraphicsMode(GraphicsMode newMode)
 {
-    if (newMode == 2) // 2D
+    if (newMode == GraphicsMode::GM_2D)
     {
         shape2DToolBar->setEnabled(true);
         shape3DToolsBar->setDisabled(true);
+        showUserCoordinateAct->setIcon(QIcon(":/images/icons/oxy_coordinate.png"));
     }
     else
     {
         shape3DToolsBar->setEnabled(true);
         shape2DToolBar->setDisabled(true);
+        showUserCoordinateAct->setIcon(QIcon(":/images/icons/oxyz_coordinate.png"));
     }
 }
 
@@ -342,7 +344,7 @@ void SDI_MainWindow::showDockWidget(bool enable)
 void SDI_MainWindow::showMessage(QString message)
 {
     //statusBar()->showMessage(message);
-    modeToolTip->setText(message);
+    modeToolTip->setText("<b>" + message + "</b>");
 }
 
 void SDI_MainWindow::showSelectedShape(QWeakPointer<SDI_GeometricShape> shape)

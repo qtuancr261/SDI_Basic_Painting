@@ -603,17 +603,10 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
     delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
-void draw2DWidget::setGraphicsMode(int newId)
+void draw2DWidget::setGraphicsMode(GraphicsMode newMode)
 {
     // change graphics mode and clear for new session
-    if (newId == 2)
-    {
-        graphicMode = GraphicsMode::GM_2D;
-    }
-    else
-    {
-        graphicMode = GraphicsMode::GM_3D;
-    }
+    graphicMode = newMode;
     clearImage(ClearImageMode::CIM_ForNewSession);
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
     //-------------------------finish-------------------------------

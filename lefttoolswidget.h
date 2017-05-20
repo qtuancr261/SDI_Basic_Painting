@@ -16,6 +16,7 @@
 #include <QVBoxLayout>
 #include <QToolBox>
 #include <QSpacerItem>
+#include "sdi_namespace.h"
 class leftToolsWidget : public QWidget
 {
     Q_OBJECT
@@ -57,7 +58,7 @@ private:
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
 
 signals:
-    void changeGraphicsMode(int newID);
+    void changeGraphicsMode(GraphicsMode newMode);
     void translateSelectedShape(int xtrans, int ytrans);
     void scaleSelectedShape(double xscale, double yscale);
     void rotateSelectedShape(double degree, int centralPointID);

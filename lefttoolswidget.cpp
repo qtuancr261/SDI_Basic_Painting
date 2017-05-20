@@ -167,9 +167,9 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
 void leftToolsWidget::decideNewGraphicMode()
 {
     if (graphic2DMode->isChecked())
-        emit changeGraphicsMode(2);
+        emit changeGraphicsMode(GraphicsMode::GM_2D);
     else if (graphic3DMode->isChecked())
-        emit changeGraphicsMode(3);
+        emit changeGraphicsMode(GraphicsMode::GM_3D);
 }
 
 void leftToolsWidget::takeTranslateParameters()

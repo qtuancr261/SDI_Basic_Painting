@@ -85,7 +85,7 @@ private slots:
     void aboutSDI_Painting();
 
 public slots:
-    void changeGraphicsMode(int newMode);
+    void changeGraphicsMode(GraphicsMode newMode);
     void showDockWidget(bool enable);
     void showMessage(QString message);
     void showSelectedShape(QWeakPointer<SDI_GeometricShape> shape);
