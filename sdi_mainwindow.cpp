@@ -25,7 +25,7 @@ void SDI_MainWindow::createActions()
     quitAct->setShortcut(QKeySequence::Quit);
     QObject::connect(quitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    showDockWidgetAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Hiện thanh công cụ chính"), this);
+    showDockWidgetAct = new QAction(QIcon(":/images/icons/add-dock.png"), tr("Hiện thanh công cụ chính"), this);
     showDockWidgetAct->setCheckable(true);
     showDockWidgetAct->setChecked(true);
     QObject::connect(showDockWidgetAct, SIGNAL(toggled(bool)), this, SLOT(showDockWidget(bool)));

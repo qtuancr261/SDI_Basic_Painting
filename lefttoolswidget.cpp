@@ -39,7 +39,7 @@ void leftToolsWidget::setupGUI()
     OyTranslateSlider = new QSlider(Qt::Horizontal, this);
     OyTranslateBox = new QSpinBox(this);
     setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -500, 500);
-    doTranslate = new QPushButton(tr("Tịnh tiến đối tượng"), this);
+    doTranslate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Tịnh tiến đối tượng"), this);
     doTranslate->setAutoRepeat(true);
     QObject::connect(doTranslate, SIGNAL(pressed()), this, SLOT(takeTranslateParameters()));
     QGridLayout* translationLayout{new QGridLayout(this)};
@@ -63,7 +63,7 @@ void leftToolsWidget::setupGUI()
     userOriginPosRotate = new QRadioButton( tr("Gốc tọa độ"), this);
     userOriginPosRotate->setAutoExclusive(true);
 
-    doRotate = new QPushButton(tr("Xoay đối tượng"));
+    doRotate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Xoay đối tượng"), this);
     doRotate->setAutoRepeat(true);
     QObject::connect(doRotate, SIGNAL(clicked(bool)), this, SLOT(takeRotateParameters()));
     QGridLayout* rotateLayout{new QGridLayout(this)};
@@ -85,7 +85,7 @@ void leftToolsWidget::setupGUI()
     OxSymmetry->setAutoExclusive(true);
     OySymmetry = new QRadioButton(tr("Đối xứng qua Oy"), this);
     OySymmetry->setAutoExclusive(true);
-    doSymmetry = new QPushButton(tr("Lấy đối xứng đối tượng"));
+    doSymmetry = new QPushButton(QIcon(":/images/icons/pointHand.png"), tr("Lấy đối xứng đối tượng"), this);
     doSymmetry->setAutoRepeat(true);
     QObject::connect(doSymmetry, SIGNAL(clicked(bool)), this, SLOT(takeSymmetryParameters()));
     QVBoxLayout* symmetryLayout{new QVBoxLayout()};
@@ -103,7 +103,7 @@ void leftToolsWidget::setupGUI()
     zoomBox->setValue(1.0);
     zoomBox->setSingleStep(0.1);
     zoomBox->setSuffix("x");
-    doZoom = new QPushButton(tr("Biến đồi đối tượng"), this);
+    doZoom = new QPushButton(QIcon(":/images/icons/pointHand.png"), tr("Biến đồi đối tượng"), this);
     doZoom->setAutoRepeat(true);
     QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
     QGridLayout* zoomLayout{new QGridLayout(this)};
@@ -139,6 +139,7 @@ void leftToolsWidget::setupGUI()
     transformBox->addItem(zoomGroupBox, "PHÉP BIẾN ĐỔI ĐỒNG DẠNG");
     transformBox->setItemIcon(3, QIcon(":/images/icons/zoom.png"));
     transformBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    transformBox->setCurrentIndex(3);
     QSpacerItem* verticalSpacer{new QSpacerItem(10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding)};
     QVBoxLayout* mainLayout{new QVBoxLayout(this)};
     mainLayout->addWidget(selectModeGroupBox);
