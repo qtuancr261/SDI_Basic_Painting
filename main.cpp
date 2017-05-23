@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     SDI_MainWindow w;
     w.setMinimumSize(1024, 768);
-    a.setStyle(QStyleFactory::create("Fusion"));
+    //a.setStyle(QStyleFactory::create("Fusion"));
     w.showMaximized();
     return a.exec();
 }

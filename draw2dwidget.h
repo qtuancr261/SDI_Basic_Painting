@@ -70,6 +70,7 @@ signals:
     void mouseMoveTo(QString currentPos);
     void selectedShape(QWeakPointer<SDI_GeometricShape> shape);
     void modificationChanged(bool state);
+    void graphicModeChanged(QString newMode);
 public slots:
     void setDraw2DObjectMode(int newId);
     void setDraw3DObjectMode(int newId);

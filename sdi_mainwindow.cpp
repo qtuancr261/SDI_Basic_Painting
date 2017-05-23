@@ -115,8 +115,6 @@ void SDI_MainWindow::createActions()
     }
     QObject::connect(draw2DShapeMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
     QObject::connect(draw2DShapeMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
-    selectShapeAct->setChecked(true); // default draw mode
-
 
 
     //---------------------3D Actions-------------------------------
@@ -275,7 +273,10 @@ void SDI_MainWindow::open()
                                                                                                         "Tagged formats (*.tif *.tiff)"
                                                                                                         "Wireless/Web/X11 formats (*.webp *.wbmp *.xbm *.xpm)"));
         if (!fileName.isEmpty())
-            central2DWidget->openImage(fileName);
+        {
+             central2DWidget->openImage(fileName);
+             setWindowTitle(QString("SDI Basic Painting | %1[*]").arg(fileName));
+        }
     }
 }
 
@@ -307,12 +308,14 @@ void SDI_MainWindow::aboutSDI_Painting()
                              tr("<h1> Đồ án Kỹ thuật Đồ họa</h1>"
                                  "<p> SDI Basic Painting là một chương trình ứng dụng các thuật toán dựng hình cơ sở, các phép biến đổi hình học cho phép người sử dụng vẽ các hình 2D, 3D cơ bản. Thực hiện các thao tác như "
                                 "chọn các hình đã vẽ, thực hiện biến đổi hình được chọn.</p> "
-                                 "   <li> Nhóm thực hiện: "
+                                 "   <p> Nhóm thực hiện: "
                                  "   <ol>"
                                  "       <b><li> Thiều Quang Tuấn - N14DCCN136</li>"
                                  "       <li> Lê Hoàng Tùng - N14DCCN113 </li>"
                                  "       <li> Hoàng Lê Anh Minh - N14DCCN138</li>"
-                                 "   </ol></li>"
+                                 "   </ol></p>"
+                                 "   <p> Học viện Công nghệ bưu chính viễn thông <br> Lớp D14CQCN02-N</p>"
+                                 "   <p> Giảng viên hướng dẫn: <b>Ths. Dương Thanh Thảo</b>"
                                  "   <p> Phiên bản dành cho %1 %2</p>"
                                  "   <p> Icons from <i>www.flaticon.com</p>").arg(osInfo).arg(QSysInfo::buildCpuArchitecture()));
 }
@@ -449,8 +452,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
       dockWidget{new QDockWidget(this)},
       central2DWidget{new draw2DWidget(this)},
       mainToolsWidget{new leftToolsWidget(this)},
-      modeToolTip{new QLabel("Release Version")},
-      draw2DGroupActs{new QActionGroup(this)},
+      modeToolTip{new QLabel("<b>Chọn chế độ đồ họa 2D hoặc 3D để bắt đầu phiên làm việc ... </b>")},      draw2DGroupActs{new QActionGroup(this)},
       draw3DGroupActs{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
       penWidthBox{new QSpinBox(this)},
@@ -464,13 +466,14 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
         setFont(QFont("Segoe UI", 12));
-    setWindowTitle("SDI Basic Painting | untitled[*].png");
+    setWindowTitle("SDI Basic Painting | untitled.png[*]");
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     modeToolTip->setMinimumSize(modeToolTip->sizeHint());
     statusBar()->addWidget(modeToolTip,1);
     QObject::connect(central2DWidget, SIGNAL(modificationChanged(bool)), this , SLOT(setWindowModified(bool)));
     QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)),mainToolsWidget, SLOT(showPosition(QString)));
     QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
+    QObject::connect(central2DWidget, SIGNAL(graphicModeChanged(QString)), this, SLOT(showMessage(QString)));
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
     QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double,int)), this, SLOT(rotateShape(double, int)));

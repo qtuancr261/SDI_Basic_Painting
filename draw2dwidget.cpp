@@ -14,7 +14,7 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     myPenWidth = 1;
     myPenColor = Qt::blue;
     currentPen = QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    graphicMode = GraphicsMode::GM_2D;
+    graphicMode = GraphicsMode::GM_NoMode;
     displayCoordinateMode = DisplayCoordinateState::DCS_Show;
     triangleTypeID = 0; // normal triangle
     delegateMode = DrawLineDelegateMode::DLDM_None; // disable delegate on startup
@@ -617,6 +617,7 @@ void draw2DWidget::setGraphicsMode(GraphicsMode newMode)
     // change graphics mode and clear for new session
     graphicMode = newMode;
     clearImage(ClearImageMode::CIM_ForNewSession);
+    emit graphicModeChanged(newMode == GraphicsMode::GM_2D ? "Chế độ đồ họa 2D được kích hoạt -> :2 :D" : "Chế độ đồ họa 3D được kích hoạt -> :3 :D");
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
     //-------------------------finish-------------------------------
 }

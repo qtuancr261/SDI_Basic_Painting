@@ -16,10 +16,10 @@ void leftToolsWidget::setInfoBox(QString shapeName, QString shapeData)
 void leftToolsWidget::setupGUI()
 {
     // select graphic mode
-    graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Hệ trục tọa độ Oxy"), this);
+    graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Đồ họa 2D - Hệ trục Oxy"), this);
     setDrawModeButtonStyle(graphic2DMode);
     QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
-    graphic3DMode = new QPushButton(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Hệ trục tọa độ Oxyz"), this);
+    graphic3DMode = new QPushButton(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Đồ họa 3D - Hệ trục Oxyz"), this);
     setDrawModeButtonStyle(graphic3DMode);
     QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
 

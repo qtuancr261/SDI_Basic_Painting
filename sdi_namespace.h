@@ -2,6 +2,7 @@
 #define SDI_NAMESPACE_H
 enum class GraphicsMode
 {
+    GM_NoMode= 0,
     GM_2D = 2,
     GM_3D = 3
 };
