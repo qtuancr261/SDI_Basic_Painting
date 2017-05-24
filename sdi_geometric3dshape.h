@@ -13,6 +13,7 @@ private:
     SDI_Point OriginPos;
     SDI_Point centralPoint;
     QPen shapePen;
+
 public:
     SDI_Geometric3DShape() = default;
     SDI_Geometric3DShape(Geometric3DShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin, const QPen& currentPen);

@@ -110,13 +110,13 @@ void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
     int yLeft{(p1.y() < p2.y() ? p1.y() : p2.y())};
     int height{qAbs(p1.y() - p2.y())};
     int width{qAbs(p1.x() - p2.x())};
-    if (height == 0 || width == 0)
+    if (height <= 30 || width <= 30)
     {
         xLeft -= 20;
         yLeft -= 20;
     }
     shape.setShapeData(data);
-    shape.setShapeBoundinRect(SDI_Point(xLeft, yLeft), QSize(width > 20 ? width : 30, height > 20 ? height : 30));
+    shape.setShapeBoundinRect(SDI_Point(xLeft, yLeft), QSize(width > 30 ? width : 80, height > 30 ? height : 80));
     shape.setCentralPoint(SDI_Point((p1.x() + p2.x())/2, (p1.y() + p2.y())/2));
 }
 

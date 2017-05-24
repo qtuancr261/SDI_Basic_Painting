@@ -84,7 +84,7 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
     if (!setOfShapes.isEmpty() && graphicMode == GraphicsMode::GM_2D)
     {
         for (int i{setOfShapes.size() - 1}; i >=0 ; i--)
-            if (setOfShapes.at(i)->getShapeBoundinRect().contains(selectPos))
+            if (setOfShapes.at(i)->containsPoint(selectPos))
             {
                 emit selectedShape(setOfShapes.at(i).toWeakRef());
                 return;

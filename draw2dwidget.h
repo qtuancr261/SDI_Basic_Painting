@@ -33,6 +33,7 @@ public:
     void drawObject(const SDI_Point &endPoint, StateOfShape drawState);
     void draw2DShape(SDI_Painter *painter, const SDI_Point& endPoint, StateOfShape drawState);
     void draw3DShape(SDI_Painter* painter, const SDI_Point& endPoint, StateOfShape drawState);
+
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void mouseMoveEvent(QMouseEvent *event) override;
@@ -41,7 +42,6 @@ protected: // handle events
     virtual void resizeEvent(QResizeEvent *event) override;
 
 private:
-    // draw 2D Objects -> stateOFShape : 0 means temporary | 1 means permanent
     void drawExistentObject(SDI_Painter *painter);
     void resizeImage(QImage* image, const QSize& newSize);
 
@@ -66,11 +66,13 @@ private:
 
     QVector<QSharedPointer<SDI_GeometricShape>> setOfShapes;
     QVector<QSharedPointer<SDI_Geometric3DShape>> setOf3DShapes;
+
 signals:
     void mouseMoveTo(QString currentPos);
     void selectedShape(QWeakPointer<SDI_GeometricShape> shape);
     void modificationChanged(bool state);
     void graphicModeChanged(QString newMode);
+
 public slots:
     void setDraw2DObjectMode(int newId);
     void setDraw3DObjectMode(int newId);

@@ -59,7 +59,6 @@ public:
     virtual void drawParallelePiped(const SDI_Point& point1, const SDI_Point& point3, const SDI_Point& pointHSize, const QPen& shapePen);
     virtual void drawPyramid(const SDI_Point& point1, const SDI_Point& point3, const SDI_Point& pointHSize, const QPen& shapePen);
 
-
     static void calculateBasePlaneABCD(SDI_Point& pointA, SDI_Point& pointB, SDI_Point& pointC, SDI_Point& pointD);
 };
 

@@ -21,7 +21,7 @@ private:
     SDI_Point centralPoint;
     void setShapeName();
 
-    //---------static memmbert---------------
+    //---------static member---------------
     static QVector<QString> shapeNames;
 public:
     SDI_GeometricShape() = default;
@@ -31,8 +31,11 @@ public:
     ~SDI_GeometricShape() = default;
 
     GeometricShape getShapeId() const;
+
     QVector<SDI_Point>& getSetOfPoints();
+
     QPen getShapePen() const;
+
     QString getShapeName() const;
 
     QString getShapeData() const;
@@ -47,6 +50,7 @@ public:
 
     void initShapeData();
     void updateShapeData();
+    bool containsPoint(const SDI_Point& point);
 public slots:
     void translate(int xtrans, int ytrans);
     void scale(double xscale, double yscale);

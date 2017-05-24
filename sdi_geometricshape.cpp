@@ -162,6 +162,24 @@ void SDI_GeometricShape::updateShapeData()
     }
 }
 
+bool SDI_GeometricShape::containsPoint(const SDI_Point &point)
+{
+    switch (shapeID)
+    {
+    case GeometricShape::GS_Line:
+        if (shapeBoundingRect.contains(point) && SDI_Point::distanceFromPointToLine(point, setOfPoints.at(0), setOfPoints.at(1)) <= 50.0)
+            return true;
+        else
+            break;
+    default:
+        if (shapeBoundingRect.contains(point))
+            return true;
+        else
+            break;
+    }
+    return false;
+}
+
 void SDI_GeometricShape::translate(int xtrans, int ytrans)
 {
     for (SDI_Point& point : setOfPoints)

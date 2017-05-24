@@ -65,12 +65,14 @@ signals:
     void centralSymmetrySelectedShape();
     void OxSymmetrySelectedShape();
     void OySymmetrySelectedShape();
+
 private slots:
     void decideNewGraphicMode();
     void takeTranslateParameters();
     void takeScaleParameters();
     void takeRotateParameters();
     void takeSymmetryParameters();
+
 public slots:
     void showPosition(QString posInfo);
 };
