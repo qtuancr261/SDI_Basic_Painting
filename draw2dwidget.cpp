@@ -617,7 +617,7 @@ void draw2DWidget::setGraphicsMode(GraphicsMode newMode)
     // change graphics mode and clear for new session
     graphicMode = newMode;
     clearImage(ClearImageMode::CIM_ForNewSession);
-    emit graphicModeChanged(newMode == GraphicsMode::GM_2D ? "Chế độ đồ họa 2D được kích hoạt -> :2 :D" : "Chế độ đồ họa 3D được kích hoạt -> :3 :D");
+    emit graphicModeChanged(newMode == GraphicsMode::GM_2D ? "Chế độ -> :2 :D" : "Chế độ -> :3 :D");
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
     //-------------------------finish-------------------------------
 }

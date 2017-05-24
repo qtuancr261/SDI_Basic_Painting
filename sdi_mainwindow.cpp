@@ -188,7 +188,12 @@ void SDI_MainWindow::createToolsBar()
 
 
     shape2DToolBar = addToolBar(tr("Các đối tượng 2D cơ bản"));
-    shape2DToolBar->addActions(draw2DShapeActs);
+    //shape2DToolBar->addActions(draw2DShapeActs);
+    for (QAction* act : draw2DShapeActs)
+    {
+        shape2DToolBar->addAction(act);
+        shape2DToolBar->addSeparator();
+    }
     triangleTypes->addItem(tr("Thường"));
     triangleTypes->addItem(tr("Vuông cân"));
     triangleTypes->setDisabled(true);
