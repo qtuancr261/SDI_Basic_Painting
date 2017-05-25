@@ -36,7 +36,7 @@ bool draw2DWidget::openImage(const QString &fileName)
     if (!loadedImage.load(fileName))
         return false;
     originalSize = loadedImage.size();
-    QImage scaledImage = loadedImage.scaled(transparentImg.size(), Qt::IgnoreAspectRatio);;
+    QImage scaledImage = loadedImage.scaled(size(), Qt::IgnoreAspectRatio);;
     //QSize newSize = loadedImage.size().scaled(size().width(), size().height(), Qt::IgnoreAspectRatio);
     //resizeImage(&scaledImage, newSize);
     backgroundImage = scaledImage;
@@ -56,7 +56,7 @@ bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
     defaultBackgroundImage = backgroundImage;
     QPainter paint(&defaultBackgroundImage);
     paint.drawImage(0,0, transparentImg);
-    QImage visibleImage = defaultBackgroundImage.scaled(originalSize, Qt::IgnoreAspectRatio);
+    QImage visibleImage = defaultBackgroundImage;
 
     if (visibleImage.save(fileName, fileFormat))
     {
