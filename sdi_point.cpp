@@ -84,7 +84,7 @@ double SDI_Point::distanceFromPointToLine(const SDI_Point &point, const SDI_Poin
     int aFactor{lineP2.y() - lineP1.y()};
     int bFactor{-(lineP2.x() - lineP1.x())};
     int cFactor{lineP2.x()*lineP1.y() - lineP1.x()*lineP2.y()};
-    qDebug() << qAbs(aFactor*point.x() + bFactor*point.y() + cFactor)/qSqrt(qPow(aFactor, 2.0) + qPow(bFactor, 2.0));
+    //qDebug() << qAbs(aFactor*point.x() + bFactor*point.y() + cFactor)/qSqrt(qPow(aFactor, 2.0) + qPow(bFactor, 2.0));
     return qAbs(aFactor*point.x() + bFactor*point.y() + cFactor)/qSqrt(qPow(aFactor, 2.0) + qPow(bFactor, 2.0));
 }
 

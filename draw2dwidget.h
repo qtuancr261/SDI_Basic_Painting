@@ -43,10 +43,11 @@ protected: // handle events
 
 private:
     void drawExistentObject(SDI_Painter *painter);
-    void resizeImage(QImage* image, const QSize& newSize);
+    void resizeImage(QImage* backgroundImage, const QSize& newSize);
 
     bool modified;
-    QImage image;
+    QImage defaultBackgroundImage;
+    QImage backgroundImage;
     QImage transparentImg;
     QSize originalSize; // original size of loaded image
 
@@ -80,6 +81,7 @@ public slots:
     void setDisplayCoordinateMode(DisplayCoordinateState newState);
     void setTriangleTypeID(int newID);
     void clearImage(ClearImageMode clearID = ClearImageMode::CIM_All);
+    void resetBackground();
     void print();
 };
 

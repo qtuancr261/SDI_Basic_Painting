@@ -18,6 +18,8 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     displayCoordinateMode = DisplayCoordinateState::DCS_Show;
     triangleTypeID = 0; // normal triangle
     delegateMode = DrawLineDelegateMode::DLDM_None; // disable delegate on startup
+    defaultBackgroundImage = QImage(size(), QImage::QImage::Format_ARGB32);
+    defaultBackgroundImage.fill(qRgba(255,255,255,255));
     setAttribute(Qt::WA_StaticContents);
     setMouseTracking(true);
 }
@@ -37,7 +39,7 @@ bool draw2DWidget::openImage(const QString &fileName)
     QImage scaledImage = loadedImage.scaled(transparentImg.size(), Qt::IgnoreAspectRatio);;
     //QSize newSize = loadedImage.size().scaled(size().width(), size().height(), Qt::IgnoreAspectRatio);
     //resizeImage(&scaledImage, newSize);
-    image = scaledImage;
+    backgroundImage = scaledImage;
     modified = false;
     emit modificationChanged(modified);
     update();
@@ -46,14 +48,15 @@ bool draw2DWidget::openImage(const QString &fileName)
 
 bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
 {
-    if (image.isNull())
+    if (backgroundImage.isNull())
     {
-        image = QImage(size(), QImage::QImage::Format_ARGB32);
-        image.fill(qRgba(255,255,255,255));
+        backgroundImage = QImage(size(), QImage::QImage::Format_ARGB32);
+        backgroundImage.fill(qRgba(255,255,255,255));
     }
-    QPainter paint(&image);
+    defaultBackgroundImage = backgroundImage;
+    QPainter paint(&defaultBackgroundImage);
     paint.drawImage(0,0, transparentImg);
-    QImage visibleImage = image.scaled(originalSize, Qt::IgnoreAspectRatio);
+    QImage visibleImage = defaultBackgroundImage.scaled(originalSize, Qt::IgnoreAspectRatio);
 
     if (visibleImage.save(fileName, fileFormat))
     {
@@ -96,8 +99,8 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
 void draw2DWidget::clearImage(ClearImageMode clearID)
 {
     transparentImg.fill(qRgba(0,0,0,0));
-    if (image.isNull())
-        image.fill(qRgb(255,255,255));
+    if (backgroundImage.isNull())
+        backgroundImage.fill(qRgba(255,255,255,255));
     origin = QPoint(width()/2, height()/2);
     SDI_Painter painter(&transparentImg);
     if (graphicMode == GraphicsMode::GM_2D)
@@ -117,7 +120,7 @@ void draw2DWidget::clearImage(ClearImageMode clearID)
             emit modificationChanged(modified);
         }
     }
-    else
+    else if (graphicMode == GraphicsMode::GM_3D)
     {
         if (displayCoordinateMode == DisplayCoordinateState::DCS_Show)
             painter.drawOxyz(this->width(), this->height(), origin);
@@ -134,6 +137,12 @@ void draw2DWidget::clearImage(ClearImageMode clearID)
     }
     lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
     delegateMode = DrawLineDelegateMode::DLDM_None;
+    update();
+}
+
+void draw2DWidget::resetBackground()
+{
+    backgroundImage.fill(qRgba(255,255,255,255));
     update();
 }
 
@@ -327,8 +336,8 @@ void draw2DWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     origin = SDI_Point(width()/2, height()/2);
-    if (!image.isNull())
-        painter.drawImage(dirtyRect, image, dirtyRect); // if user loaded an image and painted over it
+    if (!backgroundImage.isNull())
+        painter.drawImage(dirtyRect, backgroundImage, dirtyRect); // if user loaded an image and painted over it
     painter.drawImage(dirtyRect, transparentImg, dirtyRect);
 }
 
@@ -643,11 +652,11 @@ void draw2DWidget::print()
     if (printDialog.exec() == QDialog::Accepted) {
         SDI_Painter painter(&printer);
         QRect rect = painter.viewport();
-        QSize size = image.size();
+        QSize size = backgroundImage.size();
         size.scale(rect.size(), Qt::KeepAspectRatio);
         painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-        painter.setWindow(image.rect());
-        painter.drawImage(0, 0, image);
+        painter.setWindow(backgroundImage.rect());
+        painter.drawImage(0, 0, backgroundImage);
     }
 #endif // QT_NO_PRINTER
 }

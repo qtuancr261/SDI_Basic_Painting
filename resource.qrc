@@ -29,5 +29,6 @@
         <file>icons/ubuntu-logo14.png</file>
         <file>icons/pointHand.png</file>
         <file>icons/add-dock.png</file>
+        <file>icons/cleanObject.png</file>
     </qresource>
 </RCC>

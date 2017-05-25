@@ -43,11 +43,14 @@ void SDI_MainWindow::createActions()
     QObject::connect(pickPenColorAct, SIGNAL(triggered(bool)), this, SLOT(penColor()));
     QObject::connect(penWidthBox, SIGNAL(valueChanged(int)), this ,SLOT(penWidth(int)));
 
-    clearScreenAct = new QAction(QIcon(":/images/icons/clearScreen.png"), tr("Xóa màn hình"), this);
+    clearScreenAct = new QAction(QIcon(":/images/icons/cleanObject.png"), tr("Xóa mọi đối tượng"), this);
     clearScreenAct->setShortcut(Qt::CTRL + Qt::Key_L);
     clearScreenAct->setStatusTip(tr("Xóa tất cả các hình đã vẽ"));
     clearScreenAct->setToolTip(tr("Ctrl+L"));
     QObject::connect(clearScreenAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(clearImage()));
+
+    restoreDefaultScreenAct = new QAction(QIcon(":/images/icons/clearScreen.png"), tr("Khôi phục nền mặc định"), this);
+    QObject::connect(restoreDefaultScreenAct, SIGNAL(triggered(bool)), this, SLOT(restoreDefaultScreen()));
 
     aboutSDI_PaintingAct = new QAction(QIcon(":/images/icons/SDI_Basic_Painting.ico"), tr("Thông tin chương trình"), this);
     aboutSDI_PaintingAct->setShortcut(Qt::Key_F1);
@@ -162,6 +165,7 @@ void SDI_MainWindow::createMenus()
     ToolsMenu->addAction(pickPenColorAct);
     ToolsMenu->addSeparator();
     ToolsMenu->addAction(clearScreenAct);
+    ToolsMenu->addAction(restoreDefaultScreenAct);
     ToolsMenu->addAction(optionAct);
     menuBar()->addMenu(ToolsMenu);
 
@@ -372,6 +376,12 @@ void SDI_MainWindow::enableUserCoordinate(bool enable)
         emit displayCoordinateStateChanged(DisplayCoordinateState::DCS_Show);
     else
         emit displayCoordinateStateChanged(DisplayCoordinateState::DCS_Hide);
+}
+
+void SDI_MainWindow::restoreDefaultScreen()
+{
+    setWindowTitle("SDI Basic Painting | untitled.png[*]");
+    central2DWidget->resetBackground();
 }
 
 void SDI_MainWindow::translateShape(int xtrans, int ytrans)

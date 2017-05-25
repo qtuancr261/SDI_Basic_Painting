@@ -53,6 +53,7 @@ private:
     QAction* optionAct;
     QAction* pickPenColorAct;
     QAction* clearScreenAct;
+    QAction* restoreDefaultScreenAct;
     // Help Actions
     QAction* aboutSDI_PaintingAct;
     QAction* aboutQtAct;
@@ -90,6 +91,7 @@ public slots:
     void showMessage(QString message);
     void showSelectedShape(QWeakPointer<SDI_GeometricShape> shape);
     void enableUserCoordinate(bool enable);
+    void restoreDefaultScreen();
     void translateShape(int xtrans, int ytrans);
     void scaleShape(double xscale, double yscale);
     void rotateShape(double degree, int centralPointID);

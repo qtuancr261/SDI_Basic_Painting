@@ -66,12 +66,12 @@ void SDI_Painter::drawTetragon(QVector<SDI_Point> &points, const QPen &tetragonP
 
 void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
 {
-    if (std::abs(p1.y() - p2.y()) >= std::abs(p1.x() - p2.x()))
+    if (qAbs(p1.y() - p2.y()) >= qAbs(p1.x() - p2.x()))
     {
         if (p1.x() < p2.x())
             midPointYLine(p2, p1); // draw from
         else
-            midPointYLine(p1, p2 );
+            midPointYLine(p1, p2);
     }
     else
     {
