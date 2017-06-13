@@ -4,7 +4,7 @@ void SDI_MainWindow::createActions()
 {
     openAct = new QAction(QIcon(":/images/icons/openImg.png"), tr("Mở ảnh"), this);
     openAct->setShortcut(QKeySequence::Open);
-    openAct->setStatusTip(tr("Mở ảnh để chỉnh sửa cơ bản"));
+    openAct->setStatusTip(tr("Nạp một ảnh bất kỳ làm nền vẽ"));
     QObject::connect(openAct, SIGNAL(triggered(bool)), this, SLOT(open()));
 
     foreach(QByteArray imageFormat, QImageWriter::supportedImageFormats())
@@ -18,7 +18,7 @@ void SDI_MainWindow::createActions()
 
     printAct = new QAction(QIcon(":/images/icons/print.png"), tr("Tạo file PDF"), this);
     printAct->setShortcut(QKeySequence::Print);
-    printAct->setStatusTip(tr("In thành tập tin văn bản"));
+    printAct->setStatusTip(tr("In thành tập tin pdf"));
     QObject::connect(printAct, SIGNAL(triggered(bool)), central2DWidget, SLOT(print()));
 
     quitAct = new QAction(QIcon(":/images/icons/exit.png"), tr("Thoát"), this);
@@ -36,7 +36,7 @@ void SDI_MainWindow::createActions()
     QObject::connect(showUserCoordinateAct, SIGNAL(toggled(bool)), this, SLOT(enableUserCoordinate(bool)));
 
     optionAct = new QAction(QIcon(":/images/icons/Letters.ico"), tr("Tùy chỉnh..."), this);
-    optionAct->setStatusTip("Tùy chỉnh giao diện, ngôn ngữ...");
+    optionAct->setStatusTip("Tùy chỉnh giao diện, ngôn ngữ...(chưa bổ sung trong bản build này)");
 
     pickPenColorAct = new QAction(QIcon(":/images/icons/penColor.png"), tr("Màu vẽ"), this);
     pickPenColorAct->setStatusTip(tr("Chọn màu vẽ"));
@@ -204,7 +204,7 @@ void SDI_MainWindow::createToolsBar()
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
     shape2DToolBar->addWidget(triangleTypes);
 
-    shape3DToolsBar = addToolBar(tr("Các đối tượng 2D cơ bản"));
+    shape3DToolsBar = addToolBar(tr("Các đối tượng 3D cơ bản"));
     shape3DToolsBar->addActions(draw3DShapeActs);
 }
 
