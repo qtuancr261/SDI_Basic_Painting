@@ -66,7 +66,7 @@ void SDI_Painter::drawTetragon(QVector<SDI_Point> &points, const QPen &tetragonP
 
 void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
 {
-    if (qAbs(p1.y() - p2.y()) >= qAbs(p1.x() - p2.x()))
+    /*if (qAbs(p1.y() - p2.y()) >= qAbs(p1.x() - p2.x()))
     {
         if (p1.x() < p2.x())
             midPointYLine(p2, p1); // draw from
@@ -79,13 +79,16 @@ void SDI_Painter::drawLine(const SDI_Point &p1,const SDI_Point &p2)
             midPointXLine(p1, p2); // draw from
         else
             midPointXLine(p2, p1);
-    }
+    }*/
+    // Just ignore the previous section
+    QPainter::drawLine(p1, p2);
 }
 
 void SDI_Painter::drawLine(const SDI_Point &p1, const SDI_Point &p2, const QPen &linePen)
 {
     setPen(linePen);
-    drawLine(p1, p2);
+    //drawLine(p1, p2);
+    QPainter::drawLine(p1, p2);
 }
 
 void SDI_Painter::updateLineData(SDI_GeometricShape &shape)
@@ -204,9 +207,10 @@ void SDI_Painter::updateSquareData(SDI_GeometricShape& shape)
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle)
 {
     double radius {SDI_Point::distance(centralPoint, pointOnCircle)};
-    SDI_Point topCirclePoint(SDI_Point::translate(centralPoint, 0, -radius));
-    drawPoint(centralPoint);
-    midPointXYCircle(topCirclePoint, centralPoint, radius);
+    //SDI_Point topCirclePoint(SDI_Point::translate(centralPoint, 0, -radius));
+    //drawPoint(centralPoint);
+    //midPointXYCircle(topCirclePoint, centralPoint, radius);
+    QPainter::drawEllipse(centralPoint, static_cast<int>(radius), static_cast<int>(radius));
 }
 
 void SDI_Painter::drawCircle(const SDI_Point &centralPoint, const SDI_Point &pointOnCircle, const QPen &circlePen)
