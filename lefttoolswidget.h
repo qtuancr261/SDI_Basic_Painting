@@ -4,6 +4,7 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include <QtDebug>
 #include <QLabel>
 #include <QSlider>
 #include <QSpinBox>
@@ -67,7 +68,7 @@ signals:
     void OySymmetrySelectedShape();
 
 private slots:
-    void decideNewGraphicMode();
+
     void takeTranslateParameters();
     void takeScaleParameters();
     void takeRotateParameters();
