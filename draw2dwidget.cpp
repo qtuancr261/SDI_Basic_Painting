@@ -26,8 +26,9 @@ draw2DWidget::draw2DWidget(QWidget *parent)
 
 draw2DWidget::~draw2DWidget()
 {
-    setOfShapes.clear();
-    setOf3DShapes.clear();
+    //setOfShapes.clear();
+    //setOf3DShapes.clear();
+    // Since the vector item's type is QSharedPointer, we don't have to worry about clearing memory
 }
 
 bool draw2DWidget::openImage(const QString &fileName)

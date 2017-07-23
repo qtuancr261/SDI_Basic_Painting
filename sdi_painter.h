@@ -8,8 +8,8 @@
 #include <sdi_point.h>
 #include "sdi_geometricshape.h"
 #include "sdi_geometric3dshape.h"
-class SDI_GeometricShape;
-class SDI_Geometric3DShape;
+class SDI_GeometricShape; // forward declare
+class SDI_Geometric3DShape; // forward declare
 class SDI_Painter : public QPainter
 {
 public:
