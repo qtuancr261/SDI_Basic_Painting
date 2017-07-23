@@ -16,12 +16,18 @@ void leftToolsWidget::setInfoBox(QString shapeName, QString shapeData)
 void leftToolsWidget::setupGUI()
 {
     // select graphic mode
-    graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Đồ họa 2D - Hệ trục Oxy"), this);
+    graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Đồ họa 2D - Hệ trục Oxyz"), this);
     setDrawModeButtonStyle(graphic2DMode);
-    QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+    //QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+    QObject::connect(graphic2DMode, &QPushButton::toggled,
+                     [this](bool checked){if (checked) emit changeGraphicsMode(GraphicsMode::GM_2D);});
+
     graphic3DMode = new QPushButton(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Đồ họa 3D - Hệ trục Oxyz"), this);
     setDrawModeButtonStyle(graphic3DMode);
-    QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+    //QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+    QObject::connect(graphic3DMode, &QPushButton::toggled,
+                     [this](bool checked){ if (checked) emit changeGraphicsMode(GraphicsMode::GM_3D); });
+
 
     //helpMode = new QPushButton(QIcon(":/images/icons/about.png"), tr("Giới thiệu"), this);
     //setDrawModeButtonStyle(helpMode);
@@ -39,7 +45,7 @@ void leftToolsWidget::setupGUI()
     OyTranslateSlider = new QSlider(Qt::Horizontal, this);
     OyTranslateBox = new QSpinBox(this);
     setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -500, 500);
-    doTranslate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Tịnh tiến đối tượng"), this);
+    doTranslate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Tịnh tiến đối tượng"), this);
     doTranslate->setAutoRepeat(true);
     QObject::connect(doTranslate, SIGNAL(pressed()), this, SLOT(takeTranslateParameters()));
     QGridLayout* translationLayout{new QGridLayout(this)};
@@ -62,7 +68,6 @@ void leftToolsWidget::setupGUI()
     shapeCentralRotate->setAutoExclusive(true);
     userOriginPosRotate = new QRadioButton( tr("Gốc tọa độ"), this);
     userOriginPosRotate->setAutoExclusive(true);
-
     doRotate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Xoay đối tượng"), this);
     doRotate->setAutoRepeat(true);
     QObject::connect(doRotate, SIGNAL(clicked(bool)), this, SLOT(takeRotateParameters()));
@@ -163,14 +168,6 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
     box->setRange(minValue, MaxValue);
     QObject::connect(slider, SIGNAL(valueChanged(int)), box, SLOT(setValue(int)));
     QObject::connect(box, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
-}
-
-void leftToolsWidget::decideNewGraphicMode()
-{
-    if (graphic2DMode->isChecked())
-        emit changeGraphicsMode(GraphicsMode::GM_2D);
-    else if (graphic3DMode->isChecked())
-        emit changeGraphicsMode(GraphicsMode::GM_3D);
 }
 
 void leftToolsWidget::takeTranslateParameters()
