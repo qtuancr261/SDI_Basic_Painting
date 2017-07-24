@@ -109,7 +109,9 @@ void leftToolsWidget::setupGUI()
     zoomBox->setSuffix("x");
     doZoom = new QPushButton(QIcon(":/images/icons/pointHand.png"), tr("Biến đồi đối tượng"), this);
     doZoom->setAutoRepeat(true);
-    QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
+    //QObject::connect(doZoom, SIGNAL(clicked(bool)), this, SLOT(takeScaleParameters()));
+    QObject::connect(doZoom, &QPushButton::pressed,
+                     [this](){ emit scaleSelectedShape(zoomBox->value(), zoomBox->value());});
     QGridLayout* zoomLayout{new QGridLayout(this)};
     zoomLayout->addWidget(new QLabel(tr("Hệ số tỉ lệ")), 0, 0);
     zoomLayout->addWidget(zoomBox, 0, 1);
@@ -167,11 +169,6 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
     box->setRange(minValue, MaxValue);
     QObject::connect(slider, SIGNAL(valueChanged(int)), box, SLOT(setValue(int)));
     QObject::connect(box, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
-}
-
-void leftToolsWidget::takeScaleParameters()
-{
-    emit scaleSelectedShape(zoomBox->value(), zoomBox->value());
 }
 
 void leftToolsWidget::takeRotateParameters()
