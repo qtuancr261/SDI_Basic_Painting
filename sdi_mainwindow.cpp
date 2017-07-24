@@ -485,16 +485,21 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     setWindowIcon(QIcon(":/images/icons/SDI_Basic_Painting.ico"));
     modeToolTip->setMinimumSize(modeToolTip->sizeHint());
     statusBar()->addWidget(modeToolTip,1);
+    // connect draw2DWidget signals with other SDI_MainWindow components slots
     QObject::connect(central2DWidget, SIGNAL(modificationChanged(bool)), this , SLOT(setWindowModified(bool)));
-    QObject::connect(central2DWidget, SIGNAL(mouseMoveTo(QString)),mainToolsWidget, SLOT(showPosition(QString)));
+    QObject::connect(central2DWidget, &draw2DWidget::mouseMoveTo,mainToolsWidget, &leftToolsWidget::showMousePosition);
     QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
     QObject::connect(central2DWidget, SIGNAL(graphicModeChanged(QString)), this, SLOT(showMessage(QString)));
+
+    // connect leftToolsWidget signals with draw2DWidget slots
     QObject::connect(mainToolsWidget, SIGNAL(translateSelectedShape(int,int)), this, SLOT(translateShape(int,int)));
     QObject::connect(mainToolsWidget, SIGNAL(scaleSelectedShape(double,double)), this, SLOT(scaleShape(double,double)));
     QObject::connect(mainToolsWidget, SIGNAL(rotateSelectedShape(double,int)), this, SLOT(rotateShape(double, int)));
     QObject::connect(mainToolsWidget, SIGNAL(centralSymmetrySelectedShape()), this, SLOT(centralSymmetryShape()));
     QObject::connect(mainToolsWidget, SIGNAL(OxSymmetrySelectedShape()), this, SLOT(OxSymmetryShape()));
     QObject::connect(mainToolsWidget, SIGNAL(OySymmetrySelectedShape()), this, SLOT(OySymmetryShape()));
+
+    // connect SDI_MainWindow signals with other components slots
     QObject::connect(this, SIGNAL(displayCoordinateStateChanged(DisplayCoordinateState)), central2DWidget, SLOT(setDisplayCoordinateMode(DisplayCoordinateState)));
 }
 
