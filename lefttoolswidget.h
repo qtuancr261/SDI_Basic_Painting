@@ -26,9 +26,6 @@ public:
     ~leftToolsWidget() = default;
     void setInfoBox(QString shapeNameLabel, QString shapeData);
 
-    QGroupBox * setupGUISelectMode();
-    // public data member -> for SDI_MainWindow can access freely it
-    QLabel* positionLabel;
 private:
     QPushButton* graphic2DMode;
     QPushButton* graphic3DMode;
@@ -56,25 +53,29 @@ private:
 
     QLabel* shapeNameLabel;
     QTextEdit* shapeDataTEdit;
-    void setupGUI();
-    void setDrawModeButtonStyle(QPushButton* button);
+    QLabel* mousePositionLabel;
+    void setupGUI(); // setup everything in here
+    void setGraphicModeButtonStyle(QPushButton* button);
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
 
 signals:
-    void changeGraphicsMode(GraphicsMode newMode);
-    void translateSelectedShape(int xtrans, int ytrans);
-    void scaleSelectedShape(double xscale, double yscale);
-    void rotateSelectedShape(double degree, int centralPointID);
+    void changeGraphicsMode(GraphicsMode newMode); // will be emitted if graphic2D(3D)Mode button is checked
+    void translateSelectedShape(int xtrans, int ytrans); // will be emitted if doTranslate button is pressed
+    void scaleSelectedShape(double xscale, double yscale); // will be emitted if doZoom button is pressed
+    void rotateSelectedShape(double degree, int centralPointID); // will be emitted if doRotate button is pressed
     void centralSymmetrySelectedShape();
+    //will be emitted if doSymmetry button is pressed and centralSymmetry button is checked
     void OxSymmetrySelectedShape();
+    //will be emitted if doSymmetry button is pressed and OxSymmetry button is checked
     void OySymmetrySelectedShape();
+    //will be emitted if doSymmetry button is pressed and OySymmetry button is checked
 
 private slots:
     void takeRotateParameters();
     void takeSymmetryParameters();
 
 public slots:
-    void showMousePosition(QString posInfo);
+    void showMousePosition(QString posInfo); // take current mouse position and show it on the screen
 };
 
 #endif // LEFTTOOLSWIDGET_H
