@@ -68,8 +68,6 @@ signals:
     void OySymmetrySelectedShape();
 
 private slots:
-
-    void takeTranslateParameters();
     void takeScaleParameters();
     void takeRotateParameters();
     void takeSymmetryParameters();

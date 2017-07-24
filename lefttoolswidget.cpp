@@ -28,9 +28,6 @@ void leftToolsWidget::setupGUI()
     QObject::connect(graphic3DMode, &QPushButton::toggled,
                      [this](bool checked){ if (checked) emit changeGraphicsMode(GraphicsMode::GM_3D); });
 
-
-    //helpMode = new QPushButton(QIcon(":/images/icons/about.png"), tr("Giới thiệu"), this);
-    //setDrawModeButtonStyle(helpMode);
     QVBoxLayout* selectModeLayout{new QVBoxLayout(this)};
     selectModeLayout->addWidget(graphic2DMode);
     selectModeLayout->addWidget(graphic3DMode);
@@ -47,7 +44,9 @@ void leftToolsWidget::setupGUI()
     setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -500, 500);
     doTranslate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Tịnh tiến đối tượng"), this);
     doTranslate->setAutoRepeat(true);
-    QObject::connect(doTranslate, SIGNAL(pressed()), this, SLOT(takeTranslateParameters()));
+    //QObject::connect(doTranslate, SIGNAL(pressed()), this, SLOT(takeTranslateParameters()));
+    QObject::connect(doTranslate, &QPushButton::pressed,
+                     [this](){ emit translateSelectedShape(OxTranslateBox->value(), OyTranslateBox->value());});
     QGridLayout* translationLayout{new QGridLayout(this)};
     translationLayout->addWidget(new QLabel("Ox"), 0, 0);
     translationLayout->addWidget(OxTranslateSlider, 0, 1);
@@ -168,11 +167,6 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
     box->setRange(minValue, MaxValue);
     QObject::connect(slider, SIGNAL(valueChanged(int)), box, SLOT(setValue(int)));
     QObject::connect(box, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
-}
-
-void leftToolsWidget::takeTranslateParameters()
-{
-    emit translateSelectedShape(OxTranslateBox->value(), OyTranslateBox->value());
 }
 
 void leftToolsWidget::takeScaleParameters()
