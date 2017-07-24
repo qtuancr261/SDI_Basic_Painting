@@ -189,7 +189,7 @@ void leftToolsWidget::takeSymmetryParameters()
         emit OySymmetrySelectedShape();
 }
 
-void leftToolsWidget::showPosition(QString posInfo)
+void leftToolsWidget::showMousePosition(QString posInfo)
 {
     positionLabel->setText(posInfo);
 }

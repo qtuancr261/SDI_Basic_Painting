@@ -26,6 +26,9 @@ public:
     ~leftToolsWidget() = default;
     void setInfoBox(QString shapeNameLabel, QString shapeData);
 
+    QGroupBox * setupGUISelectMode();
+    // public data member -> for SDI_MainWindow can access freely it
+    QLabel* positionLabel;
 private:
     QPushButton* graphic2DMode;
     QPushButton* graphic3DMode;
@@ -53,7 +56,6 @@ private:
 
     QLabel* shapeNameLabel;
     QTextEdit* shapeDataTEdit;
-    QLabel* positionLabel;
     void setupGUI();
     void setDrawModeButtonStyle(QPushButton* button);
     void setSlider_BoxSytle(QSlider* slider, QSpinBox* box, int minValue, int MaxValue);
@@ -68,12 +70,11 @@ signals:
     void OySymmetrySelectedShape();
 
 private slots:
-    //void takeScaleParameters();
     void takeRotateParameters();
     void takeSymmetryParameters();
 
 public slots:
-    void showPosition(QString posInfo);
+    void showMousePosition(QString posInfo);
 };
 
 #endif // LEFTTOOLSWIDGET_H
