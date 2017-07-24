@@ -15,27 +15,24 @@ void leftToolsWidget::setInfoBox(QString shapeName, QString shapeData)
 
 void leftToolsWidget::setupGUI()
 {
-    // select graphic mode
+    // select Mode Group Box
     graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Đồ họa 2D - Hệ trục Oxyz"), this);
-    setDrawModeButtonStyle(graphic2DMode);
-    //QObject::connect(graphic2DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+    setGraphicModeButtonStyle(graphic2DMode);
     QObject::connect(graphic2DMode, &QPushButton::toggled,
                      [this](bool checked){if (checked) emit changeGraphicsMode(GraphicsMode::GM_2D);});
 
     graphic3DMode = new QPushButton(QIcon(":/images/icons/oxyz_coordinate.png"), tr("Đồ họa 3D - Hệ trục Oxyz"), this);
-    setDrawModeButtonStyle(graphic3DMode);
-    //QObject::connect(graphic3DMode, SIGNAL(toggled(bool)), this, SLOT(decideNewGraphicMode()));
+    setGraphicModeButtonStyle(graphic3DMode);
     QObject::connect(graphic3DMode, &QPushButton::toggled,
                      [this](bool checked){ if (checked) emit changeGraphicsMode(GraphicsMode::GM_3D); });
 
     QVBoxLayout* selectModeLayout{new QVBoxLayout(this)};
     selectModeLayout->addWidget(graphic2DMode);
     selectModeLayout->addWidget(graphic3DMode);
-    //selectModeLayout->addWidget(helpMode);
     QGroupBox* selectModeGroupBox{new QGroupBox(tr("CHỌN CHẾ ĐỘ"), this)};
     selectModeGroupBox->setLayout(selectModeLayout);
     //----------------------------------------------------------------------
-    // translate mode
+    // translate Group Box
     OxTranslateSlider = new QSlider(Qt::Horizontal, this);
     OxTranslateBox = new QSpinBox(this);
     setSlider_BoxSytle(OxTranslateSlider, OxTranslateBox, -500, 500);
@@ -44,7 +41,6 @@ void leftToolsWidget::setupGUI()
     setSlider_BoxSytle(OyTranslateSlider, OyTranslateBox, -500, 500);
     doTranslate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Tịnh tiến đối tượng"), this);
     doTranslate->setAutoRepeat(true);
-    //QObject::connect(doTranslate, SIGNAL(pressed()), this, SLOT(takeTranslateParameters()));
     QObject::connect(doTranslate, &QPushButton::pressed,
                      [this](){ emit translateSelectedShape(OxTranslateBox->value(), OyTranslateBox->value());});
     QGridLayout* translationLayout{new QGridLayout(this)};
@@ -59,7 +55,7 @@ void leftToolsWidget::setupGUI()
     QGroupBox* translationGroupBox{new QGroupBox()};
     translationGroupBox->setLayout(translationLayout);
     //--------------------------------------------------------------------
-    // rotate mode
+    // rotate Group Box
     rotateSlider = new QSlider(Qt::Horizontal, this);
     rotateBox = new QSpinBox(this);
     setSlider_BoxSytle(rotateSlider, rotateBox, -360, 360);
@@ -69,7 +65,7 @@ void leftToolsWidget::setupGUI()
     userOriginPosRotate->setAutoExclusive(true);
     doRotate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Xoay đối tượng"), this);
     doRotate->setAutoRepeat(true);
-    QObject::connect(doRotate, SIGNAL(clicked(bool)), this, SLOT(takeRotateParameters()));
+    QObject::connect(doRotate, &QPushButton::pressed, this, &leftToolsWidget::takeRotateParameters);
     QGridLayout* rotateLayout{new QGridLayout(this)};
     rotateLayout->addWidget(new QLabel(tr("Góc xoay: ")), 0, 0);
     rotateLayout->addWidget(rotateSlider, 0, 1);
@@ -82,7 +78,7 @@ void leftToolsWidget::setupGUI()
     QGroupBox* rotateGroupBox{new QGroupBox()};
     rotateGroupBox->setLayout(rotateLayout);
     //---------------------------------------------------------------------
-    //symmetry mode
+    //symmetry Group Box
     centralSymmetry = new QRadioButton(tr("Đối xứng qua gốc tọa độ"), this);
     centralSymmetry->setAutoExclusive(true);
     OxSymmetry = new QRadioButton(tr("Đối xứng qua Ox"), this);
@@ -91,7 +87,7 @@ void leftToolsWidget::setupGUI()
     OySymmetry->setAutoExclusive(true);
     doSymmetry = new QPushButton(QIcon(":/images/icons/pointHand.png"), tr("Lấy đối xứng đối tượng"), this);
     doSymmetry->setAutoRepeat(true);
-    QObject::connect(doSymmetry, SIGNAL(clicked(bool)), this, SLOT(takeSymmetryParameters()));
+    QObject::connect(doSymmetry, &QPushButton::pressed, this, &leftToolsWidget::takeSymmetryParameters);
     QVBoxLayout* symmetryLayout{new QVBoxLayout()};
     symmetryLayout->addWidget(centralSymmetry);
     symmetryLayout->addWidget(OxSymmetry);
@@ -101,7 +97,7 @@ void leftToolsWidget::setupGUI()
     QGroupBox* symmetryGroupBox{new QGroupBox()};
     symmetryGroupBox->setLayout(symmetryLayout);
     //---------------------------------------------------------------------
-    // zoom mode
+    // zoom Group box
     zoomBox = new QDoubleSpinBox(this);
     zoomBox->setRange(0.1, 5.0);
     zoomBox->setValue(1.0);
@@ -132,8 +128,8 @@ void leftToolsWidget::setupGUI()
     QGroupBox* infoGroupBox{new QGroupBox(tr("ĐỐI TƯỢNG ĐANG ĐƯỢC CHỌN"))};
     infoGroupBox->setLayout(infoLayout);
 
-    positionLabel = new QLabel("Tọa độ");
-    positionLabel->setAlignment(Qt::AlignCenter);
+    mousePositionLabel = new QLabel("Tọa độ");
+    mousePositionLabel->setAlignment(Qt::AlignCenter);
     //---------------------------------------------------------------------
     QToolBox* transformBox{new QToolBox(this)};
     transformBox->addItem(translationGroupBox, "PHÉP TỊNH TIẾN");
@@ -151,12 +147,12 @@ void leftToolsWidget::setupGUI()
     mainLayout->addWidget(selectModeGroupBox);
     mainLayout->addWidget(transformBox);
     mainLayout->addWidget(infoGroupBox);
-    mainLayout->addWidget(positionLabel);
+    mainLayout->addWidget(mousePositionLabel);
     mainLayout->addItem(verticalSpacer);
     setLayout(mainLayout);
 }
 
-void leftToolsWidget::setDrawModeButtonStyle(QPushButton *button)
+void leftToolsWidget::setGraphicModeButtonStyle(QPushButton *button)
 {
     button->setIconSize(QSize(32, 32));
     button->setCheckable(true);
@@ -191,6 +187,6 @@ void leftToolsWidget::takeSymmetryParameters()
 
 void leftToolsWidget::showMousePosition(QString posInfo)
 {
-    positionLabel->setText(posInfo);
+    mousePositionLabel->setText(posInfo);
 }
 
