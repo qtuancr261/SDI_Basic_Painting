@@ -61,53 +61,33 @@ void SDI_MainWindow::createActions()
 
     //--------------------------------------2D Action
     QAction* selectShapeAct{new QAction(QIcon(":/images/icons/scribble.png"), tr("Chọn hình"), this)};
-    selectShapeAct->setShortcut(Qt::CTRL + Qt::Key_0);
-    selectShapeAct->setToolTip(tr("Ctrl+0"));
-    selectShapeAct->setStatusTip(tr("Chế độ chọn hình dựa trên tọa độ điểm được chỉ ra trên hệ trục tọa độ ..."));
-    setupDraw2DAct(selectShapeAct);
-
-    QAction* drawPointAct{new QAction(QIcon(":/images/icons/point.png"), tr("Điểm"), this)};
-    drawPointAct->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
-    drawPointAct->setStatusTip(tr("Vẽ một điểm trên hệ trục, dùng chuột để chọn điểm vẽ hoặc dùng nút Thêm đối tượng để nhập vào thông số..."));
-    //setupDrawAct(drawPointAct);
+    setupActionProperties(selectShapeAct, Qt::CTRL + Qt::Key_0, "Ctrl + 0", "Select a shape on the screen");
+    setupActionGroup(selectShapeAct, draw2DShapeActGroup);
 
     QAction* drawLineAct{new QAction(QIcon(":/images/icons/line.png"), tr("Đoạn thẳng"), this)};
-    drawLineAct->setShortcut(Qt::CTRL + Qt::Key_1);
-    drawLineAct->setToolTip(tr("Ctrl+1"));
-    drawLineAct->setStatusTip(tr("Vẽ một đoạn thẳng trên hệ trục, dùng chuột để chọn 2 điểm..."));
-    setupDraw2DAct(drawLineAct);
+    setupActionProperties(drawLineAct, Qt::CTRL + Qt::Key_1, "Ctrl+1", "Draw a line on the screen");
+    setupActionGroup(drawLineAct, draw2DShapeActGroup);
 
     QAction* drawRectAct{new QAction(QIcon(":/images/icons/rect.png"), tr("Hình chữ nhật"), this)};
-    drawRectAct->setShortcut(Qt::CTRL + Qt::Key_2);
-    drawRectAct->setToolTip(tr("Ctrl+2"));
-    drawRectAct->setStatusTip(tr("Vẽ một hình chữ nhật trên hệ trục, dùng chuột để chọn 2 điểm tạo nên đường chéo hình chữ nhật..."));
-    setupDraw2DAct(drawRectAct);
+    setupActionProperties(drawRectAct, Qt::CTRL + Qt::Key_2, "Ctrl+2", "Draw a rectangle on the screen");
+    setupActionGroup(drawRectAct, draw2DShapeActGroup);
 
     QAction* drawSquareAct{new QAction(QIcon(":/images/icons/square"), tr("Hình vuông"), this)};
-    drawSquareAct->setShortcut(Qt::CTRL + Qt::Key_3);
-    drawSquareAct->setToolTip(tr("Ctrl+3"));
-    drawSquareAct->setStatusTip(tr("Vẽ một hình vuông trên hệ trục, dùng chuột để chọn 2 điểm tạo nên đường chéo hình vuông..."));
-    setupDraw2DAct(drawSquareAct);
+    setupActionProperties(drawSquareAct, Qt::CTRL + Qt::Key_3, "Ctrl+3", "Draw a square on the screen");
+    setupActionGroup(drawSquareAct, draw2DShapeActGroup);
 
     QAction* drawParallelogramAct{new QAction(QIcon(":/images/icons/parallelogram.png"), tr("Hình bình hành"), this)};
-    drawParallelogramAct->setShortcut(Qt::CTRL + Qt::Key_4);
-    drawParallelogramAct->setToolTip(tr("Ctrl+4"));
-    drawParallelogramAct->setStatusTip(tr("Vẽ một hình binh hành trên hệ trục, dùng chuột để chọn 4 điểm thuộc hình bình hành..."));
-    setupDraw2DAct(drawParallelogramAct);
-
+    setupActionProperties(drawParallelogramAct, Qt::CTRL + Qt::Key_4, "Ctrl+4", "Draw a parallelogram on the screen");
+    setupActionGroup(drawParallelogramAct, draw2DShapeActGroup);
 
     QAction* drawCircleAct{new QAction(QIcon(":/images/icons/circle.png"), tr("Hình tròn"), this)};
-    drawCircleAct->setShortcut(Qt::CTRL + Qt::Key_5);
-    drawCircleAct->setToolTip(tr("Ctrl+5"));
-    drawCircleAct->setStatusTip(tr("Vẽ một hình tròn trên hệ trục, dùng chuột để chọn tâm đường tròn và điểm thuộc đường tròn..."));
-    setupDraw2DAct(drawCircleAct);
+    setupActionProperties(drawCircleAct, Qt::CTRL + Qt::Key_5, "Ctrl+5", "Draw a circle on the screen");
+    setupActionGroup(drawCircleAct, draw2DShapeActGroup);
 
     QAction* drawTriangleAct{new QAction(QIcon(":/images/icons/triangle.png"), tr("Tam giác"), this)};
-    drawTriangleAct->setShortcut(Qt::CTRL + Qt::Key_6);
-    drawTriangleAct->setToolTip(tr("Ctrl+6"));
-    drawTriangleAct->setStatusTip(tr("Vẽ một hình tam giác trên hệ trục, dùng chuột để chọn 3 điểm tạo nên hình tam giác..."));
+    setupActionProperties(drawTriangleAct, Qt::CTRL + Qt::Key_6, "Ctrl+6", "Draw a triangle on the screen");
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
-    setupDraw2DAct(drawTriangleAct);
+    setupActionGroup(drawTriangleAct, draw2DShapeActGroup);
 
     QSignalMapper* draw2DShapeMapper{new QSignalMapper(this)};
     for (int i{}; i < draw2DShapeActs.size(); i++)
@@ -138,6 +118,31 @@ void SDI_MainWindow::createActions()
     }
     QObject::connect(draw3DShapeMapper, SIGNAL(mapped(int)), central2DWidget, SLOT(setDraw3DObjectMode(int)));
     QObject::connect(draw3DShapeMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
+}
+
+void SDI_MainWindow::setupActionProperties(QAction *action, const QKeySequence &shortcut, const QString &toolTip, const QString &statusTip)
+{
+    action->setShortcut(shortcut);
+    action->setToolTip(toolTip);
+    action->setStatusTip(statusTip);
+}
+
+void SDI_MainWindow::setupActionGroup(QAction *action, QActionGroup *actGroup)
+{
+    action->setCheckable(true);
+    action->setActionGroup(actGroup);
+}
+
+void SDI_MainWindow::setupActionGroupMapping(QActionGroup *actGroup)
+{
+    QList<QAction*> actionsList{actGroup->actions()};
+    QSignalMapper* actionsMapper{new QSignalMapper(this)};
+    for (int i{}; i < actionsList.size(); i++)
+    {
+        QObject::connect(actionsList.at(i), QAction::toggle(), actionsMapper, QSignalMapper::map());
+        actionsMapper->setMapping(actionsList.at(i), i);
+        actionsMapper->setMapping(actionsList.at(i), actionsList.at(i)->statusTip());
+    }
 }
 
 void SDI_MainWindow::createMenus()
@@ -195,7 +200,6 @@ void SDI_MainWindow::createToolsBar()
     for (QAction* act : draw2DShapeActs)
     {
         shape2DToolBar->addAction(act);
-        shape2DToolBar->addSeparator();
     }
     shape2DToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
     addToolBar(Qt::LeftToolBarArea, shape2DToolBar);
@@ -222,14 +226,14 @@ void SDI_MainWindow::createDockWidget()
 void SDI_MainWindow::setupDraw2DAct(QAction *drawAct)
 {
     drawAct->setCheckable(true);
-    drawAct->setActionGroup(draw2DGroupActs);
+    drawAct->setActionGroup(draw2DShapeActGroup);
     draw2DShapeActs.append(drawAct);
 }
 
 void SDI_MainWindow::setupDraw3DAct(QAction *drawAct)
 {
     drawAct->setCheckable(true);
-    drawAct->setActionGroup(draw3DGroupActs);
+    drawAct->setActionGroup(draw3DShapeActGroup);
     draw3DShapeActs.append(drawAct);
 }
 
@@ -467,8 +471,8 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
       dockWidget{new QDockWidget(this)},
       central2DWidget{new draw2DWidget(this)},
       mainToolsWidget{new leftToolsWidget(this)},
-      modeToolTip{new QLabel("<b>Chọn chế độ đồ họa 2D hoặc 3D để bắt đầu phiên làm việc ... </b>")},      draw2DGroupActs{new QActionGroup(this)},
-      draw3DGroupActs{new QActionGroup(this)},
+      modeToolTip{new QLabel("<b>Chọn chế độ đồ họa 2D hoặc 3D để bắt đầu phiên làm việc ... </b>")},      draw2DShapeActGroup{new QActionGroup(this)},
+      draw3DShapeActGroup{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
       penWidthBox{new QSpinBox(this)},
       activatedShape{nullptr}

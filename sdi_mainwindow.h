@@ -58,8 +58,8 @@ private:
     QAction* aboutSDI_PaintingAct;
     QAction* aboutQtAct;
     // Draw Actions
-    QActionGroup* draw2DGroupActs;
-    QActionGroup* draw3DGroupActs;
+    QActionGroup* draw2DShapeActGroup;
+    QActionGroup* draw3DShapeActGroup;
     QList<QAction*> draw2DShapeActs;
     QList<QAction*> draw3DShapeActs;
     QComboBox* triangleTypes;
@@ -68,6 +68,8 @@ private:
     QWeakPointer<SDI_GeometricShape> weakActivatedShape;
     //Private Functions
     void createActions();
+    void setupActionProperties(QAction* action,const QKeySequence& shortcut, const QString& toolTip, const QString& statusTip);
+    void setupActionGroup(QAction* action, QActionGroup* actGroup);
     void createMenus();
     void createToolsBar();
     void createDockWidget();
