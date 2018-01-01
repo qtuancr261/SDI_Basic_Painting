@@ -190,20 +190,20 @@ void SDI_MainWindow::createToolsBar()
     penWidthBox->setRange(1, 10);
     mainToolBar->addWidget(penWidthBox);
 
-
-    shape2DToolBar = addToolBar(tr("Các đối tượng 2D cơ bản"));
+    shape2DToolBar = new QToolBar(tr("Các đối tượng 2D"), this);
     //shape2DToolBar->addActions(draw2DShapeActs);
     for (QAction* act : draw2DShapeActs)
     {
         shape2DToolBar->addAction(act);
         shape2DToolBar->addSeparator();
     }
+    shape2DToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    addToolBar(Qt::LeftToolBarArea, shape2DToolBar);
     triangleTypes->addItem(tr("Thường"));
     triangleTypes->addItem(tr("Vuông cân"));
     triangleTypes->setDisabled(true);
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
-    shape2DToolBar->addWidget(triangleTypes);
-
+    //shape2DToolBar->addWidget(triangleTypes);
     shape3DToolsBar = addToolBar(tr("Các đối tượng 3D cơ bản"));
     shape3DToolsBar->addActions(draw3DShapeActs);
 }
