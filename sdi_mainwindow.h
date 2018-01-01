@@ -60,8 +60,6 @@ private:
     // Draw Actions
     QActionGroup* draw2DShapeActGroup;
     QActionGroup* draw3DShapeActGroup;
-    QList<QAction*> draw2DShapeActs;
-    QList<QAction*> draw3DShapeActs;
     QComboBox* triangleTypes;
     QSpinBox* penWidthBox;
     QSharedPointer<SDI_GeometricShape> activatedShape;
@@ -70,11 +68,10 @@ private:
     void createActions();
     void setupActionProperties(QAction* action,const QKeySequence& shortcut, const QString& toolTip, const QString& statusTip);
     void setupActionGroup(QAction* action, QActionGroup* actGroup);
+    void setupActionGroupMapping(QActionGroup* actGroupSender, GraphicsMode mode);
     void createMenus();
     void createToolsBar();
     void createDockWidget();
-    void setupDraw2DAct(QAction* drawAct);
-    void setupDraw3DAct(QAction* drawAct);
     bool mayBeSave();
     bool saveFile(const QByteArray& fileFormat);
 
@@ -90,7 +87,7 @@ private slots:
 public slots:
     void changeGraphicsMode(GraphicsMode newMode);
     void showDockWidget(bool enable);
-    void showMessage(QString message);
+    void showMessage(const QString& message);
     void showSelectedShape(QWeakPointer<SDI_GeometricShape> shape);
     void enableUserCoordinate(bool enable);
     void restoreDefaultScreen();

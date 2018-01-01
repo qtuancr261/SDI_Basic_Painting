@@ -89,35 +89,23 @@ void SDI_MainWindow::createActions()
     QObject::connect(drawTriangleAct, SIGNAL(toggled(bool)), triangleTypes, SLOT(setEnabled(bool)));
     setupActionGroup(drawTriangleAct, draw2DShapeActGroup);
 
-    QSignalMapper* draw2DShapeMapper{new QSignalMapper(this)};
-    for (int i{}; i < draw2DShapeActs.size(); i++)
-    {
-        draw2DShapeMapper->setMapping(draw2DShapeActs.at(i), i);
-        draw2DShapeMapper->setMapping(draw2DShapeActs.at(i), draw2DShapeActs.at(i)->statusTip());
-        QObject::connect(draw2DShapeActs.at(i), SIGNAL(toggled(bool)), draw2DShapeMapper, SLOT(map()));
-    }
-    QObject::connect(draw2DShapeMapper, SIGNAL(mapped(int)), central2DWidget , SLOT(setDraw2DObjectMode(int)));
-    QObject::connect(draw2DShapeMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
+    // Mapping
+    setupActionGroupMapping(draw2DShapeActGroup, GraphicsMode::GM_2D);
 
 
     //---------------------3D Actions-------------------------------
     QAction* drawParallelepipedAct{new QAction(QIcon(":/images/icons/cube.png"),tr("Hình hộp"), this)};
     drawParallelepipedAct->setStatusTip(tr("Vẽ hình hộp chữ nhật trên hệ trục, dùng chuột di chuyển để chọn 2 điểm tạo nên mặt đáy và di chuyển để xác định chiều cao<"));
-    setupDraw3DAct(drawParallelepipedAct);
+    //setupDraw3DAct(drawParallelepipedAct);
+    setupActionGroup(drawParallelepipedAct, draw3DShapeActGroup);
 
     QAction* drawPyramidAct{new QAction(QIcon(":/images/icons/pyramid.png"), tr("Hình chóp"), this)};
     drawPyramidAct->setStatusTip(tr("Vẽ hình chóp trên hệ trục, dùng chuột di chuyển để chọn 2 điểm tạo nên mặt đáy và di chuyển để xác định chiều cao"));
-    setupDraw3DAct(drawPyramidAct);
+    //setupDraw3DAct(drawPyramidAct);
+    setupActionGroup(drawPyramidAct, draw3DShapeActGroup);
 
-    QSignalMapper* draw3DShapeMapper{new QSignalMapper(this)};
-    for (int i{}; i < draw3DShapeActs.size(); i++)
-    {
-        draw3DShapeMapper->setMapping(draw3DShapeActs.at(i), i);
-        draw3DShapeMapper->setMapping(draw3DShapeActs.at(i), draw3DShapeActs.at(i)->statusTip());
-        QObject::connect(draw3DShapeActs[i], SIGNAL(toggled(bool)), draw3DShapeMapper, SLOT(map()));
-    }
-    QObject::connect(draw3DShapeMapper, SIGNAL(mapped(int)), central2DWidget, SLOT(setDraw3DObjectMode(int)));
-    QObject::connect(draw3DShapeMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
+    // Mapping
+    setupActionGroupMapping(draw3DShapeActGroup, GraphicsMode::GM_3D);
 }
 
 void SDI_MainWindow::setupActionProperties(QAction *action, const QKeySequence &shortcut, const QString &toolTip, const QString &statusTip)
@@ -133,15 +121,27 @@ void SDI_MainWindow::setupActionGroup(QAction *action, QActionGroup *actGroup)
     action->setActionGroup(actGroup);
 }
 
-void SDI_MainWindow::setupActionGroupMapping(QActionGroup *actGroup)
+void SDI_MainWindow::setupActionGroupMapping(QActionGroup *actGroupSender, GraphicsMode mode)
 {
-    QList<QAction*> actionsList{actGroup->actions()};
+    QList<QAction*> actionsList{actGroupSender->actions()};
     QSignalMapper* actionsMapper{new QSignalMapper(this)};
     for (int i{}; i < actionsList.size(); i++)
     {
-        QObject::connect(actionsList.at(i), QAction::toggle(), actionsMapper, QSignalMapper::map());
+        QObject::connect(actionsList.at(i), SIGNAL(toggled(bool)), actionsMapper, SLOT(map()));
         actionsMapper->setMapping(actionsList.at(i), i);
         actionsMapper->setMapping(actionsList.at(i), actionsList.at(i)->statusTip());
+    }
+    QObject::connect(actionsMapper, SIGNAL(mapped(QString)), this, SLOT(showMessage(QString)));
+    switch (mode)
+    {
+    case GraphicsMode::GM_2D:
+        QObject::connect(actionsMapper, SIGNAL(mapped(int)), central2DWidget, SLOT(setDraw2DObjectMode(int)));
+        break;
+    case GraphicsMode::GM_3D:
+        QObject::connect(actionsMapper, SIGNAL(mapped(int)), central2DWidget, SLOT(setDraw3DObjectMode(int)));
+        break;
+    default:
+        break;
     }
 }
 
@@ -182,6 +182,7 @@ void SDI_MainWindow::createMenus()
 
 void SDI_MainWindow::createToolsBar()
 {
+    // Top tool bars ------------------------------------------------------------------------------------------------------
     QToolBar* mainToolBar;
     mainToolBar = addToolBar(tr("Tâp tin"));
     mainToolBar->addAction(openAct);
@@ -195,21 +196,22 @@ void SDI_MainWindow::createToolsBar()
     penWidthBox->setRange(1, 10);
     mainToolBar->addWidget(penWidthBox);
 
+    // Left tool bars ------------------------------------------------------------------------------------------------------
     shape2DToolBar = new QToolBar(tr("Các đối tượng 2D"), this);
-    //shape2DToolBar->addActions(draw2DShapeActs);
-    for (QAction* act : draw2DShapeActs)
-    {
-        shape2DToolBar->addAction(act);
-    }
+    shape2DToolBar->addActions(draw2DShapeActGroup->actions());
     shape2DToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
     addToolBar(Qt::LeftToolBarArea, shape2DToolBar);
+
     triangleTypes->addItem(tr("Thường"));
     triangleTypes->addItem(tr("Vuông cân"));
     triangleTypes->setDisabled(true);
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
     //shape2DToolBar->addWidget(triangleTypes);
-    shape3DToolsBar = addToolBar(tr("Các đối tượng 3D cơ bản"));
-    shape3DToolsBar->addActions(draw3DShapeActs);
+
+    shape3DToolsBar = new QToolBar(tr("Các đối tượng 3D"), this);
+    shape3DToolsBar->addActions(draw3DShapeActGroup->actions());
+    shape3DToolsBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    addToolBar(Qt::LeftToolBarArea, shape3DToolsBar);
 }
 
 void SDI_MainWindow::createDockWidget()
@@ -221,20 +223,6 @@ void SDI_MainWindow::createDockWidget()
     dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, dockWidget);
     //dockWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-}
-
-void SDI_MainWindow::setupDraw2DAct(QAction *drawAct)
-{
-    drawAct->setCheckable(true);
-    drawAct->setActionGroup(draw2DShapeActGroup);
-    draw2DShapeActs.append(drawAct);
-}
-
-void SDI_MainWindow::setupDraw3DAct(QAction *drawAct)
-{
-    drawAct->setCheckable(true);
-    drawAct->setActionGroup(draw3DShapeActGroup);
-    draw3DShapeActs.append(drawAct);
 }
 
 bool SDI_MainWindow::mayBeSave()
@@ -357,7 +345,7 @@ void SDI_MainWindow::showDockWidget(bool enable)
         removeDockWidget(dockWidget);
 }
 
-void SDI_MainWindow::showMessage(QString message)
+void SDI_MainWindow::showMessage(const QString &message)
 {
     //statusBar()->showMessage(message);
     modeToolTip->setText("<b>" + message + "</b>");
