@@ -30,11 +30,6 @@ public:
     explicit SDI_MainWindow(QWidget *parent = nullptr);
     ~SDI_MainWindow();
 private:
-    QMenu* FileMenu;
-    QMenu* saveAsMenu;
-    QMenu* ViewMenu;
-    QMenu* ToolsMenu;
-    QMenu* HelpMenu;
     QToolBar* shape2DToolBar;
     QToolBar* shape3DToolsBar;
     QDockWidget* dockWidget;

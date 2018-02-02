@@ -147,12 +147,12 @@ void SDI_MainWindow::setupActionGroupMapping(QActionGroup *actGroupSender, Graph
 
 void SDI_MainWindow::createMenus()
 {
-    saveAsMenu = new QMenu(tr("Lưu thành..."), this);
+    QMenu* saveAsMenu{new QMenu(tr("Lưu thành..."), this)};
     saveAsMenu->setIcon(QIcon(":/images/icons/save.png"));
     foreach(QAction* act, saveAsActs)
         saveAsMenu->addAction(act);
 
-    FileMenu = new QMenu(tr("&Tập tin"), this);
+    QMenu* FileMenu{new QMenu(tr("&Tập tin"), this)};
     FileMenu->addAction(openAct);
     FileMenu->addMenu(saveAsMenu);
     FileMenu->addAction(printAct);
@@ -160,13 +160,13 @@ void SDI_MainWindow::createMenus()
     FileMenu->addAction(quitAct);
     menuBar()->addMenu(FileMenu);
 
-    ViewMenu = new QMenu(tr("&Xem"), this);
+    QMenu* ViewMenu{new QMenu(tr("&Xem"), this)};
     ViewMenu->addAction(showDockWidgetAct);
     ViewMenu->addSeparator();
     ViewMenu->addAction(showUserCoordinateAct);
     menuBar()->addMenu(ViewMenu);
 
-    ToolsMenu = new QMenu(tr("&Công cụ"), this);
+    QMenu* ToolsMenu{new QMenu(tr("&Công cụ"), this)};
     ToolsMenu->addAction(pickPenColorAct);
     ToolsMenu->addSeparator();
     ToolsMenu->addAction(clearScreenAct);
@@ -174,7 +174,7 @@ void SDI_MainWindow::createMenus()
     ToolsMenu->addAction(optionAct);
     menuBar()->addMenu(ToolsMenu);
 
-    HelpMenu = new QMenu(tr("T&hông tin"), this);
+    QMenu* HelpMenu{new QMenu(tr("T&hông tin"), this)};
     HelpMenu->addAction(aboutSDI_PaintingAct);
     HelpMenu->addAction(aboutQtAct);
     menuBar()->addMenu(HelpMenu);
