@@ -5,9 +5,9 @@
 #include <QDebug>
 #endif
 
-#include "draw2dwidget.h"
+#include "paintwidget.h"
 
-draw2DWidget::draw2DWidget(QWidget *parent)
+PaintWidget::PaintWidget(QWidget *parent)
     : QWidget(parent)
 {
     modified = false;
@@ -24,14 +24,15 @@ draw2DWidget::draw2DWidget(QWidget *parent)
     setMouseTracking(true);
 }
 
-draw2DWidget::~draw2DWidget()
+PaintWidget::~PaintWidget()
 {
+    qDebug() << "Releasing memomy";
     //setOfShapes.clear();
     //setOf3DShapes.clear();
     // Since the vector item's type is QSharedPointer, we don't have to worry about clearing memory
 }
 
-bool draw2DWidget::openImage(const QString &fileName)
+bool PaintWidget::openImage(const QString &fileName)
 {
     QImage loadedImage;
     if (!loadedImage.load(fileName))
@@ -47,7 +48,7 @@ bool draw2DWidget::openImage(const QString &fileName)
     return true;
 }
 
-bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
+bool PaintWidget::saveImage(const QString &fileName, const char *fileFormat)
 {
     if (backgroundImage.isNull())
     {
@@ -71,19 +72,19 @@ bool draw2DWidget::saveImage(const QString &fileName, const char *fileFormat)
     }
 }
 
-void draw2DWidget::setPenColor(const QColor &newColor)
+void PaintWidget::setPenColor(const QColor &newColor)
 {
     myPenColor = newColor;
     currentPen.setColor(myPenColor);
 }
 
-void draw2DWidget::setPenWidth(int newWidth)
+void PaintWidget::setPenWidth(int newWidth)
 {
     myPenWidth = newWidth;
     currentPen.setWidth(myPenWidth);
 }
 
-void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
+void PaintWidget::locateSelectedShape(const SDI_Point &selectPos)
 {
     if (!setOfShapes.isEmpty() && graphicMode == GraphicsMode::GM_2D)
     {
@@ -97,7 +98,7 @@ void draw2DWidget::locateSelectedShape(const SDI_Point &selectPos)
     emit selectedShape(QSharedPointer<SDI_GeometricShape>(nullptr));
 }
 
-void draw2DWidget::clearImage(ClearImageMode clearID)
+void PaintWidget::clearImage(ClearImageMode clearID)
 {
     transparentImg.fill(qRgba(0,0,0,0));
     if (backgroundImage.isNull())
@@ -141,13 +142,13 @@ void draw2DWidget::clearImage(ClearImageMode clearID)
     update();
 }
 
-void draw2DWidget::resetBackground()
+void PaintWidget::resetBackground()
 {
     backgroundImage.fill(qRgba(255,255,255,255));
     update();
 }
 
-void draw2DWidget::mousePressEvent(QMouseEvent *event)
+void PaintWidget::mousePressEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
     //--------------LEFT MOUSE HANDLER  FOR 2D Mode----------------------------
@@ -242,7 +243,7 @@ void draw2DWidget::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
+void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
     if (graphicMode == GraphicsMode::GM_2D)
@@ -322,7 +323,7 @@ void draw2DWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
+void PaintWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     SDI_Point eventPos(event->pos());
     if (event->button() == Qt::LeftButton  && draw2DObjectMode == GeometricShape::GS_SelectShape)
@@ -332,7 +333,7 @@ void draw2DWidget::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void draw2DWidget::paintEvent(QPaintEvent *event)
+void PaintWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
@@ -342,7 +343,7 @@ void draw2DWidget::paintEvent(QPaintEvent *event)
     painter.drawImage(dirtyRect, transparentImg, dirtyRect);
 }
 
-void draw2DWidget::resizeEvent(QResizeEvent *event)
+void PaintWidget::resizeEvent(QResizeEvent *event)
 {
     if (width() > transparentImg.width() || height() > transparentImg.height()) {
         int newWidth = width();
@@ -354,7 +355,7 @@ void draw2DWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void draw2DWidget::drawObject(const SDI_Point &endPoint, StateOfShape drawState) // handle draw Object
+void PaintWidget::drawObject(const SDI_Point &endPoint, StateOfShape drawState) // handle draw Object
 {
     transparentImg.fill(qRgba(0,0,0,0));
     //Repaint the user's coordinate  system
@@ -378,7 +379,7 @@ void draw2DWidget::drawObject(const SDI_Point &endPoint, StateOfShape drawState)
 
 }
 
-void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, StateOfShape drawState)
+void PaintWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, StateOfShape drawState)
 {
     int rad = (myPenWidth / 2) + 2;
     switch (draw2DObjectMode)
@@ -483,7 +484,7 @@ void draw2DWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, 
     emit modificationChanged(modified);
 }
 
-void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, StateOfShape drawState)
+void PaintWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, StateOfShape drawState)
 {
     switch (draw3DObjectMode)
     {
@@ -523,7 +524,7 @@ void draw2DWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, 
     emit modificationChanged(modified);
 }
 
-void draw2DWidget::drawExistentObject(SDI_Painter *painter)
+void PaintWidget::drawExistentObject(SDI_Painter *painter)
 {
     painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
@@ -555,7 +556,7 @@ void draw2DWidget::drawExistentObject(SDI_Painter *painter)
     update();
 }
 
-void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
+void PaintWidget::resizeImage(QImage *image, const QSize &newSize)
 {
     if (image->size() == newSize)
         return;
@@ -568,7 +569,7 @@ void draw2DWidget::resizeImage(QImage *image, const QSize &newSize)
     *image = newImage;
 }
 
-void draw2DWidget::setDraw2DObjectMode(int newId)
+void PaintWidget::setDraw2DObjectMode(int newId)
 {
     switch (newId)
     {
@@ -605,7 +606,7 @@ void draw2DWidget::setDraw2DObjectMode(int newId)
     delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
-void draw2DWidget::setDraw3DObjectMode(int newId)
+void PaintWidget::setDraw3DObjectMode(int newId)
 {
     switch (newId)
     {
@@ -622,7 +623,7 @@ void draw2DWidget::setDraw3DObjectMode(int newId)
     delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
-void draw2DWidget::setGraphicsMode(GraphicsMode newMode)
+void PaintWidget::setGraphicsMode(GraphicsMode newMode)
 {
     // change graphics mode and clear for new session
     graphicMode = newMode;
@@ -632,19 +633,19 @@ void draw2DWidget::setGraphicsMode(GraphicsMode newMode)
     //-------------------------finish-------------------------------
 }
 
-void draw2DWidget::setDisplayCoordinateMode(DisplayCoordinateState newState)
+void PaintWidget::setDisplayCoordinateMode(DisplayCoordinateState newState)
 {
     displayCoordinateMode = newState;
     drawObject(SDI_Point(0,0), StateOfShape::SOS_AllExistentShapes);
 }
 
-void draw2DWidget::setTriangleTypeID(int newID)
+void PaintWidget::setTriangleTypeID(int newID)
 {
     triangleTypeID =  newID;
     lastPoint = lastPoint_2 = SDI_Point(0,0);
 }
 
-void draw2DWidget::print()
+void PaintWidget::print()
 {
 #if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
     QPrinter printer(QPrinter::HighResolution);

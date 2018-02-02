@@ -15,12 +15,12 @@
 #include "sdi_geometricshape.h"
 #include "sdi_geometric3dshape.h"
 
-class draw2DWidget : public QWidget // responsible for drawing 2D Objects, images
+class PaintWidget : public QWidget // responsible for drawing 2D Objects, images
 {
     Q_OBJECT
 public:
-    explicit draw2DWidget(QWidget *parent = nullptr); //  default constructor
-    ~draw2DWidget();
+    explicit PaintWidget(QWidget *parent = nullptr); //  default constructor
+    ~PaintWidget();
     bool openImage(const QString& fileName);
     bool saveImage(const QString& fileName, const char* fileFormat);
     void setPenColor(const QColor& newColor); // set painter's color
