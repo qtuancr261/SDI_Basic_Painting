@@ -1,6 +1,6 @@
 #include "sdi_mainwindow.h"
 
-void SDI_MainWindow::createActions()
+void SDI_MainWindow::setupActions()
 {
     openAct = new QAction(QIcon(":/images/icons/openImg.png"), tr("Mở ảnh"), this);
     openAct->setShortcut(QKeySequence::Open);
@@ -145,7 +145,7 @@ void SDI_MainWindow::setupActionGroupMapping(QActionGroup *actGroupSender, Graph
     }
 }
 
-void SDI_MainWindow::createMenus()
+void SDI_MainWindow::setupMenuBar()
 {
     QMenu* saveAsMenu{new QMenu(tr("Lưu thành..."), this)};
     saveAsMenu->setIcon(QIcon(":/images/icons/save.png"));
@@ -180,7 +180,7 @@ void SDI_MainWindow::createMenus()
     menuBar()->addMenu(HelpMenu);
 }
 
-void SDI_MainWindow::createToolsBar()
+void SDI_MainWindow::setupToolBars()
 {
     // Top tool bars ------------------------------------------------------------------------------------------------------
     QToolBar* mainToolBar;
@@ -214,7 +214,7 @@ void SDI_MainWindow::createToolsBar()
     addToolBar(Qt::LeftToolBarArea, shape3DToolsBar);
 }
 
-void SDI_MainWindow::createDockWidget()
+void SDI_MainWindow::setupDockWidget()
 {
     QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(GraphicsMode)), central2DWidget, SLOT(setGraphicsMode(GraphicsMode)));
     QObject::connect(mainToolsWidget, SIGNAL(changeGraphicsMode(GraphicsMode)), this, SLOT(changeGraphicsMode(GraphicsMode)));
@@ -465,10 +465,10 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
       penWidthBox{new QSpinBox(this)},
       activatedShape{nullptr}
 {
-    createActions();
-    createMenus();
-    createToolsBar();
-    createDockWidget();
+    setupActions();
+    setupMenuBar();
+    setupToolBars();
+    setupDockWidget();
     setCentralWidget(central2DWidget);
     setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)

@@ -64,9 +64,9 @@ private:
     void setupActionProperties(QAction* action,const QKeySequence& shortcut, const QString& toolTip, const QString& statusTip);
     void setupActionGroup(QAction* action, QActionGroup* actGroup);
     void setupActionGroupMapping(QActionGroup* actGroupSender, GraphicsMode mode);
-    void createMenus();
-    void createToolsBar();
-    void createDockWidget();
+    void setupMenuBar();
+    void setupToolBars();
+    void setupDockWidget();
     bool mayBeSave();
     bool saveFile(const QByteArray& fileFormat);
 
