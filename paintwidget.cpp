@@ -84,7 +84,7 @@ void PaintWidget::setPenWidth(int newWidth)
     currentPen.setWidth(myPenWidth);
 }
 
-void PaintWidget::locateSelectedShape(const SDI_Point &selectPos)
+void PaintWidget::locateSelectedShape(const Point &selectPos)
 {
     if (!setOfShapes.isEmpty() && graphicMode == GraphicsMode::GM_2D)
     {
@@ -137,7 +137,7 @@ void PaintWidget::clearImage(ClearImageMode clearID)
             modified = false;
         }
     }
-    lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
+    lastPoint = lastPoint_2 =  Point(0, 0); // reset recorded position
     delegateMode = DrawLineDelegateMode::DLDM_None;
     update();
 }
@@ -150,7 +150,7 @@ void PaintWidget::resetBackground()
 
 void PaintWidget::mousePressEvent(QMouseEvent *event)
 {
-    SDI_Point eventPos(event->pos());
+    Point eventPos(event->pos());
     //--------------LEFT MOUSE HANDLER  FOR 2D Mode----------------------------
     if (event->button() == Qt::LeftButton && graphicMode == GraphicsMode::GM_2D)
         switch (draw2DObjectMode)
@@ -167,7 +167,7 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
             else
             {
                 drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
-                lastPoint = SDI_Point(0, 0); // set to null
+                lastPoint = Point(0, 0); // set to null
             }
             break;
        //-------------------------------------------------------------
@@ -184,7 +184,7 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
                 else
                 {
                     drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
-                    lastPoint = lastPoint_2 = SDI_Point(0, 0); // reset to null
+                    lastPoint = lastPoint_2 = Point(0, 0); // reset to null
                 }
                 break;
             case 1: // Isosceles Right Triangle
@@ -193,7 +193,7 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
                 else
                 {
                     drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
-                    lastPoint = SDI_Point(0, 0); // set to null
+                    lastPoint = Point(0, 0); // set to null
                 }
                 break;
             }
@@ -207,7 +207,7 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
             else
             {
                 drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
-                lastPoint = lastPoint_2 = SDI_Point(0, 0);
+                lastPoint = lastPoint_2 = Point(0, 0);
             }
             break;
         //-------------------------------------------------------------
@@ -219,8 +219,8 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
     else if (event->button() == Qt::LeftButton && graphicMode == GraphicsMode::GM_3D)
         switch (draw3DObjectMode)
         {
-        case Geometric3DShape::G3DS_Parallelepiped:
-        case Geometric3DShape::G3DS_Pyramid:
+        case G3DShape::G3DS_Parallelepiped:
+        case G3DShape::G3DS_Pyramid:
             if (lastPoint.isNull())
                 lastPoint = eventPos;
             else if (lastPoint_2.isNull())
@@ -228,7 +228,7 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
             else
             {
                 drawObject(eventPos, StateOfShape::SOS_NewPermanentShape);
-                lastPoint = lastPoint_2 = SDI_Point(0,0);
+                lastPoint = lastPoint_2 = Point(0,0);
             }
             break;
         default:
@@ -237,15 +237,15 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
     //--------------RIGHT MOUSE HANDLER---------------------------
     else if (event->button() == Qt::RightButton)
     {
-        lastPoint = lastPoint_2 = SDI_Point(0, 0);
+        lastPoint = lastPoint_2 = Point(0, 0);
         delegateMode = DrawLineDelegateMode::DLDM_None;
-        drawObject(SDI_Point(0,0), StateOfShape::SOS_AllExistentShapes); //
+        drawObject(Point(0,0), StateOfShape::SOS_AllExistentShapes); //
     }
 }
 
 void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    SDI_Point eventPos(event->pos());
+    Point eventPos(event->pos());
     if (graphicMode == GraphicsMode::GM_2D)
     {
         switch (draw2DObjectMode)
@@ -308,8 +308,8 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
     {
         switch (draw3DObjectMode)
         {
-        case Geometric3DShape::G3DS_Parallelepiped:
-        case Geometric3DShape::G3DS_Pyramid:
+        case G3DShape::G3DS_Parallelepiped:
+        case G3DShape::G3DS_Pyramid:
             if (lastPoint.isNull())
                 break;
             else if (lastPoint_2.isNull())
@@ -325,7 +325,7 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 
 void PaintWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    SDI_Point eventPos(event->pos());
+    Point eventPos(event->pos());
     if (event->button() == Qt::LeftButton  && draw2DObjectMode == GeometricShape::GS_SelectShape)
     {
         drawObject(eventPos, StateOfShape::SOS_NewTempShape);
@@ -337,7 +337,7 @@ void PaintWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-    origin = SDI_Point(width()/2, height()/2);
+    origin = Point(width()/2, height()/2);
     if (!backgroundImage.isNull())
         painter.drawImage(dirtyRect, backgroundImage, dirtyRect); // if user loaded an image and painted over it
     painter.drawImage(dirtyRect, transparentImg, dirtyRect);
@@ -355,7 +355,7 @@ void PaintWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void PaintWidget::drawObject(const SDI_Point &endPoint, StateOfShape drawState) // handle draw Object
+void PaintWidget::drawObject(const Point &endPoint, StateOfShape drawState) // handle draw Object
 {
     transparentImg.fill(qRgba(0,0,0,0));
     //Repaint the user's coordinate  system
@@ -379,7 +379,7 @@ void PaintWidget::drawObject(const SDI_Point &endPoint, StateOfShape drawState) 
 
 }
 
-void PaintWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, StateOfShape drawState)
+void PaintWidget::draw2DShape(SDI_Painter* painter, const Point &endPoint, StateOfShape drawState)
 {
     int rad = (myPenWidth / 2) + 2;
     switch (draw2DObjectMode)
@@ -484,37 +484,37 @@ void PaintWidget::draw2DShape(SDI_Painter* painter, const SDI_Point &endPoint, S
     emit modificationChanged(modified);
 }
 
-void PaintWidget::draw3DShape(SDI_Painter *painter, const SDI_Point &endPoint, StateOfShape drawState)
+void PaintWidget::draw3DShape(SDI_Painter *painter, const Point &endPoint, StateOfShape drawState)
 {
     switch (draw3DObjectMode)
     {
-    case Geometric3DShape::G3DS_Parallelepiped:
+    case G3DShape::G3DS_Parallelepiped:
         if (!lastPoint.isNull() && lastPoint_2.isNull())
         {
            int xTrans{endPoint.y() - lastPoint.y()};
-           SDI_Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
+           Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
            painter->drawParallelogram(lastPoint, tempPoint, endPoint);
         }
         else
             painter->drawParallelePiped(lastPoint, lastPoint_2, endPoint, currentPen);
         if (drawState == StateOfShape::SOS_NewPermanentShape)
         {
-            setOf3DShapes.push_back(QSharedPointer<SDI_Geometric3DShape>(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin, currentPen)));
+            setOf3DShapes.push_back(QSharedPointer<Geometric3DShape>(new Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin, currentPen)));
         }
         update();
         break;
-    case Geometric3DShape::G3DS_Pyramid:
+    case G3DShape::G3DS_Pyramid:
         if (!lastPoint.isNull() && lastPoint_2.isNull())
         {
             int xTrans{endPoint.y() - lastPoint.y()};
-            SDI_Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
+            Point tempPoint(lastPoint.x() - xTrans, endPoint.y());
             painter->drawParallelogram(lastPoint, tempPoint, endPoint);
         }
         else
             painter->drawPyramid(lastPoint, lastPoint_2, endPoint, currentPen);
         if (drawState == StateOfShape::SOS_NewPermanentShape)
         {
-            setOf3DShapes.push_back(QSharedPointer<SDI_Geometric3DShape>(new SDI_Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin, currentPen)));
+            setOf3DShapes.push_back(QSharedPointer<Geometric3DShape>(new Geometric3DShape(draw3DObjectMode, lastPoint, lastPoint_2, endPoint, origin, currentPen)));
         }
         update();
     default:
@@ -531,7 +531,7 @@ void PaintWidget::drawExistentObject(SDI_Painter *painter)
     if (!setOfShapes.isEmpty() && graphicMode == GraphicsMode::GM_2D)
         for (QSharedPointer<SDI_GeometricShape>& shape:setOfShapes)
         {
-            QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
+            QVector<Point> setOfPoints(shape->getSetOfPoints());
             GeometricShape shapeName{shape->getShapeId()};
             if (shapeName == GeometricShape::GS_Rect || shapeName == GeometricShape::GS_Square || shapeName == GeometricShape::GS_Parallelogram)
                 painter->drawTetragon(setOfPoints, shape->getShapePen());
@@ -543,14 +543,14 @@ void PaintWidget::drawExistentObject(SDI_Painter *painter)
                 painter->drawTriangle(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2), shape->getShapePen());
         }
     else if (!setOf3DShapes.isEmpty() && graphicMode == GraphicsMode::GM_3D)
-        for (QSharedPointer<SDI_Geometric3DShape> shape:setOf3DShapes)
+        for (QSharedPointer<Geometric3DShape> shape:setOf3DShapes)
         {
-            QVector<SDI_Point> setOfPoints(shape->getSetOfPoints());
-            Geometric3DShape shapeName{shape->getShapeID()};
+            QVector<Point> setOfPoints(shape->getSetOfPoints());
+            G3DShape shapeName{shape->getShapeID()};
             painter->setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-            if (shapeName == Geometric3DShape::G3DS_Parallelepiped)
+            if (shapeName == G3DShape::G3DS_Parallelepiped)
                 painter->drawParallelePiped(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2), shape->getShapePen());
-            else if (shapeName == Geometric3DShape::G3DS_Pyramid)
+            else if (shapeName == G3DShape::G3DS_Pyramid)
                 painter->drawPyramid(setOfPoints.at(0), setOfPoints.at(1), setOfPoints.at(2), shape->getShapePen());
         }
     update();
@@ -565,7 +565,7 @@ void PaintWidget::resizeImage(QImage *image, const QSize &newSize)
     newImage.fill(qRgba(0,0,0,0));
     //-----------------------------------------
     SDI_Painter painter(&newImage);
-    painter.drawImage(SDI_Point(0, 0), *image);
+    painter.drawImage(Point(0, 0), *image);
     *image = newImage;
 }
 
@@ -602,7 +602,7 @@ void PaintWidget::setDraw2DObjectMode(int newId)
         setCursor(Qt::PointingHandCursor);
         break;
     }
-    lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
+    lastPoint = lastPoint_2 =  Point(0, 0); // reset recorded position
     delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
@@ -611,15 +611,15 @@ void PaintWidget::setDraw3DObjectMode(int newId)
     switch (newId)
     {
     case 0:
-        draw3DObjectMode = Geometric3DShape::G3DS_Parallelepiped;
+        draw3DObjectMode = G3DShape::G3DS_Parallelepiped;
         setCursor(Qt::ClosedHandCursor);
         break;
     case 1:
-        draw3DObjectMode = Geometric3DShape::G3DS_Pyramid;
+        draw3DObjectMode = G3DShape::G3DS_Pyramid;
         setCursor(Qt::ClosedHandCursor);
         break;
     }
-    lastPoint = lastPoint_2 =  SDI_Point(0, 0); // reset recorded position
+    lastPoint = lastPoint_2 =  Point(0, 0); // reset recorded position
     delegateMode = DrawLineDelegateMode::DLDM_None;
 }
 
@@ -636,13 +636,13 @@ void PaintWidget::setGraphicsMode(GraphicsMode newMode)
 void PaintWidget::setDisplayCoordinateMode(DisplayCoordinateState newState)
 {
     displayCoordinateMode = newState;
-    drawObject(SDI_Point(0,0), StateOfShape::SOS_AllExistentShapes);
+    drawObject(Point(0,0), StateOfShape::SOS_AllExistentShapes);
 }
 
 void PaintWidget::setTriangleTypeID(int newID)
 {
     triangleTypeID =  newID;
-    lastPoint = lastPoint_2 = SDI_Point(0,0);
+    lastPoint = lastPoint_2 = Point(0,0);
 }
 
 void PaintWidget::print()

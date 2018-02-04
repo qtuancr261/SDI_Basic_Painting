@@ -1,6 +1,6 @@
 // GUI
-#ifndef DRAW2DWIDGET_H
-#define DRAW2DWIDGET_H
+#ifndef PAINTWIDGET_H
+#define PAINTWIDGET_H
 
 #include <QWidget>
 #include <QColor>
@@ -11,9 +11,9 @@
 #include <QWeakPointer>
 #include "sdi_namespace.h"
 #include "sdi_painter.h"
-#include "sdi_point.h"
+#include "point.h"
 #include "sdi_geometricshape.h"
-#include "sdi_geometric3dshape.h"
+#include "geometric3dshape.h"
 
 class PaintWidget : public QWidget // responsible for drawing 2D Objects, images
 {
@@ -29,10 +29,10 @@ public:
     bool isModified() const {return modified;} // check if image has been modified
     QColor penColor() const {return myPenColor;}
     int penWidth() const {return myPenWidth;}
-    void locateSelectedShape(const SDI_Point &selectPos);
-    void drawObject(const SDI_Point &endPoint, StateOfShape drawState);
-    void draw2DShape(SDI_Painter *painter, const SDI_Point& endPoint, StateOfShape drawState);
-    void draw3DShape(SDI_Painter* painter, const SDI_Point& endPoint, StateOfShape drawState);
+    void locateSelectedShape(const Point &selectPos);
+    void drawObject(const Point &endPoint, StateOfShape drawState);
+    void draw2DShape(SDI_Painter *painter, const Point& endPoint, StateOfShape drawState);
+    void draw3DShape(SDI_Painter* painter, const Point& endPoint, StateOfShape drawState);
 
 protected: // handle events
     virtual void mousePressEvent(QMouseEvent *event) override;
@@ -51,14 +51,14 @@ private:
     QImage transparentImg;
     QSize originalSize; // original size of loaded image
 
-    SDI_Point origin; // where the axes of the system intersect
-    SDI_Point lastPoint;
-    SDI_Point lastPoint_2;
+    Point origin; // where the axes of the system intersect
+    Point lastPoint;
+    Point lastPoint_2;
 
     GraphicsMode graphicMode;
     DisplayCoordinateState displayCoordinateMode;
     GeometricShape draw2DObjectMode; // hold 2D Object ID
-    Geometric3DShape draw3DObjectMode;
+    G3DShape draw3DObjectMode;
     DrawLineDelegateMode delegateMode;
     int triangleTypeID; // hold triangle ID
     int myPenWidth;
@@ -66,7 +66,7 @@ private:
     QPen currentPen;
 
     QVector<QSharedPointer<SDI_GeometricShape>> setOfShapes;
-    QVector<QSharedPointer<SDI_Geometric3DShape>> setOf3DShapes;
+    QVector<QSharedPointer<Geometric3DShape>> setOf3DShapes;
 
 signals:
     void mouseMoveTo(QString currentPos);
@@ -85,4 +85,4 @@ public slots:
     void print();
 };
 
-#endif // DRAW2DWIDGET_H
+#endif // PAINTWIDGET_H
