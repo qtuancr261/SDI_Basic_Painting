@@ -3,22 +3,22 @@
 
 #include <QVector>
 #include "sdi_namespace.h"
-#include "sdi_point.h"
+#include "point.h"
 #include "sdi_painter.h"
-class SDI_Geometric3DShape
+class Geometric3DShape
 {
 private:
-    QVector<SDI_Point>setOfPoints;
-    Geometric3DShape shapeID;
-    SDI_Point OriginPos;
-    SDI_Point centralPoint;
+    QVector<Point>setOfPoints;
+    G3DShape shapeID;
+    Point OriginPos;
+    Point centralPoint;
     QPen shapePen;
 
 public:
-    SDI_Geometric3DShape() = default;
-    SDI_Geometric3DShape(Geometric3DShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin, const QPen& currentPen);
-    QVector<SDI_Point>& getSetOfPoints();
-    Geometric3DShape getShapeID() const;
+    Geometric3DShape() = default;
+    Geometric3DShape(G3DShape id, const Point& point1, const Point& point2, const Point& point3, const Point& Origin, const QPen& currentPen);
+    QVector<Point>& getSetOfPoints();
+    G3DShape getShapeID() const;
     QPen getShapePen() const;
 };
 
