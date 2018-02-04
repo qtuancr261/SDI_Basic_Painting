@@ -1,21 +1,21 @@
-#include "sdi_point.h"
+#include "point.h"
 
-SDI_Point::SDI_Point() : QPoint()
+Point::Point() : QPoint()
 {
     // default constructor
 }
 
-SDI_Point::SDI_Point(int xpos, int ypos, int hValue) : QPoint(xpos, ypos), h(hValue)
+Point::Point(int xpos, int ypos, int hValue) : QPoint(xpos, ypos), h(hValue)
 {
 
 }
 
-SDI_Point::SDI_Point(const QPoint &srcPoint) : SDI_Point(srcPoint.x(), srcPoint.y())
+Point::Point(const QPoint &srcPoint) : Point(srcPoint.x(), srcPoint.y())
 {
 
 }
 
-SDI_Point &SDI_Point::operator =(const SDI_Point &srcPoint)
+Point &Point::operator =(const Point &srcPoint)
 {
     rx() = srcPoint.x();
     ry() = srcPoint.y();
@@ -23,13 +23,13 @@ SDI_Point &SDI_Point::operator =(const SDI_Point &srcPoint)
     return *this;
 }
 
-void SDI_Point::translate(int xtrans, int ytrans)
+void Point::translate(int xtrans, int ytrans)
 {
     rx() += xtrans;
     ry() -= ytrans;
 }
 
-void SDI_Point::scale(double Sx, double Sy, const QPoint &centralPoint)
+void Point::scale(double Sx, double Sy, const QPoint &centralPoint)
 {
     int xtrans{x() - centralPoint.x()};
     int ytrans{y() - centralPoint.y()};
@@ -37,7 +37,7 @@ void SDI_Point::scale(double Sx, double Sy, const QPoint &centralPoint)
     ry() = centralPoint.y() + Sy*ytrans;
 }
 
-void SDI_Point::rotate(double degree, int xtrans, int ytrans)
+void Point::rotate(double degree, int xtrans, int ytrans)
 {
     if (degree == 0.0 || degree == 180.0)
         return;
@@ -52,33 +52,33 @@ void SDI_Point::rotate(double degree, int xtrans, int ytrans)
     }
 }
 
-void SDI_Point::centralSymmetry(const QPoint &centralPoint)
+void Point::centralSymmetry(const QPoint &centralPoint)
 {
     rx() = centralPoint.x()*2 - x();
     ry() = centralPoint.y()*2 - y();
 }
 
-void SDI_Point::OxSymmetry(int yValue)
+void Point::OxSymmetry(int yValue)
 {
-    centralSymmetry(SDI_Point(x(), yValue));
+    centralSymmetry(Point(x(), yValue));
 }
 
-void SDI_Point::OySymmetry(int xValue)
+void Point::OySymmetry(int xValue)
 {
-    centralSymmetry(SDI_Point(xValue, y()));
+    centralSymmetry(Point(xValue, y()));
 }
 
-bool SDI_Point::operator <(const SDI_Point &srcPoint) const
+bool Point::operator <(const Point &srcPoint) const
 {
     return this->x() < srcPoint.x();
 }
 
-double SDI_Point::distance(const SDI_Point &p1, const SDI_Point &p2) // static function
+double Point::distance(const Point &p1, const Point &p2) // static function
 {
     return qSqrt(qPow(p1.x() - p2.x(), 2.0) + qPow(p1.y() - p2.y(), 2.0));
 }
 
-double SDI_Point::distanceFromPointToLine(const SDI_Point &point, const SDI_Point &lineP1, const SDI_Point &lineP2)
+double Point::distanceFromPointToLine(const Point &point, const Point &lineP1, const Point &lineP2)
 {
     // aFact*x + bFact*y + c = 0
     int aFactor{lineP2.y() - lineP1.y()};
@@ -88,12 +88,12 @@ double SDI_Point::distanceFromPointToLine(const SDI_Point &point, const SDI_Poin
     return qAbs(aFactor*point.x() + bFactor*point.y() + cFactor)/qSqrt(qPow(aFactor, 2.0) + qPow(bFactor, 2.0));
 }
 
-SDI_Point SDI_Point::convertToUserSystem(const SDI_Point &cvtPoint, const SDI_Point &Origin)
+Point Point::convertToUserSystem(const Point &cvtPoint, const Point &Origin)
 {
-    return SDI_Point(cvtPoint.x() - Origin.x(), Origin.y() - cvtPoint.y());
+    return Point(cvtPoint.x() - Origin.x(), Origin.y() - cvtPoint.y());
 }
 
-SDI_Point SDI_Point::translate(const SDI_Point &cvtPoint, int xtrans, int ytrans)
+Point Point::translate(const Point &cvtPoint, int xtrans, int ytrans)
 {
     QVector<QVector<int>> transMatrix; // 2D scale matrix
     transMatrix = matrix2DLibs::createTranslateMatrix(xtrans, ytrans);
@@ -104,10 +104,10 @@ SDI_Point SDI_Point::translate(const SDI_Point &cvtPoint, int xtrans, int ytrans
         for (int j{ 0 }; j < 3; j++)
             newPoint[i] += currentPoint[j] * transMatrix[j][i];
     }
-    return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
+    return Point(newPoint[0], newPoint[1], newPoint[2]);
 }
 
-SDI_Point SDI_Point::scale(const SDI_Point &cvtPoint, int Sx, int Sy)
+Point Point::scale(const Point &cvtPoint, int Sx, int Sy)
 {
     QVector<QVector<int>> scaMatrix; // 2D scale matrix
     scaMatrix = matrix2DLibs::createScaleMatrix(Sx, Sy);
@@ -118,10 +118,10 @@ SDI_Point SDI_Point::scale(const SDI_Point &cvtPoint, int Sx, int Sy)
         for (int j{ 0 }; j < 3; j++)
             newPoint[i] += currentPoint[j] * scaMatrix[j][i];
     }
-    return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
+    return Point(newPoint[0], newPoint[1], newPoint[2]);
 }
 
-SDI_Point SDI_Point::rotate(const SDI_Point &cvtPoint, double radian)
+Point Point::rotate(const Point &cvtPoint, double radian)
 {
     QVector<QVector<double>> RotMatrix; // 2D rotate matrix
     RotMatrix = matrix2DLibs::createRotateMatrix(radian);
@@ -134,10 +134,10 @@ SDI_Point SDI_Point::rotate(const SDI_Point &cvtPoint, double radian)
           newPoint[i] += (currentPoint[j] *RotMatrix[j][i]);
         }
     }
-    return SDI_Point(float(newPoint[0]), float(newPoint[1]), newPoint[2]);
+    return Point(float(newPoint[0]), float(newPoint[1]), newPoint[2]);
 }
 
-SDI_Point SDI_Point::centralSymmetry(const SDI_Point &cvtPoint, const SDI_Point &centralPoint)
+Point Point::centralSymmetry(const Point &cvtPoint, const Point &centralPoint)
 {
     QVector<QVector<int>> centralSymMatrix; // 2D reflect matrix
     centralSymMatrix = matrix2DLibs::createCentralSymetryMatrix(centralPoint);
@@ -148,5 +148,5 @@ SDI_Point SDI_Point::centralSymmetry(const SDI_Point &cvtPoint, const SDI_Point 
         for (int j{ 0 }; j < 3; j++)
             newPoint[i] += currentPoint[j] * centralSymMatrix[j][i];
     }
-    return SDI_Point(newPoint[0], newPoint[1], newPoint[2]);
+    return Point(newPoint[0], newPoint[1], newPoint[2]);
 }
