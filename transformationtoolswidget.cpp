@@ -1,19 +1,18 @@
-#include "lefttoolswidget.h"
-
-leftToolsWidget::leftToolsWidget(QWidget *parent) : QWidget(parent)
+#include "transformationtoolswidget.h"
+TransformationToolsWidget::TransformationToolsWidget(QWidget *parent) : QWidget(parent)
 {
     setupGUI();
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_WINDOWS7)
         setFont(QFont("Segoe UI", 11));
 }
 
-void leftToolsWidget::setInfoBox(QString shapeName, QString shapeData)
+void TransformationToolsWidget::setInfoBox(QString shapeName, QString shapeData)
 {
     shapeNameLabel->setText(shapeName);
     shapeDataTEdit->setText(shapeData);
 }
 
-void leftToolsWidget::setupGUI()
+void TransformationToolsWidget::setupGUI()
 {
     // select Mode Group Box
     graphic2DMode = new QPushButton(QIcon(":/images/icons/oxy_coordinate.png"), tr("Đồ họa 2D - Hệ trục Oxyz"), this);
@@ -65,7 +64,7 @@ void leftToolsWidget::setupGUI()
     userOriginPosRotate->setAutoExclusive(true);
     doRotate = new QPushButton(QIcon(":/images/icons/pointHand.png"),tr("Xoay đối tượng"), this);
     doRotate->setAutoRepeat(true);
-    QObject::connect(doRotate, &QPushButton::pressed, this, &leftToolsWidget::takeRotateParameters);
+    QObject::connect(doRotate, &QPushButton::pressed, this, &TransformationToolsWidget::takeRotateParameters);
     QGridLayout* rotateLayout{new QGridLayout(this)};
     rotateLayout->addWidget(new QLabel(tr("Góc xoay: ")), 0, 0);
     rotateLayout->addWidget(rotateSlider, 0, 1);
@@ -87,7 +86,7 @@ void leftToolsWidget::setupGUI()
     OySymmetry->setAutoExclusive(true);
     doSymmetry = new QPushButton(QIcon(":/images/icons/pointHand.png"), tr("Lấy đối xứng đối tượng"), this);
     doSymmetry->setAutoRepeat(true);
-    QObject::connect(doSymmetry, &QPushButton::pressed, this, &leftToolsWidget::takeSymmetryParameters);
+    QObject::connect(doSymmetry, &QPushButton::pressed, this, &TransformationToolsWidget::takeSymmetryParameters);
     QVBoxLayout* symmetryLayout{new QVBoxLayout()};
     symmetryLayout->addWidget(centralSymmetry);
     symmetryLayout->addWidget(OxSymmetry);
@@ -152,14 +151,14 @@ void leftToolsWidget::setupGUI()
     setLayout(mainLayout);
 }
 
-void leftToolsWidget::setGraphicModeButtonStyle(QPushButton *button)
+void TransformationToolsWidget::setGraphicModeButtonStyle(QPushButton *button)
 {
     button->setIconSize(QSize(32, 32));
     button->setCheckable(true);
     button->setAutoExclusive(true);
 }
 
-void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int minValue, int MaxValue)
+void TransformationToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int minValue, int MaxValue)
 {
     slider->setRange(minValue, MaxValue);
     box->setRange(minValue, MaxValue);
@@ -167,7 +166,7 @@ void leftToolsWidget::setSlider_BoxSytle(QSlider *slider, QSpinBox *box, int min
     QObject::connect(box, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
 }
 
-void leftToolsWidget::takeRotateParameters()
+void TransformationToolsWidget::takeRotateParameters()
 {
     if (shapeCentralRotate->isChecked())
         emit rotateSelectedShape(rotateBox->value(), 1); // 1 : using SDI_GeometricShape::centralPoint
@@ -175,7 +174,7 @@ void leftToolsWidget::takeRotateParameters()
         emit rotateSelectedShape(rotateBox->value(), 0); // 0 : using SDI_GeometricShape::OriginPos
 }
 
-void leftToolsWidget::takeSymmetryParameters()
+void TransformationToolsWidget::takeSymmetryParameters()
 {
     if (centralSymmetry->isChecked())
         emit centralSymmetrySelectedShape();
@@ -185,7 +184,7 @@ void leftToolsWidget::takeSymmetryParameters()
         emit OySymmetrySelectedShape();
 }
 
-void leftToolsWidget::showMousePosition(QString posInfo)
+void TransformationToolsWidget::showMousePosition(QString posInfo)
 {
     mousePositionLabel->setText(posInfo);
 }

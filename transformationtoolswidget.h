@@ -1,6 +1,6 @@
 //GUI
-#ifndef LEFTTOOLSWIDGET_H
-#define LEFTTOOLSWIDGET_H
+#ifndef TRANSFORMATIONTOOLSWIDGET_H
+#define TRANSFORMATIONTOOLSWIDGET_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -18,12 +18,12 @@
 #include <QToolBox>
 #include <QSpacerItem>
 #include "sdi_namespace.h"
-class leftToolsWidget : public QWidget
+class TransformationToolsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit leftToolsWidget(QWidget *parent = nullptr);
-    ~leftToolsWidget() = default;
+    explicit TransformationToolsWidget(QWidget *parent = nullptr);
+    ~TransformationToolsWidget() = default;
     void setInfoBox(QString shapeNameLabel, QString shapeData);
 
 private:
@@ -78,4 +78,4 @@ public slots:
     void showMousePosition(QString posInfo); // take current mouse position and show it on the screen
 };
 
-#endif // LEFTTOOLSWIDGET_H
+#endif // TRANSFORMATIONTOOLSWIDGET_H
