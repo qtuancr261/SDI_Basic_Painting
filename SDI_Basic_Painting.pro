@@ -25,23 +25,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         sdi_mainwindow.cpp \
-    lefttoolswidget.cpp \
     sdi_painter.cpp \
-    draw2dwidget.cpp \
-    sdi_point.cpp \
     matrixlibs.cpp \
     sdi_geometricshape.cpp \
-    sdi_geometric3dshape.cpp
+    paintwidget.cpp \
+    transformationtoolswidget.cpp \
+    point.cpp \
+    geometric3dshape.cpp
 
 HEADERS  += sdi_mainwindow.h \
-    lefttoolswidget.h \
     sdi_painter.h \
-    draw2dwidget.h \
-    sdi_point.h \
     matrixlibs.h \
     sdi_geometricshape.h \
-    sdi_geometric3dshape.h \
-    sdi_namespace.h
+    sdi_namespace.h \
+    paintwidget.h \
+    transformationtoolswidget.h \
+    point.h \
+    geometric3dshape.h
 
 RESOURCES += \
     resource.qrc
