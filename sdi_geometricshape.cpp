@@ -8,7 +8,7 @@ void SDI_GeometricShape::setShapeName()
         shapeName = shapeNames.at(static_cast<int>(shapeID));
 }
 
-SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &Origin, const QPen &pen)
+SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const Point &point1, const Point &point2, const Point &Origin, const QPen &pen)
     : shapeID(id), shapePen(pen),OriginPos(Origin)
 {
     switch (shapeID)
@@ -29,7 +29,7 @@ SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point
     }
 }
 
-SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const SDI_Point &point1, const SDI_Point &point2, const SDI_Point &point3, const SDI_Point &Origin, const QPen &pen)
+SDI_GeometricShape::SDI_GeometricShape(GeometricShape id, const Point &point1, const Point &point2, const Point &point3, const Point &Origin, const QPen &pen)
     : shapeID(id), shapePen(pen), OriginPos(Origin)
 {
     switch (shapeID)
@@ -63,7 +63,7 @@ GeometricShape SDI_GeometricShape::getShapeId() const
     return shapeID;
 }
 
-QVector<SDI_Point> &SDI_GeometricShape::getSetOfPoints()
+QVector<Point> &SDI_GeometricShape::getSetOfPoints()
 {
     return setOfPoints;
 }
@@ -93,18 +93,18 @@ const QRect &SDI_GeometricShape::getShapeBoundinRect() const
     return shapeBoundingRect;
 }
 
-void SDI_GeometricShape::setShapeBoundinRect(const SDI_Point &topLeft, const QSize &rectSize)
+void SDI_GeometricShape::setShapeBoundinRect(const Point &topLeft, const QSize &rectSize)
 {
     shapeBoundingRect.setTopLeft(topLeft);
     shapeBoundingRect.setSize(rectSize);
 }
 
-const SDI_Point &SDI_GeometricShape::getOriginPos() const
+const Point &SDI_GeometricShape::getOriginPos() const
 {
     return OriginPos;
 }
 
-void SDI_GeometricShape::setCentralPoint(const SDI_Point &src)
+void SDI_GeometricShape::setCentralPoint(const Point &src)
 {
     centralPoint = src;
 }
@@ -162,12 +162,12 @@ void SDI_GeometricShape::updateShapeData()
     }
 }
 
-bool SDI_GeometricShape::containsPoint(const SDI_Point &point)
+bool SDI_GeometricShape::containsPoint(const Point &point)
 {
     switch (shapeID)
     {
     case GeometricShape::GS_Line:
-        if (shapeBoundingRect.contains(point) && SDI_Point::distanceFromPointToLine(point, setOfPoints.at(0), setOfPoints.at(1)) <= 50.0)
+        if (shapeBoundingRect.contains(point) && Point::distanceFromPointToLine(point, setOfPoints.at(0), setOfPoints.at(1)) <= 50.0)
             return true;
         else
             break;
@@ -182,7 +182,7 @@ bool SDI_GeometricShape::containsPoint(const SDI_Point &point)
 
 void SDI_GeometricShape::translate(int xtrans, int ytrans)
 {
-    for (SDI_Point& point : setOfPoints)
+    for (Point& point : setOfPoints)
     {
         point.translate(xtrans, ytrans);
     }
@@ -191,7 +191,7 @@ void SDI_GeometricShape::translate(int xtrans, int ytrans)
 
 void SDI_GeometricShape::scale(double xscale, double yscale)
 {
-    for (SDI_Point& point : setOfPoints)
+    for (Point& point : setOfPoints)
     {
         point.scale(xscale, yscale, centralPoint);
     }
@@ -204,7 +204,7 @@ void SDI_GeometricShape::rotate(double degree, int centralPointID)
     {
         int xtrans{centralPointID == 1 ? -centralPoint.x() : -OriginPos.x()};
         int ytrans{centralPointID == 1 ? -centralPoint.y() : -OriginPos.y()};
-        for (SDI_Point& point : setOfPoints)
+        for (Point& point : setOfPoints)
         {
             point.rotate(degree, xtrans, ytrans);
         }
@@ -216,7 +216,7 @@ void SDI_GeometricShape::rotate(double degree, int centralPointID)
 
 void SDI_GeometricShape::originPosSymmetry()
 {
-    for (SDI_Point& point : setOfPoints)
+    for (Point& point : setOfPoints)
     {
         //point.rx() = OriginPos.x()*2 - point.x();
         //point.ry() = OriginPos.y()*2 - point.y();
@@ -227,7 +227,7 @@ void SDI_GeometricShape::originPosSymmetry()
 
 void SDI_GeometricShape::OxSymmetry()
 {
-    for (SDI_Point& point : setOfPoints)
+    for (Point& point : setOfPoints)
     {
         point.OxSymmetry(OriginPos.y());
     }
@@ -236,7 +236,7 @@ void SDI_GeometricShape::OxSymmetry()
 
 void SDI_GeometricShape::OySymmetry()
 {
-    for (SDI_Point& point : setOfPoints)
+    for (Point& point : setOfPoints)
     {
         point.OySymmetry(OriginPos.x());
     }

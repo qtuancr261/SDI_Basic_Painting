@@ -32,7 +32,7 @@ enum class GeometricShape
     GS_Triangle
 };
 
-enum class Geometric3DShape
+enum class G3DShape
 {
     G3DS_SelectShape = 0,
     G3DS_Parallelepiped,

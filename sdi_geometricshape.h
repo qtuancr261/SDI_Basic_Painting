@@ -5,34 +5,34 @@
 #include <QVector>
 #include <QRect>
 #include "sdi_namespace.h"
-#include "sdi_point.h"
+#include "point.h"
 #include "sdi_painter.h"
 
 class SDI_GeometricShape
 {
 private:
-    QVector<SDI_Point> setOfPoints;
+    QVector<Point> setOfPoints;
     GeometricShape shapeID;
     QString shapeData;
     QRect shapeBoundingRect;
     QPen shapePen;
     QString shapeName;
-    SDI_Point OriginPos;
-    SDI_Point centralPoint;
+    Point OriginPos;
+    Point centralPoint;
     void setShapeName();
 
     //---------static member---------------
     static QVector<QString> shapeNames;
 public:
     SDI_GeometricShape() = default;
-    SDI_GeometricShape(GeometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& Origin, const QPen& pen);
-    SDI_GeometricShape(GeometricShape id, const SDI_Point& point1, const SDI_Point& point2, const SDI_Point& point3, const SDI_Point& Origin, const QPen& pen);
+    SDI_GeometricShape(GeometricShape id, const Point& point1, const Point& point2, const Point& Origin, const QPen& pen);
+    SDI_GeometricShape(GeometricShape id, const Point& point1, const Point& point2, const Point& point3, const Point& Origin, const QPen& pen);
     SDI_GeometricShape(const SDI_GeometricShape& srcShape);
     ~SDI_GeometricShape() = default;
 
     GeometricShape getShapeId() const;
 
-    QVector<SDI_Point>& getSetOfPoints();
+    QVector<Point>& getSetOfPoints();
 
     QPen getShapePen() const;
 
@@ -42,15 +42,15 @@ public:
     void setShapeData(QString newData);
 
     const QRect& getShapeBoundinRect() const;
-    void setShapeBoundinRect(const SDI_Point& topLeft, const QSize& rectSize);
+    void setShapeBoundinRect(const Point& topLeft, const QSize& rectSize);
 
-    const SDI_Point& getOriginPos() const;
+    const Point& getOriginPos() const;
 
-    void setCentralPoint(const SDI_Point&src);
+    void setCentralPoint(const Point&src);
 
     void initShapeData();
     void updateShapeData();
-    bool containsPoint(const SDI_Point& point);
+    bool containsPoint(const Point& point);
 public slots:
     void translate(int xtrans, int ytrans);
     void scale(double xscale, double yscale);

@@ -21,8 +21,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QColorDialog>
-#include "lefttoolswidget.h"
-#include "draw2dwidget.h"
+#include "transformationtoolswidget.h"
+#include "paintwidget.h"
 class SDI_MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -31,10 +31,10 @@ public:
     ~SDI_MainWindow();
 private:
     QToolBar* shape2DToolBar;
-    QToolBar* shape3DToolsBar;
+    QToolBar* shape3DToolBar;
     QDockWidget* dockWidget;
-    draw2DWidget* central2DWidget;
-    leftToolsWidget* mainToolsWidget;
+    PaintWidget* central2DWidget;
+    TransformationToolsWidget* mainToolsWidget;
     QLabel* modeToolTip;
     // File Actions
     QAction* openAct;
@@ -64,9 +64,9 @@ private:
     void setupActionProperties(QAction* action,const QKeySequence& shortcut, const QString& toolTip, const QString& statusTip);
     void setupActionGroup(QAction* action, QActionGroup* actGroup);
     void setupActionGroupMapping(QActionGroup* actGroupSender, GraphicsMode mode);
-    void createMenus();
-    void createToolsBar();
-    void createDockWidget();
+    void setupMenuBar();
+    void setupToolBars();
+    void setupDockWidget();
     bool mayBeSave();
     bool saveFile(const QByteArray& fileFormat);
 

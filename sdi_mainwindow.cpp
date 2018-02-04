@@ -208,10 +208,10 @@ void SDI_MainWindow::setupToolBars()
     QObject::connect(triangleTypes, SIGNAL(currentIndexChanged(int)), central2DWidget, SLOT(setTriangleTypeID(int)));
     //shape2DToolBar->addWidget(triangleTypes);
 
-    shape3DToolsBar = new QToolBar(tr("Các đối tượng 3D"), this);
-    shape3DToolsBar->addActions(draw3DShapeActGroup->actions());
-    shape3DToolsBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    addToolBar(Qt::LeftToolBarArea, shape3DToolsBar);
+    shape3DToolBar = new QToolBar(tr("Các đối tượng 3D"), this);
+    shape3DToolBar->addActions(draw3DShapeActGroup->actions());
+    shape3DToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    addToolBar(Qt::LeftToolBarArea, shape3DToolBar);
 }
 
 void SDI_MainWindow::setupDockWidget()
@@ -326,12 +326,12 @@ void SDI_MainWindow::changeGraphicsMode(GraphicsMode newMode)
     if (newMode == GraphicsMode::GM_2D)
     {
         shape2DToolBar->setEnabled(true);
-        shape3DToolsBar->setDisabled(true);
+        shape3DToolBar->setDisabled(true);
         showUserCoordinateAct->setIcon(QIcon(":/images/icons/oxy_coordinate.png"));
     }
     else
     {
-        shape3DToolsBar->setEnabled(true);
+        shape3DToolBar->setEnabled(true);
         shape2DToolBar->setDisabled(true);
         showUserCoordinateAct->setIcon(QIcon(":/images/icons/oxyz_coordinate.png"));
     }
@@ -457,8 +457,8 @@ void SDI_MainWindow::OySymmetryShape()
 SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     : QMainWindow(parent),
       dockWidget{new QDockWidget(this)},
-      central2DWidget{new draw2DWidget(this)},
-      mainToolsWidget{new leftToolsWidget(this)},
+      central2DWidget{new PaintWidget(this)},
+      mainToolsWidget{new TransformationToolsWidget(this)},
       modeToolTip{new QLabel("<b>Chọn chế độ đồ họa 2D hoặc 3D để bắt đầu phiên làm việc ... </b>")},      draw2DShapeActGroup{new QActionGroup(this)},
       draw3DShapeActGroup{new QActionGroup(this)},
       triangleTypes{ new QComboBox(this)},
@@ -479,7 +479,7 @@ SDI_MainWindow::SDI_MainWindow(QWidget *parent)
     statusBar()->addWidget(modeToolTip,1);
     // connect draw2DWidget signals with other SDI_MainWindow components slots
     QObject::connect(central2DWidget, SIGNAL(modificationChanged(bool)), this , SLOT(setWindowModified(bool)));
-    QObject::connect(central2DWidget, &draw2DWidget::mouseMoveTo,mainToolsWidget, &leftToolsWidget::showMousePosition);
+    QObject::connect(central2DWidget, &PaintWidget::mouseMoveTo,mainToolsWidget, &TransformationToolsWidget::showMousePosition);
     QObject::connect(central2DWidget, SIGNAL(selectedShape(QWeakPointer<SDI_GeometricShape>)), this, SLOT(showSelectedShape(QWeakPointer<SDI_GeometricShape>)));
     QObject::connect(central2DWidget, SIGNAL(graphicModeChanged(QString)), this, SLOT(showMessage(QString)));
 
